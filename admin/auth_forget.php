@@ -19,6 +19,7 @@
                 $stmt->bindValue(":email",Form::get_data("email"));
                 $stmt->bindValue(":token",$token);
                 $stmt->bindValue(":status",0);
+                
                 if($stmt->execute()) {
                     $hashedToken = password_hash($token, PASSWORD_DEFAULT); 
                     $message = "<p>Please click on the following link in order to redet the password.</p>";

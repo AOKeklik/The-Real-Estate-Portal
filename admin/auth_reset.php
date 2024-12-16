@@ -18,8 +18,9 @@
                 $sql = "select id,email,token from admins where email=:email limit 1";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":email", htmlspecialchars(trim($_REQUEST["email"])));
+                $stmt->execute();
     
-                if($stmt->execute()) {
+                if($stmt->rowCount() > 0) {
                     $admin = $stmt->fetch(PDO::FETCH_ASSOC);
     
                     if(!password_verify($admin["token"], htmlspecialchars(trim($_REQUEST["token"]))))

@@ -21,8 +21,9 @@
                 $sql = "select email,password,status from admins where email=:email limit 1";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":email",Form::get_data("email"));
-    
-                if($stmt->execute())  {
+                $stmt->execute();
+
+                if($stmt->rowCount() > 0)  {
                     $admin = $stmt->fetch(PDO::FETCH_ASSOC);  
                     
                     if($admin["status"] == 0)
@@ -36,7 +37,8 @@
     
                         Redirect::route("dashboard.php")->with();
                     }
-                }
+                } else
+                    return Redirect::route()->with("error","Not valid user or password!");
             } catch (PDOException $err) {
                 $error_message = $err->getMessage();
             }
