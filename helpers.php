@@ -39,7 +39,7 @@ class Mail {
 
     static function send () {
         $phpmailer = new PHPMailer(true);
-        
+
         try { 
             $phpmailer->isSMTP();
             $phpmailer->Host = self::SMTP_HOST;
@@ -79,7 +79,7 @@ class Redirect {
     public static function route($url=null){
         $dir = self::isAdmin() ? ADMIN_URL : FRONTEND_URL;
 
-        self::$url = $dir.$url ?? ($_SERVER["HTTP_REFERER"] ?? "/");
+        self::$url = $url ? $dir.$url : ($_SERVER["HTTP_REFERER"] ?? "/");
 
         return new self;
     }
@@ -118,31 +118,6 @@ class Session {
 }
 
 class Auth {
-    static function login(PDO $pdo,$email,$password):void {
-        try {
-            $email = htmlspecialchars(trim($email));
-            $password = htmlspecialchars(trim($password));
-            
-            $sql = "select email,password from admins where email=:email limit 1";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(":email",$email);
-
-            if($stmt->execute())  {
-                $admin = $stmt->fetch(PDO::FETCH_ASSOC);            
-
-                if(password_verify($password, $admin["password"])) {
-                    Session::put("admin", [
-                        'email' => $admin['email'],
-                        'password' => $admin['password'],
-                    ]);
-
-                    Redirect::route("dashboard.php")->with();
-                }
-            }
-        } catch (PDOException $err) {
-            error_log("PDO Exists: ".$err->getMessage());
-        }
-    }
     static function isLoggedIn($role="admin"):bool {
         if ($role=="admin") {
             if(isset($_SESSION["admin"]))
@@ -161,9 +136,7 @@ class Auth {
         Session::forget("admin");
         Redirect::route("auth_login.php")->with();
     }
-    static function user() {
-
-    }
+    static function user() {}
 }
 
 class Form {
@@ -189,6 +162,9 @@ class Form {
 
         return "";
     }
+    static function same ($key,$confirmKey):bool {
+        return self::value ($key) == self::value ($confirmKey);
+    }
     static function exists($pdo,$table,$email,$password){
         try {
             $table = htmlspecialchars(trim($table));
@@ -199,15 +175,17 @@ class Form {
                 $sql = "select email,password from $table where email=:email limit 1";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":email",$email);
+                $stmt->execute();
 
-                if($stmt->execute())  {
+                if($stmt->rowCount() > 0)  {
                     $admin = $stmt->fetch(PDO::FETCH_ASSOC);            
 
                     if(password_verify($password, $admin["password"]))
                         return true;
 
                     return false;
-                }
+                } else
+                    return false;
             }
 
             return false;
@@ -292,18 +270,21 @@ class Form {
         return  self::value($key);
     }
     static function get_data($input=null){            
-        if($_SERVER["REQUEST_METHOD"] === "POST") 
-            foreach($_POST as $key => $val) {
+        if (in_array($_SERVER["REQUEST_METHOD"], ["POST", "GET"])) {
+            $requestData = $_SERVER["REQUEST_METHOD"] === "POST" ? $_POST : $_GET;
+    
+            foreach ($requestData as $key => $val) {
                 if (stripos($key, "form") !== false) continue;
                 self::$data[$key] = htmlspecialchars(trim($val));
             }
-
-        if($_SERVER["REQUEST_METHOD"] === "POST") 
-            foreach($_POST as $key => $val)
-                unset($_POST[$key]);
+    
+            foreach ($requestData as $key => $val) {
+                unset($requestData[$key]);
+            }
+        }
 
         if(!is_null($input))
-            return  self::$data[$input];
+            return  htmlspecialchars(trim(self::$data[$input]));
 
         return  self::$data;
     }
@@ -311,7 +292,7 @@ class Form {
         if(empty($fieldName))
             return empty(Form::$errors) ? false : Form::$errors;
 
-        return empty(Form::$errors) ? false : Form::$errors[$fieldName][0];
+        return empty(Form::$errors) || !isset(Form::$errors[$fieldName]) ? false : Form::$errors[$fieldName][0];
     }
     static function push_error($fieldName,$message){
         Form::$errors[$fieldName][] = "<small class='form-text text-danger'>$message</small>";
@@ -320,6 +301,6 @@ class Form {
         if(array_key_exists($fieldName, Form::$errors))
             return Form::$errors[$fieldName];
 
-        return count(Form::$errors) == 0 ? true : false;
+        return count(Form::$errors) == 0 ? false : true;
     }
 }
