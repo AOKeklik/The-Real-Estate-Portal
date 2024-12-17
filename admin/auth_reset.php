@@ -20,23 +20,26 @@
                 $stmt->bindValue(":email", htmlspecialchars(trim($_REQUEST["email"])));
                 $stmt->execute();
     
-                if($stmt->rowCount() > 0) {
-                    $admin = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-                    if(!password_verify($admin["token"], htmlspecialchars(trim($_REQUEST["token"]))))
-                        return Redirect::route()->with("error","Invalid or missing reset credentials.");
+                if($stmt->rowCount() == 0)
+                    return Redirect::route()->with("error","Invalid or missing reset credentials.");
 
-                    $sql = "update admins set password=:password,status=:status,token=:token where id=:id";
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->bindValue(":id", $admin["id"]);
-                    $stmt->bindValue(":password", password_hash(Form::get_data("password"), PASSWORD_DEFAULT));
-                    $stmt->bindValue(":status", 1);
-                    $stmt->bindValue(":token", NULL);
-    
-                    if($stmt->execute()) {
-                        Redirect::route("auth_login.php")->with("success","Your password has been successfully reset!");
-                    }
-                }
+                $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if(!password_verify($admin["token"], htmlspecialchars(trim($_REQUEST["token"]))))
+                    return Redirect::route()->with("error","Invalid or missing reset credentials.");
+
+                $sql = "update admins set password=:password,status=:status,token=:token where id=:id";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id", $admin["id"]);
+                $stmt->bindValue(":password", password_hash(Form::get_data("password"), PASSWORD_DEFAULT));
+                $stmt->bindValue(":status", 1);
+                $stmt->bindValue(":token", NULL);
+                $stmt->execute();
+
+                if($stmt->rowCount() == 0)
+                    return Redirect::route()->with("error","Unable to process your password reset request. Please try again!");
+
+                Redirect::route("auth_login.php")->with("success","Your password has been successfully reset!");
             } catch(PDOException $err) {
                 $error_message = $err->getmessage();
             }

@@ -11,7 +11,11 @@
         </li>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img alt="image" src="<?php echo PUBLIC_URL?>uploads/user.jpg" class="rounded-circle-custom">
+            <?php if(empty(Session::get("admin")["photo"])):?>
+                <img src="<?php echo PUBLIC_URL?>uploads/user.png" alt="" class="rounded-circle-custom">
+            <?php else:?>
+                <img src="<?php echo PUBLIC_URL?>uploads/admin/<?php echo Session::get("admin")["photo"]?>" alt="" class="rounded-circle-custom">
+            <?php endif?>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="<?php echo ADMIN_URL?>profile.php"><i class="far fa-user"></i> Edit Profile</a></li>

@@ -99,13 +99,11 @@ class Session {
     static function put ($key, $val):void {
         $_SESSION[$key] = $val;
     }
-    static function get ($key):string {
+    static function get ($key):string|array {
         if(!isset($_SESSION[$key]))
             return "";
         
-        $msg = $_SESSION[$key];
-        unset($_SESSION[$key]);
-        return $msg;
+        return $_SESSION[$key];
     }
     static function forget ($key):void {
         if (isset($_SESSION[$key])) {
@@ -114,6 +112,14 @@ class Session {
     }
     static function has ($key):bool {
         return isset($_SESSION[$key]) ? true : false ;
+    }
+    static function flash($key): string {
+        if (!isset($_SESSION[$key]))
+            return "";
+        
+        $msg = $_SESSION[$key];
+        self::forget($key);
+        return $msg;
     }
 }
 
@@ -136,7 +142,8 @@ class Auth {
         Session::forget("admin");
         Redirect::route("auth_login.php")->with();
     }
-    static function user() {}
+    static function user($role="customers") {
+    }
 }
 
 class Form {
@@ -165,35 +172,6 @@ class Form {
     static function same ($key,$confirmKey):bool {
         return self::value ($key) == self::value ($confirmKey);
     }
-    static function exists($pdo,$table,$email,$password){
-        try {
-            $table = htmlspecialchars(trim($table));
-            $email = htmlspecialchars(trim($email));
-            $password = htmlspecialchars(trim($password));
-            
-            if(!empty($table) && !empty($email) && !empty($password)) {
-                $sql = "select email,password from $table where email=:email limit 1";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":email",$email);
-                $stmt->execute();
-
-                if($stmt->rowCount() > 0)  {
-                    $admin = $stmt->fetch(PDO::FETCH_ASSOC);            
-
-                    if(password_verify($password, $admin["password"]))
-                        return true;
-
-                    return false;
-                } else
-                    return false;
-            }
-
-            return false;
-        } catch (PDOException $err) {
-            error_log("PDO Exists: ".$err->getMessage());
-            return false;
-        }
-    }
     static function required($key){
 
         if(empty(self::value($key)))
@@ -207,31 +185,6 @@ class Form {
             return true;
         
         return false;
-    }
-    static function exist_email(PDO $pdo,$table,$key){
-        try {
-            $table = htmlspecialchars(trim($table));
-            $email = self::value($key);
-            
-            if(!empty($table) && !empty($email)) {
-                $sql = "select email from $table where email=:email limit 1";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":email",$email);
-                $stmt->execute();
-
-                if($stmt->execute())
-                    if($stmt->rowCount() > 0)
-                        return true;
-
-                
-                return false;
-            }
-
-            return false;
-        } catch (PDOException $err) {
-            error_log("PDO Exists: ".$err->getMessage());
-            return false;
-        }
     }
     static function minmax($rule,$key){
         $rules = explode("|",$rule);
@@ -253,6 +206,18 @@ class Form {
         }
 
         return false;
+    }
+    static function has_file($key) {
+        return isset($_FILES[$key]) && !empty($_FILES[$key]["name"]);
+    }
+    static function has_extension($key) {
+        $allowedTypes = ["jpg","jpeg","png"];
+
+        return in_array(Form::get_extension($key), $allowedTypes);
+    }
+    static function has_size ($key) {
+        $allowedSize = 2 * 1024 * 1024;
+        return $_FILES[$key]["size"] <= $allowedSize;
     }
 
 

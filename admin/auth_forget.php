@@ -8,30 +8,39 @@
         if(Form::email("email"))
             Form::push_error("email","Email must be valid!");
 
-        if(!Form::exist_email($pdo,"admins","email"))
-            Form::push_error("email","The provided email is not registered!");
-
         if (!Form::has_error()) {
-            try {
-                $token = bin2hex(random_bytes(32 / 2));
+            try {                            
+                $sql = "select email from admins where email=:email limit 1";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":email",Form::get_data("email"));
+                $stmt->execute();
+
+                if($stmt->rowCount() == 0)
+                    return Redirect::route()->with("error","The provided email is not registered!");
+
                 $sql = "update admins set token=:token,status=:status where email=:email";
                 $stmt = $pdo->prepare($sql);
+
+                $token = bin2hex(random_bytes(32 / 2));
+
                 $stmt->bindValue(":email",Form::get_data("email"));
                 $stmt->bindValue(":token",$token);
                 $stmt->bindValue(":status",0);
-                
-                if($stmt->execute()) {
-                    $hashedToken = password_hash($token, PASSWORD_DEFAULT); 
-                    $message = "<p>Please click on the following link in order to redet the password.</p>";
-                    $message .= "<a href='".ADMIN_URL."auth_reset.php?email=".Form::get_data("email")."&token=".$hashedToken."'>Reset Password!</a>";
-                    if (
-                        Mail::to(Form::get_data("email"))
-                        ->subject("Reset Email")
-                        ->message($message)
-                        ->send()
-                    ) {
-                        Redirect::route("auth_login.php")->with("success","Please check your email and follow the instruction to reset the password.");
-                    }
+                $stmt->execute();
+
+                if($stmt->rowCount() == 0) 
+                    return Redirect::route()->with("error","Unable to process your password reset request. Please try again!");
+
+                $hashedToken = password_hash($token, PASSWORD_DEFAULT); 
+                $message = "<p>Please click on the following link in order to redet the password.</p>";
+                $message .= "<a href='".ADMIN_URL."auth_reset.php?email=".Form::get_data("email")."&token=".$hashedToken."'>Reset Password!</a>";
+                if (
+                    Mail::to(Form::get_data("email"))
+                    ->subject("Reset Email")
+                    ->message($message)
+                    ->send()
+                ) {
+                    Redirect::route("auth_login.php")->with("success","Please check your email and follow the instruction to reset the password.");
                 }
             } catch (Exception $err) {
                 $error_message = $err->getMessage();

@@ -18,7 +18,7 @@
     <!-- session -->
     <script>
         iziToast.show({
-            message: "<?php echo Session::get("error")?>",
+            message: "<?php echo Session::flash("error")?>",
             position: 'topRight',
             color: 'red',
         })
@@ -28,12 +28,25 @@
     <!-- session -->
     <script>
         iziToast.show({
-            message: "<?php echo Session::get("success")?>",
+            message: "<?php echo Session::flash("success")?>",
             position: 'topRight',
             color: 'green',
         })
     </script>
 <?php endif?>
-
+<script>
+    /* change photo */
+    if($(".js-update-photo").length > 0) {
+        $(".js-update-photo").each(function () {
+            $(this).change(function (evnet) {
+                $(this).parent("div").find("img").each(function () {
+                    if ($(this).length > 0) {
+                        $(this).attr("src",URL.createObjectURL(event.target.files[0]))
+                    }
+                })
+            })
+        })
+    }
+</script>
 </body>
 </html>

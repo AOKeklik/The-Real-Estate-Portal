@@ -1,7 +1,7 @@
 <div class="main-sidebar">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="index.html">Admin Panel</a>
+            <a href="<?php echo ADMIN_URL."dashboard.php"?>">Admin Panel</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="index.html"></a>
@@ -9,7 +9,7 @@
 
         <ul class="sidebar-menu">
 
-            <li class="active"><a class="nav-link" href="index.html"><i class="fas fa-hand-point-right"></i> <span>Dashboard</span></a></li>
+            <li class="active"><a class="nav-link" href="<?php echo ADMIN_URL."dashboard.php"?>"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
 
             <li class="nav-item dropdown active">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-hand-point-right"></i><span>Dropdown Items</span></a>

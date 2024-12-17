@@ -13,32 +13,28 @@
         if(Form::minmax("min:8|max:20","password"))
             Form::push_error("password","The Password must be between 8 and 20 characters!");
 
-        if(!Form::exists($pdo,"admins",$_POST["email"],$_POST["password"]))
-            Form::push_error("password","Admin does not exist!");
-
         if (!Form::has_error()) {
             try {                
-                $sql = "select email,password,status from admins where email=:email limit 1";
+                $sql = "select * from admins where email=:email limit 1";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":email",Form::get_data("email"));
                 $stmt->execute();
 
-                if($stmt->rowCount() > 0)  {
-                    $admin = $stmt->fetch(PDO::FETCH_ASSOC);  
-                    
-                    if($admin["status"] == 0)
-                        return Redirect::route()->with("error","Not valid user or password!");
-    
-                    if(password_verify(Form::get_data("password"), $admin["password"])) {
-                        Session::put("admin", [
-                            'email' => $admin['email'],
-                            'password' => $admin['password'],
-                        ]);
-    
-                        Redirect::route("dashboard.php")->with();
-                    }
-                } else
+                if($stmt->rowCount() == 0)
                     return Redirect::route()->with("error","Not valid user or password!");
+
+                $admin = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                if($admin["status"] == 0)
+                    return Redirect::route()->with("error","Not valid user or password!");
+
+                if(!password_verify(Form::get_data("password"), $admin["password"]))
+                    return Redirect::route()->with("error","Not valid user or password!");
+
+                Session::put("admin", $admin);
+
+                Redirect::route("dashboard.php")->with();
+                    
             } catch (PDOException $err) {
                 $error_message = $err->getMessage();
             }
