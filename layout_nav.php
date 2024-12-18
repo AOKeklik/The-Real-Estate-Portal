@@ -1,7 +1,7 @@
 <div class="navbar-area" id="stickymenu">
     <!-- Menu For Mobile Device -->
     <div class="mobile-nav">
-        <a href="index.html" class="logo">
+        <a href="<?php echo BASE_URL?>" class="logo">
             <img src="https://placehold.co/600x200" alt="">
         </a>
     </div>
@@ -10,8 +10,8 @@
     <div class="main-nav">
         <div class="container">
             <nav class="navbar navbar-expand-md navbar-light">
-                <a class="navbar-brand" href="index.html">
-                    <img src="uploads/logo.png" alt="">
+                <a class="navbar-brand" href="<?php echo BASE_URL?>">
+                    <img src="https://placehold.co/600x200" alt="">
                 </a>
                 <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto">

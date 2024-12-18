@@ -115,5 +115,26 @@
     </div>
 
     <script src="<?php echo PUBLIC_URL?>dist/js/custom.js"></script>
+        <!-- exception error -->
+        <?php if(isset($error_message)):?>
+            <script>
+                iziToast.show({
+                    message: "<?php echo $error_message?>",
+                    position: "topRight",
+                    color: "red",
+                })
+            </script>
+        <?php endif?>
+        
+        <!-- session success -->
+        <?php if(isset($_SESSION["success"])):?>
+            <script>
+                iziToast.show({
+                    message: "<?php echo $_SESSION["success"]?>",
+                    position: "topRight",
+                    color: "green",
+                })
+            </script>
+        <?php unset($_SESSION["success"]); endif?>
 </body>
 </html>
