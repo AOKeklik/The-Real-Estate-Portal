@@ -1,9 +1,10 @@
 </div>
 </div>
 
+<?php //echo "<pre>";print_r($_SESSION);echo "</pre>"?>
 
-<script src="<?php echo PUBLIC_URL?>dist/js/scripts.js"></script>
-<script src="<?php echo PUBLIC_URL?>dist/js/custom.js"></script>
+<script src="<?php echo PUBLIC_URL?>dist_admin/js/scripts.js"></script>
+<script src="<?php echo PUBLIC_URL?>dist_admin/js/custom.js"></script>
 <?php if(isset($error_message)):?>
     <!-- exception -->
     <script>
@@ -14,16 +15,19 @@
         })
     </script>
 <?php endif?>
-<?php if(Session::has("error")):?>
+
+<?php if(isset($_SESSION["error"]) && !empty($_SESSION["error"])):?>
     <!-- session -->
     <script>
         iziToast.show({
-            message: "<?php echo Session::flash("error")?>",
+            message: "<?php echo $_SESSION["error"]?>",
             position: 'topRight',
             color: 'red',
         })
     </script>
+<?php unset($_SESSION["error"])?>
 <?php endif?>
+
 <?php if(Session::has("success")):?>
     <!-- session -->
     <script>

@@ -1,0 +1,7 @@
+RewriteEngine On
+
+RewriteRule     ^select-user$          auth_select_user.php        [NC,L]
+RewriteRule     ^customer-login$       auth_customer_login.php     [NC,L]
+RewriteRule     ^customer-register$    auth_customer_register.php  [NC,L]
+RewriteRule     ^agent-login$          auth_agent_login.php        [NC,L]
+RewriteRule     ^agent-register$       auth_agent_register.php     [NC,L]

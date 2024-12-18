@@ -1,33 +1,82 @@
-(function($){
+(function ($) {
+    
     "use strict";
-    $(".inputtags").tagsinput('items');
-    $(document).ready(function() {
-        $('#example1').DataTable();
-    });
-    $('.icp_demo').iconpicker();
 
-    $('#datepicker').datepicker({
-        dateFormat: 'yyyy-mm-dd',
-        language: {
-            today: 'Today',
-            days: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-            daysShort: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-            daysMin: ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'],
-            months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-            monthsShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    $("form").attr("autocomplete", "off");
+
+    $(".scroll-top").hide();
+    $(window).on("scroll", function () {
+        if ($(this).scrollTop() > 300) {
+            $(".scroll-top").fadeIn();
+        } else {
+            $(".scroll-top").fadeOut();
         }
     });
-    $('#timepicker').datepicker({
-        language: 'en',
-        timepicker: true,
-        onlyTimepicker: true,
-        timeFormat: 'hh:ii',
-        dateFormat: null
+    $(".scroll-top").on("click", function () {
+        $("html, body").animate(
+            {
+                scrollTop: 0,
+            },
+            700
+        );
+    });
+
+    new WOW().init();
+
+    $(".video-button").magnificPopup({
+        type: "iframe",
+        gallery: {
+            enabled: true,
+        },
+    });
+
+    $(".magnific").magnificPopup({
+        type: "image",
+        gallery: {
+            enabled: true,
+        },
+    });
+    
+    jQuery(".mean-menu").meanmenu({
+        meanScreenWidth: "991",
+    });
+
+    $(document).ready(function () {
+        $('#datatable').DataTable();
     });
 
     tinymce.init({
         selector: '.editor',
-        height : '300'
+        height: '300'
+    });
+
+    $('.select2').select2();
+
+    $(".testimonial-carousel").owlCarousel({
+        loop: true,
+        autoplay: true,
+        autoplayHoverPause: true,
+        autoplaySpeed: 1500,
+        smartSpeed: 1500,
+        margin: 30,
+        nav: false,
+        animateIn: "fadeIn",
+        animateOut: "fadeOut",
+        navText: [
+            "<i class='fa fa-caret-left'></i>",
+            "<i class='fa fa-caret-right'></i>",
+        ],
+        responsive: {
+            0: {
+                items: 1
+            },
+            768: {
+                items: 1,
+            },
+            992: {
+                items: 1,
+            },
+        },
     });
 
 })(jQuery);

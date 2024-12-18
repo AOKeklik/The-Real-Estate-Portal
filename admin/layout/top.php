@@ -1,5 +1,5 @@
 <?php include "../helpers.php"?>
-<?php include "../config.php"?>
+<?php include "./layout/config.php"?>
 <?php include "./layout/header.php"?>
 
 <?php if($current_page != "auth_login.php" && $current_page != "auth_forget.php" && $current_page != "auth_reset.php"):?>
