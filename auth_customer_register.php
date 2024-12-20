@@ -1,5 +1,10 @@
-<?php include "./layout_header.php"?>
+<?php include "./layout_top.php"?>
 <?php
+    if (isset($_SESSION["customer"])) {
+        header("Location: ".BASE_URL."customer-dashboard");
+        exit;
+    }
+    
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\Exception;
     use PHPMailer\PHPMailer\SMTP;
@@ -42,7 +47,7 @@
                 $hashed_password = password_hash($password, PASSWORD_DEFAULT);
                 $token = bin2hex(random_bytes(32/2));
                 $hased_token = password_hash($token,PASSWORD_DEFAULT);
-                $link = BASE_URL."customer-register-verify?token=".$hased_token."&email=$email";
+                $link = BASE_URL."auth_customer_register_verify.php?token=".$hased_token."&email=$email";
 
                 $sql = "insert into customers (email,password,token) values (:email,:password,:token)";
                 $stmt = $pdo->prepare($sql);
