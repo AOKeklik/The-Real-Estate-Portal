@@ -115,6 +115,17 @@
     </div>
 
     <script src="<?php echo PUBLIC_URL?>dist/js/custom.js"></script>
+        <!-- exception success -->
+        <?php if(isset($success_message)):?>
+            <script>
+                iziToast.show({
+                    message: "<?php echo $success_message?>",
+                    position: "topRight",
+                    color: "green"
+                })
+            </script>
+        <?php endif?>
+
         <!-- exception error -->
         <?php if(isset($error_message)):?>
             <script>
@@ -136,5 +147,16 @@
                 })
             </script>
         <?php unset($_SESSION["success"]); endif?>
+        
+        <!-- session error -->
+        <?php if(isset($_SESSION["error"])):?>
+            <script>
+                iziToast.show({
+                    message: "<?php echo $_SESSION["error"]?>",
+                    position: "topRight",
+                    color: "red"
+                })
+            </script>
+        <?php unset($_SESSION["error"]); endif?>
 </body>
 </html>

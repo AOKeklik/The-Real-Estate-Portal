@@ -1,4 +1,11 @@
-<?php include "./layout_header.php"?>
+<?php 
+    include "./layout_top.php";
+    
+    if (isset($_SESSION["customer"])) {
+        header("Location: ".BASE_URL."customer-dashboard");
+        exit;
+    }    
+?>
 
 <div class="page-top" style="background-image: url('https://placehold.co/1300x260')">
     <div class="bg"></div>

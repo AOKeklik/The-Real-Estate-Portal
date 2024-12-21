@@ -21,6 +21,7 @@
     define("SMTP_USERNAME", "8c1c7fb7ffe625");
     define("SMTP_PASSWORD", "0673cb81e66408");
     define("SMTP_FROM", "contact@mail.com");
+    define("SMTP_SECURE", "tsl");
         
 
     try {  
@@ -30,7 +31,7 @@
         $error_message = $err->getMessage();
     }
 
-    $current_page = substr($_SERVER["SCRIPT_NAME"], strpos($_SERVER["SCRIPT_NAME"],"/")+1);
+    $current_page = substr($_SERVER["SCRIPT_NAME"],strrpos($_SERVER["SCRIPT_NAME"],"/")+1);
 
     global $current_page;
     global $pdo;

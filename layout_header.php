@@ -1,6 +1,3 @@
-<?php
-    include "./layout_config.php";
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,5 +40,3 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-<?php include "./layout_nav.php"?>

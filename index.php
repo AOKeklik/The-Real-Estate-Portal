@@ -1,4 +1,4 @@
-<?php include "./layout_header.php"?>
+<?php include "./layout_top.php"?>
 
     <div class="slider" style="background-image: url(https://placehold.co/1200x540)">
         <div class="bg"></div>

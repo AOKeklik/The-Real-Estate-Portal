@@ -40,7 +40,11 @@
                             <a href="contact.html" class="nav-link">Contact</a>
                         </li>
                         <li class="nav-item">
-                            <a href="<?php echo BASE_URL?>select-user" class="nav-link">Login</a>
+                            <?php if(isset($_SESSION["customer"])):?>
+                                <a href="<?php echo BASE_URL?>customer-dashboard" class="nav-link">Dashboard</a>
+                            <?php else:?>
+                                <a href="<?php echo BASE_URL?>select-user" class="nav-link">Login</a>
+                            <?php endif?>
                         </li>
                     </ul>
                 </div>
