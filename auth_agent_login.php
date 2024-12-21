@@ -1,6 +1,11 @@
 <?php
     include "./layout_top.php";
 
+    if(isset($_SESSION["agent"])) {
+        header("Location: ".BASE_URL."agent-dashboard");
+        exit();
+    }
+
     $errors = [];
 
     if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["form"])) {
@@ -77,7 +82,7 @@
                             <button name="form" type="submit" class="btn btn-primary bg-website">
                                 Login
                             </button>
-                            <a href="forget-password.html" class="primary-color">Forget Password?</a>
+                            <a href="<?php echo BASE_URL?>agent-forget" class="primary-color">Forget Password?</a>
                         </div>
                         <div class="mb-3">
                             <a href="<?php echo BASE_URL."agent-register"?>" class="primary-color">Don't have an account? Create Account</a>

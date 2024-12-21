@@ -1,6 +1,10 @@
 <?php
-
     include "./layout_top.php";
+
+    if(isset($_SESSION["agent"])) {
+        header("Location: ".BASE_URL."agent-dashboard");
+        exit();
+    }
 
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\Exception;

@@ -20,8 +20,8 @@
     define("SMTP_PORT", "2525");
     define("SMTP_USERNAME", "8c1c7fb7ffe625");
     define("SMTP_PASSWORD", "0673cb81e66408");
-    define("SMTP_FROM", "contact@mail.com");
     define("SMTP_SECURE", "tsl");
+    define("SMTP_FROM", "contact@mail.com");
         
 
     try {  

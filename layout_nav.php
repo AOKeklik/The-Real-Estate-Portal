@@ -42,6 +42,8 @@
                         <li class="nav-item">
                             <?php if(isset($_SESSION["customer"])):?>
                                 <a href="<?php echo BASE_URL?>customer-dashboard" class="nav-link">Dashboard</a>
+                            <?php elseif(isset($_SESSION["agent"])):?>
+                                <a href="<?php echo BASE_URL?>agent-dashboard" class="nav-link">Dashboard</a>
                             <?php else:?>
                                 <a href="<?php echo BASE_URL?>select-user" class="nav-link">Login</a>
                             <?php endif?>

@@ -1,5 +1,4 @@
 <?php
-
     include "./layout_config.php";
 
     unset($_SESSION["customer"]);

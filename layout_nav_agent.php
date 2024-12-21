@@ -1,7 +1,7 @@
 <div class="card">
     <ul class="list-group list-group-flush">
         <li class="list-group-item <?php if($current_page=="agent_dashboard.php") echo "active"?>">
-            <a href="<?php echo BASE_URL."agent-dashboard"?>">Dashboard</a>
+            <a href="<?php echo BASE_URL?>agent-dashboard">Dashboard</a>
         </li>
         <li class="list-group-item">
             <a href="user-payment.html">Make Payment</a>
@@ -22,7 +22,7 @@
             <a href="user-edit-profile.html">Edit Profile</a>
         </li>
         <li class="list-group-item">
-            <a href="login.html">Logout</a>
+            <a href="<?php echo BASE_URL?>auth_agent_logout.php">Logout</a>
         </li>
     </ul>
 </div>
