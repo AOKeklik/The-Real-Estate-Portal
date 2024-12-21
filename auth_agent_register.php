@@ -84,7 +84,7 @@
                 $password = password_hash($password,PASSWORD_DEFAULT);
                 $token = bin2hex(random_bytes(32/2));
                 $hashed_token = password_hash($token,PASSWORD_DEFAULT);
-                $link = BASE_URL."auth_agent_register_verify.php?token=$token&email=$email";
+                $link = BASE_URL."auth_agent_register_verify.php?token=$hashed_token&email=$email";
 
                 $sql = "
                     insert into agents (full_name,email,password,designation,company,phone,country,address,state,city,zip_code,token) 
@@ -141,9 +141,7 @@
                         unset($_POST["city"]);
                         unset($_POST["zip_code"]);
 
-                        $_SESSION["success"] = "Registration is successful. Check your email and verify registration to login.";
-                        header("Location: ".BASE_URL."agent-login");
-                        exit();
+                        $success_message = "Registration is successful. Check your email and verify registration to login.";
                     }
                 } catch(Exception $err) {
                     $error_message = $err->getMessage();                    
@@ -160,7 +158,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <h2>Create Account</h2>
+                    <h2>Create Agent Account</h2>
                 </div>
             </div>
         </div>
