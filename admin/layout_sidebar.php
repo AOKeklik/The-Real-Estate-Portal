@@ -9,11 +9,23 @@
 
         <ul class="sidebar-menu">
 
-            <li class="<?php if($current_page == "page_dashboard.php") echo "active"?>">
+            <li class="<?php if($current_page == "dashboard.php") echo "active"?>">
                 <a class="nav-link" href="<?php echo ADMIN_URL?>dashboard"><i class="fas fa-home"></i> <span>Dashboard</span></a>
             </li>
-            <li class="<?php if($current_page == "page_setting.php") echo "active"?>">
+            <li class="<?php if($current_page == "setting.php") echo "active"?>">
                 <a class="nav-link" href="<?php echo ADMIN_URL?>setting"><i class="fas fa-cog"></i><span>Setting</span></a>
+            </li>
+
+            <li class="nav-item dropdown <?php if($current_page=="packages.php" || $current_page=="package_create.php") echo "active"?>">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-cubes"></i><span>Packages</span></a>
+                <ul class="dropdown-menu">
+                    <li class="<?php if($current_page == "packages.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>packages"><i class="fas fa-angle-right"></i> Packages</a>
+                    </li>
+                    <li class="<?php if($current_page == "package_create.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>package-create"><i class="fas fa-angle-right"></i> Create Package</a>
+                    </li>
+                </ul>
             </li>
 
             <!-- <li class="nav-item dropdown active">
