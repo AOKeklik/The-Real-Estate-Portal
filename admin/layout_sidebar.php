@@ -1,7 +1,7 @@
 <div class="main-sidebar">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="<?php echo ADMIN_URL."dashboard.php"?>">Admin Panel</a>
+            <a href="">Admin Panel</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="index.html"></a>
@@ -9,8 +9,12 @@
 
         <ul class="sidebar-menu">
 
-            <li class="<?php if($current_page == "dashboard.php"): echo "active"; endif?>"><a class="nav-link" href="<?php echo ADMIN_URL."dashboard.php"?>"><i class="fas fa-home"></i> <span>Dashboard</span></a></li>
-            <li class="<?php if($current_page == "setting.php"): echo "active";endif?>"><a class="nav-link" href="<?php echo ADMIN_URL."setting.php"?>"><i class="fas fa-cog"></i> <span>Setting</span></a></li>
+            <li class="<?php if($current_page == "page_dashboard.php") echo "active"?>">
+                <a class="nav-link" href="<?php echo ADMIN_URL?>dashboard"><i class="fas fa-home"></i> <span>Dashboard</span></a>
+            </li>
+            <li class="<?php if($current_page == "page_setting.php") echo "active"?>">
+                <a class="nav-link" href="<?php echo ADMIN_URL?>setting"><i class="fas fa-cog"></i><span>Setting</span></a>
+            </li>
 
             <!-- <li class="nav-item dropdown active">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-hand-point-right"></i><span>Dropdown Items</span></a>

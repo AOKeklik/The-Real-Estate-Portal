@@ -1,4 +1,4 @@
-<?php include "./layout/top.php"?> 
+<?php include "./layout_top.php"?> 
 <?php 
     try {
         $sql = "select * from settings where id=:id limit 1";
@@ -36,7 +36,7 @@
                                             <?php if(empty($setting["logo"])):?>
                                                 <img src="https://placehold.co/600x200" alt="" class="w_100">
                                             <?php else:?>
-                                                <img src="<?php echo PUBLIC_URL?>/uploads/setting/logo.png" alt="" class="w_100">
+                                                <img src="<?php echo PUBLIC_URL?>/uploads/setting/<?php echo $setting["logo"]?>" alt="" class="w_100">
                                             <?php endif?>
                                         </div>
                                     </div>
@@ -75,4 +75,4 @@
     </section>
 </div>
 
-<?php include "../admin/layout/footer.php"?>
+<?php include "./layout_footer.php"?>

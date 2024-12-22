@@ -125,10 +125,9 @@
                 $stmt->bindValue(":pinterest",$pinterest);
                 $stmt->bindValue(":instagram",$instagram);
                 $stmt->bindValue(":youtube",$youtube);
-                $stmt->execute();
 
-                if($stmt->rowCount() == 0)
-                    throw new PDOException("");
+                if(!$stmt->execute())
+                    throw new PDOException("An error occurred while updating. Please try again later!");
 
                 if(!empty($_FILES["photo"]["name"])) { 
                     if(!is_dir("./public/uploads/agent"))

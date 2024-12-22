@@ -1,5 +1,10 @@
 RewriteEngine On
 
+RewriteRule     ^admin/login$                   ./admin/auth_login.php              [NC,L]
+RewriteRule     ^admin/profile$                 ./admin/page_profile.php            [NC,L]
+RewriteRule     ^admin/dashboard$               ./admin/page_dashboard.php          [NC,L]
+RewriteRule     ^admin/setting$                 ./admin/page_setting.php            [NC,L]
+
 RewriteRule     ^select-user$                   auth_select_user.php                [NC,L]
 
 RewriteRule     ^customer-login$                auth_customer_login.php             [NC,L]
@@ -13,3 +18,4 @@ RewriteRule     ^agent-register$                auth_agent_register.php         
 RewriteRule     ^agent-forget$                  auth_agent_forget.php               [NC,L]
 RewriteRule     ^agent-dashboard$               agent_dashboard.php                 [NC,L]
 RewriteRule     ^agent-profile$                 agent_profile.php                   [NC,L]
+
