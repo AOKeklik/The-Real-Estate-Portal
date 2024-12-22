@@ -18,8 +18,8 @@
         <li class="list-group-item">
             <a href="user-wishlist.html">Wishlist</a>
         </li>
-        <li class="list-group-item">
-            <a href="user-edit-profile.html">Edit Profile</a>
+        <li class="list-group-item <?php if($current_page == "agent_profile.php") echo "active"?>">
+            <a href="<?php echo BASE_URL?>agent-profile">Edit Profile</a>
         </li>
         <li class="list-group-item">
             <a href="<?php echo BASE_URL?>auth_agent_logout.php">Logout</a>

@@ -12,3 +12,4 @@ RewriteRule     ^agent-login$                   auth_agent_login.php            
 RewriteRule     ^agent-register$                auth_agent_register.php             [NC,L]
 RewriteRule     ^agent-forget$                  auth_agent_forget.php               [NC,L]
 RewriteRule     ^agent-dashboard$               agent_dashboard.php                 [NC,L]
+RewriteRule     ^agent-profile$                 agent_profile.php                   [NC,L]
