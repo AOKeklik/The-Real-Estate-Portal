@@ -15,7 +15,7 @@
                 </a>
                 <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item active">
+                        <li class="nav-item <?php if($current_page == "index.php") echo "active"?>">
                             <a href="<?php echo BASE_URL?>" class="nav-link">Home</a>
                         </li>
                         <li class="nav-item">
@@ -24,8 +24,8 @@
                         <li class="nav-item">
                             <a href="agents.html" class="nav-link">Agents</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="locations.html" class="nav-link">Locations</a>
+                        <li class="nav-item <?php if($current_page == "page_location.php") echo "active"?>">
+                            <a href="<?php echo BASE_URL?>locations" class="nav-link">Locations</a>
                         </li>
                         <li class="nav-item">
                             <a href="<?php echo BASE_URL?>pricing" class="nav-link">Pricing</a>

@@ -467,3 +467,6 @@ hr.invoice-above-table {
     font-size: var(--font-size-common-1);
 }
 
+/* table */
+.table-responsive table {min-width: 500px;}
+.table-responsive td {white-space: nowrap;}

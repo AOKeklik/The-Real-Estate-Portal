@@ -28,6 +28,18 @@
                 </ul>
             </li>
 
+            <li class="nav-item dropdown <?php if($current_page == "locations.php" || $current_page == "location_create.php") echo "active"?>">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-map-marker"></i><span>Locations</span></a>
+                <ul class="dropdown-menu">
+                    <li class="<?php if($current_page == "locations.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>locations"><i class="fas fa-angle-right"></i> Locations</a>
+                    </li>
+                    <li class="<?php if($current_page == "location_create.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>location-create"><i class="fas fa-angle-right"></i> Create Location</a>
+                    </li>
+                </ul>
+            </li>
+
             <!-- <li class="nav-item dropdown active">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-hand-point-right"></i><span>Dropdown Items</span></a>
                 <ul class="dropdown-menu">

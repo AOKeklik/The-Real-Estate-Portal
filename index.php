@@ -1,4 +1,15 @@
-<?php include "./layout_top.php"?>
+<?php 
+    include "./layout_top.php";
+
+    try {
+        $sql = "select * from locations";
+        $stmtLoc = $pdo->prepare($sql);
+        $stmtLoc->execute();
+        $locations = $stmtLoc->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $err) {   
+        $error_message = $err->getMessage();
+    }
+?>
 
     <div class="slider" style="background-image: url(https://placehold.co/1200x540)">
         <div class="bg"></div>
@@ -25,15 +36,10 @@
                                             <div class="form-group">
                                                 <select name="" class="form-select select2">
                                                     <option value="">Select Location</option>
-                                                    <option value="">Boston</option>
-                                                    <option value="">California</option>
-                                                    <option value="">Chicago</option>
-                                                    <option value="">Dallas</option>
-                                                    <option value="">Denver</option>
-                                                    <option value="">NewYork</option>
-                                                    <option value="">San Diago</option>
-                                                    <option value="">Washington</option>
-                                                    <option value="">Winconsin</option>
+                                                    <?php if($stmtLoc->rowCount() > 0):
+                                                        foreach($locations as $loc):?>
+                                                            <option value="<?php echo $loc["id"]?>"><?php echo $loc["name"]?></option>
+                                                    <?php endforeach;endif?>
                                                 </select>
                                             </div>
                                         </div>
@@ -511,94 +517,22 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="item">
-                        <div class="photo">
-                            <a href="location.html"><img src="https://placehold.co/500x500" alt=""></a>
+                <?php if($stmtLoc->rowCount() > 0):
+                    foreach($locations as $loc):?>
+                        <div class="col-lg-3 col-md-4 col-sm-6">
+                            <div class="item">
+                                <div class="photo">
+                                    <a href="<?php echo BASE_URL?>location/<?php echo $loc["slug"]?>">
+                                        <img src="<?php echo PUBLIC_URL?>uploads/location/<?php echo $loc["photo"]?>" alt="<?php echo $loc["name"]?>">
+                                    </a>
+                                </div>
+                                <div class="text">
+                                    <h2><a href="<?php echo BASE_URL?>location/<?php echo $loc["slug"]?>"><?php echo $loc["name"]?></a></h2>
+                                    <h4>(10 Properties)</h4>
+                                </div>
+                            </div>
                         </div>
-                        <div class="text">
-                            <h2><a href="location.html">Boston</a></h2>
-                            <h4>(10 Properties)</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="item">
-                        <div class="photo">
-                            <a href="location.html"><img src="https://placehold.co/500x500" alt=""></a>
-                        </div>
-                        <div class="text">
-                            <h2><a href="location.html">California</a></h2>
-                            <h4>(5 Properties)</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="item">
-                        <div class="photo">
-                            <a href="location.html"><img src="https://placehold.co/500x500" alt=""></a>
-                        </div>
-                        <div class="text">
-                            <h2><a href="location.html">Chicago</a></h2>
-                            <h4>(2 Properties)</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="item">
-                        <div class="photo">
-                            <a href="location.html"><img src="https://placehold.co/500x500" alt=""></a>
-                        </div>
-                        <div class="text">
-                            <h2><a href="location.html">Dallas</a></h2>
-                            <h4>(0 Properties)</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="item">
-                        <div class="photo">
-                            <a href="location.html"><img src="https://placehold.co/500x500" alt=""></a>
-                        </div>
-                        <div class="text">
-                            <h2><a href="location.html">Denver</a></h2>
-                            <h4>(0 Properties)</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="item">
-                        <div class="photo">
-                            <a href="location.html"><img src="https://placehold.co/500x500" alt=""></a>
-                        </div>
-                        <div class="text">
-                            <h2><a href="location.html">New York</a></h2>
-                            <h4>(0 Properties)</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="item">
-                        <div class="photo">
-                            <a href="location.html"><img src="https://placehold.co/500x500" alt=""></a>
-                        </div>
-                        <div class="text">
-                            <h2><a href="location.html">San Diago</a></h2>
-                            <h4>(0 Properties)</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-4 col-sm-6">
-                    <div class="item">
-                        <div class="photo">
-                            <a href="location.html"><img src="https://placehold.co/500x500" alt=""></a>
-                        </div>
-                        <div class="text">
-                            <h2><a href="location.html">Washington</a></h2>
-                            <h4>(0 Properties)</h4>
-                        </div>
-                    </div>
-                </div>
+                <?php endforeach;endif?>
             </div>
         </div>
     </div>

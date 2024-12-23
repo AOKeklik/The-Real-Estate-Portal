@@ -1,15 +1,20 @@
 RewriteEngine On
 
-RewriteRule     ^admin/login$                   ./admin/auth_login.php                  [NC,L]
-RewriteRule     ^admin/profile$                 ./admin/profile.php                [NC,L]
-RewriteRule     ^admin/dashboard$               ./admin/dashboard.php              [NC,L]
-RewriteRule     ^admin/setting$                 ./admin/setting.php                [NC,L]
-RewriteRule     ^admin/packages$                ./admin/packages.php               [NC,L]
-RewriteRule     ^admin/package-create$          ./admin/package_create.php         [NC,L]
-RewriteRule     ^admin/package-edit/([0-9]+)    ./admin/package_edit.php?id=$1     [NC,L]
-RewriteRule     ^admin/package-delete/([0-9]+)  ./admin/package_delete.php?id=$1   [NC,L]
+RewriteRule     ^admin/login$                   ./admin/auth_login.php              [NC,L]
+RewriteRule     ^admin/profile$                 ./admin/profile.php                 [NC,L]
+RewriteRule     ^admin/dashboard$               ./admin/dashboard.php               [NC,L]
+RewriteRule     ^admin/setting$                 ./admin/setting.php                 [NC,L]
+RewriteRule     ^admin/packages$                ./admin/packages.php                [NC,L]
+RewriteRule     ^admin/package-create$          ./admin/package_create.php          [NC,L]
+RewriteRule     ^admin/package-edit/([0-9]+)    ./admin/package_edit.php?id=$1      [NC,L]
+RewriteRule     ^admin/package-delete/([0-9]+)  ./admin/package_delete.php?id=$1    [NC,L]
+RewriteRule     ^admin/locations$               ./admin/locations.php               [NC,L]
+RewriteRule     ^admin/location-create$         ./admin/location_create.php         [NC,L]
+RewriteRule     ^admin/location-edit/([0-9]+)   ./admin/location_edit.php?id=$1     [NC,L]
+RewriteRule     ^admin/location-delete/([0-9]+) ./admin/location_delete.php?id=$1   [NC,L]
 
 RewriteRule     ^pricing$                       page_pricing.php                    [NC,L]
+RewriteRule     ^locations$                     page_location.php                   [NC,L]
 RewriteRule     ^select-user$                   auth_select_user.php                [NC,L]
 
 RewriteRule     ^customer-login$                auth_customer_login.php             [NC,L]
