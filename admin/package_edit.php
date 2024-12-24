@@ -20,106 +20,106 @@
         $stmt->execute();
         $package = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if($stmt->rowCount() == 0) {
-            $_SESSION["error"] = "The selected package is not available.";
-            header("Location: ".ADMIN_URL."packages");
-            exit();
-        }
+        if($stmt->rowCount() == 0)
+            throw new PDOException("The selected package is not available.");
 
-        $errors = [];
+    } catch (PDOException $err) {
+        $_SESSION["error"] = $err->getMessage();
+        header("Location: ".ADMIN_URL."packages");
+        exit();
+    }
 
-        if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["form"])) {
-            $name = htmlspecialchars(trim($_POST["name"]));
-            $price = htmlspecialchars(trim($_POST["price"]));
-            $allowed_days = htmlspecialchars(trim($_POST["allowed_days"]));
-            $allowed_properties = htmlspecialchars(trim($_POST["allowed_properties"]));
-            $allowed_featured_properties = htmlspecialchars(trim($_POST["allowed_featured_properties"]));
-            $allowed_photos = htmlspecialchars(trim($_POST["allowed_photos"]));
-            $allowed_videos = htmlspecialchars(trim($_POST["allowed_videos"]));
+    $errors = [];
 
-            if($name === "")
-                $errors["name"][] = "<small class='form-text text-danger'>The name field is required!</small>";
+    if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["form"])) {
+        $name = htmlspecialchars(trim($_POST["name"]));
+        $price = htmlspecialchars(trim($_POST["price"]));
+        $allowed_days = htmlspecialchars(trim($_POST["allowed_days"]));
+        $allowed_properties = htmlspecialchars(trim($_POST["allowed_properties"]));
+        $allowed_featured_properties = htmlspecialchars(trim($_POST["allowed_featured_properties"]));
+        $allowed_photos = htmlspecialchars(trim($_POST["allowed_photos"]));
+        $allowed_videos = htmlspecialchars(trim($_POST["allowed_videos"]));
 
-            if($price === "")
-                $errors["price"][] = "<small class='form-text text-danger'>The price field is required!</small>";
+        if($name === "")
+            $errors["name"][] = "<small class='form-text text-danger'>The name field is required!</small>";
 
-            if($allowed_days === "")
-                $errors["allowed_days"][] = "<small class='form-text text-danger'>The allowed days field is required!</small>";
+        if($price === "")
+            $errors["price"][] = "<small class='form-text text-danger'>The price field is required!</small>";
 
-            if($allowed_properties === "")
-                $errors["allowed_properties"][] = "<small class='form-text text-danger'>The allowed properties field is required!</small>";
+        if($allowed_days === "")
+            $errors["allowed_days"][] = "<small class='form-text text-danger'>The allowed days field is required!</small>";
 
-            if($allowed_featured_properties === "")
-                $errors["allowed_featured_properties"][] = "<small class='form-text text-danger'>The allowed featured properties field is required!</small>";
+        if($allowed_properties === "")
+            $errors["allowed_properties"][] = "<small class='form-text text-danger'>The allowed properties field is required!</small>";
 
-            if($allowed_photos === "")
-                $errors["allowed_photos"][] = "<small class='form-text text-danger'>The allowed photos field is required!</small>";
+        if($allowed_featured_properties === "")
+            $errors["allowed_featured_properties"][] = "<small class='form-text text-danger'>The allowed featured properties field is required!</small>";
 
-            if($allowed_videos === "")
-                $errors["allowed_videos"][] = "<small class='form-text text-danger'>The allowed videos field is required!</small>";
+        if($allowed_photos === "")
+            $errors["allowed_photos"][] = "<small class='form-text text-danger'>The allowed photos field is required!</small>";
 
-            if(!is_numeric($price))
-                $errors["price"][] = "<small class='form-text text-danger'>The price field must be numeric!</small>";
+        if($allowed_videos === "")
+            $errors["allowed_videos"][] = "<small class='form-text text-danger'>The allowed videos field is required!</small>";
 
-            if(!is_numeric($allowed_days))
-                $errors["allowed_days"][] = "<small class='form-text text-danger'>The allowed days field must be numeric!</small>";
+        if(!is_numeric($price))
+            $errors["price"][] = "<small class='form-text text-danger'>The price field must be numeric!</small>";
 
-            if(!is_numeric($allowed_properties))
-                $errors["allowed_properties"][] = "<small class='form-text text-danger'>The allowed properties field must be numeric!</small>";
+        if(!is_numeric($allowed_days))
+            $errors["allowed_days"][] = "<small class='form-text text-danger'>The allowed days field must be numeric!</small>";
 
-            if(!is_numeric($allowed_featured_properties))
-                $errors["allowed_featured_properties"][] = "<small class='form-text text-danger'>The allowed featured properties field must be numeric!</small>";
+        if(!is_numeric($allowed_properties))
+            $errors["allowed_properties"][] = "<small class='form-text text-danger'>The allowed properties field must be numeric!</small>";
 
-            if(!is_numeric($allowed_photos))
-                $errors["allowed_photos"][] = "<small class='form-text text-danger'>The allowed photos field must be numeric!</small>";
+        if(!is_numeric($allowed_featured_properties))
+            $errors["allowed_featured_properties"][] = "<small class='form-text text-danger'>The allowed featured properties field must be numeric!</small>";
 
-            if(!is_numeric($allowed_videos))
-                $errors["allowed_videos"][] = "<small class='form-text text-danger'>The allowed videos field must be numeric!</small>";
+        if(!is_numeric($allowed_photos))
+            $errors["allowed_photos"][] = "<small class='form-text text-danger'>The allowed photos field must be numeric!</small>";
 
-            if(empty($errors)) {
-                try {
-                    $sql = "
-                        update packages set
-                        name=:name,
-                        price=:price,
-                        allowed_days=:allowed_days,
-                        allowed_properties=:allowed_properties,
-                        allowed_featured_properties=:allowed_featured_properties,
-                        allowed_photos=:allowed_photos,
-                        allowed_videos=:allowed_videos
-                        where id=:id
-                    ";
-                    $stmt = $pdo->prepare($sql);
-                    $stmt->bindValue(":id",$id);
-                    $stmt->bindValue(":name",$name);
-                    $stmt->bindValue(":price",$price);
-                    $stmt->bindValue(":allowed_days",$allowed_days);
-                    $stmt->bindValue(":allowed_properties",$allowed_properties);
-                    $stmt->bindValue(":allowed_featured_properties",$allowed_featured_properties);
-                    $stmt->bindValue(":allowed_photos",$allowed_photos);
-                    $stmt->bindValue(":allowed_videos",$allowed_videos);
-                    
-                    if(!$stmt->execute())
-                        throw new PDOException("An error occurred while updating. Please try again later!");
+        if(!is_numeric($allowed_videos))
+            $errors["allowed_videos"][] = "<small class='form-text text-danger'>The allowed videos field must be numeric!</small>";
 
-                    unset($_POST["name"]);
-                    unset($_POST["price"]);
-                    unset($_POST["allowed_days"]);
-                    unset($_POST["allowed_properties"]);
-                    unset($_POST["allowed_featured_properties"]);
-                    unset($_POST["allowed_photos"]);
-                    unset($_POST["allowed_videos"]);
+        if(empty($errors)) {
+            try {
+                $sql = "
+                    update packages set
+                    name=:name,
+                    price=:price,
+                    allowed_days=:allowed_days,
+                    allowed_properties=:allowed_properties,
+                    allowed_featured_properties=:allowed_featured_properties,
+                    allowed_photos=:allowed_photos,
+                    allowed_videos=:allowed_videos
+                    where id=:id
+                ";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":id",$id);
+                $stmt->bindValue(":name",$name);
+                $stmt->bindValue(":price",$price);
+                $stmt->bindValue(":allowed_days",$allowed_days);
+                $stmt->bindValue(":allowed_properties",$allowed_properties);
+                $stmt->bindValue(":allowed_featured_properties",$allowed_featured_properties);
+                $stmt->bindValue(":allowed_photos",$allowed_photos);
+                $stmt->bindValue(":allowed_videos",$allowed_videos);
+                
+                if(!$stmt->execute())
+                    throw new PDOException("An error occurred while updating. Please try again later!");
 
-                    $_SESSION["success"] = "The package has been updated successfully!";
-                    header("Location: ".ADMIN_URL."packages");
-                    exit();
-                } catch (PDOException $err) {
-                    $error_message = $err->getMessage();
-                }
+                unset($_POST["name"]);
+                unset($_POST["price"]);
+                unset($_POST["allowed_days"]);
+                unset($_POST["allowed_properties"]);
+                unset($_POST["allowed_featured_properties"]);
+                unset($_POST["allowed_photos"]);
+                unset($_POST["allowed_videos"]);
+
+                $_SESSION["success"] = "The package has been updated successfully!";
+                header("Location: ".ADMIN_URL."packages");
+                exit();
+            } catch (PDOException $err) {
+                $error_message = $err->getMessage();
             }
         }
-    } catch (PDOException $err) {
-        $error_message = $err->getMessage();
     }
 ?>
 <div class="main-content">

@@ -2,11 +2,20 @@
     include "./layout_top.php";
 
     try {
-        $sql = "select * from locations";
+        $sql = "select * from locations order by id asc";
         $stmtLoc = $pdo->prepare($sql);
         $stmtLoc->execute();
         $locations = $stmtLoc->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $err) {   
+        $error_message = $err->getMessage();
+    }
+
+    try {
+        $sql = "select * from types order by id asc";
+        $stmtTyp = $pdo->prepare($sql);
+        $stmtTyp->execute();
+        $types = $stmtTyp->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $err) {
         $error_message = $err->getMessage();
     }
 ?>
@@ -47,14 +56,10 @@
                                             <div class="form-group">
                                                 <select name="" class="form-select select2">
                                                     <option value="">Select Type</option>
-                                                    <option value="">Apartment</option>
-                                                    <option value="">Bungalow</option>
-                                                    <option value="">Cabin</option>
-                                                    <option value="">Condo</option>
-                                                    <option value="">Cottage</option>
-                                                    <option value="">Duplex</option>
-                                                    <option value="">Townhouse</option>
-                                                    <option value="">Villa</option>
+                                                    <?php if($stmtTyp->rowCount() > 0):
+                                                        foreach($types as $type):?>
+                                                            <option value="<?php echo $type["id"]?>"><?php echo $type["name"]?></option>
+                                                    <?php endforeach;endif?>
                                                 </select>
                                             </div>
                                         </div>
