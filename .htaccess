@@ -21,6 +21,11 @@ RewriteRule     ^admin/types$                       ./admin/types.php           
 RewriteRule     ^admin/type-create$                 ./admin/type_create.php             [NC,L]
 RewriteRule     ^admin/type-edit/([0-9]+)$          ./admin/type_edit.php?id=$1         [NC,L]
 RewriteRule     ^admin/type-delete/([0-9]+)$        ./admin/type_delete.php?id=$1       [NC,L]
+
+RewriteRule     ^admin/amenities$                   ./admin/amenities.php               [NC,L]
+RewriteRule     ^admin/amenity-create$              ./admin/amenity_create.php          [NC,L]
+RewriteRule     ^admin/amenity-edit/([0-9]+)$       ./admin/amenity_edit.php?id=$1      [NC,L]
+RewriteRule     ^admin/amenity-delete/([0-9]+)$     ./admin/amenity_delete.php?id=$1    [NC,L]
     
 # -- frontend ---   
     

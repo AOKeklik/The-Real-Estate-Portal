@@ -1,4 +1,5 @@
 <?php
+    include "./layout_helper.php";
     include "./layout_config.php";
     include "./layout_header.php";
 

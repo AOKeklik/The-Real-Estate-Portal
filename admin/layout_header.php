@@ -6,7 +6,7 @@
 
     <link rel="icon" type="image/png" href="<?php echo PUBLIC_URL?>uploads/favicon.png" />
 
-    <title>Admin Panel</title>
+    <title><?php echo setPageTitle($current_page)?></title>
 
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 

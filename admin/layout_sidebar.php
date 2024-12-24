@@ -41,7 +41,7 @@
             </li>
 
             <li class="nav-item dropdown <?php if($current_page == "types.php" || $current_page == "type_create.php") echo "active"?>">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-folder-open"></i><span> Types</span></a>
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-folder"></i><span> Types</span></a>
                 <ul class="dropdown-menu">
                     <li class="<?php if($current_page == "types.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>types"><i class="fas fa-angle-right"></i> Types</a>
@@ -52,6 +52,17 @@
                 </ul>
             </li>
 
+            <li class="nav-item dropdown <?php if(strpos($current_page, "amenit") !== false) echo "active"?>">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-th-large"></i><span> Amenities</span></a>
+                <ul class="dropdown-menu">
+                    <li class="<?php if($current_page == "amenities.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>amenities"><i class="fas fa-angle-right"></i> Amenities</a>
+                    </li>
+                    <li class="<?php if($current_page == "amenity_create.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>amenity-create"><i class="fas fa-angle-right"></i> Create Amenity</a>
+                    </li>
+                </ul>
+            </li>
 
             <!-- <li class="nav-item dropdown active">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-hand-point-right"></i><span>Dropdown Items</span></a>

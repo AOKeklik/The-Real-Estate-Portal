@@ -33,6 +33,7 @@
         })
     </script>
 <?php unset($_SESSION["error"]);endif?>
+<!-- session success -->
 <?php if(isset($_SESSION["success"])):?>
     <script>
         iziToast.show({

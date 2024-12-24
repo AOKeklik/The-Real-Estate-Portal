@@ -1,11 +1,3 @@
-<?php
-    function forntendButtonLink ($link) {
-        if (strpos($link, "location") !== false) 
-            return BASE_URL."locations";
-
-        return BASE_URL;
-    }
-?>
 <div class="navbar-bg"></div>
 <nav class="navbar navbar-expand-lg main-navbar">
     <form class="form-inline mr-auto">
@@ -15,7 +7,7 @@
     </form>
     <ul class="navbar-nav navbar-right justify-content-end rightsidetop">
         <li class="nav-link">
-            <a href="<?php echo forntendButtonLink($current_page)?>" target="_blank" class="btn btn-warning">Front End</a>
+            <a href="<?php echo setForntendButtonLink($current_page)?>" target="_blank" class="btn btn-warning">Front End</a>
         </li>
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
