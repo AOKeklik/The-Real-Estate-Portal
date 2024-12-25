@@ -53,5 +53,6 @@ RewriteRule     ^agent-payment-paypal-success/(.+)$         agent_payment_paypal
 RewriteRule     ^agent-payment-paypal-cancel$               agent_payment_paypal_cancel.php                         [NC,L]
 RewriteRule     ^agent-payment-stripe-success$              agent_payment_stripe_success.php                        [NC,L]
 RewriteRule     ^agent-payment-stripe-cancel$               agent_payment_stripe_cancel.php                         [NC,L]
+RewriteRule     ^agent-orders$                              agent_orders.php                                        [NC,L]
     
     

@@ -2119,3 +2119,7 @@ a.links_gray {
 .message-bottom {
     margin-top: 20px;
 }
+/* table */
+.table-responsive table {
+    min-width: 900px;
+}
