@@ -1,5 +1,11 @@
-<?php include "./layout_top.php"?> 
 <?php 
+    include "./layout_top.php";
+
+    if(!isset($_SESSION["admin"])) {
+        header("Location: ".ADMIN_URL."login");
+        exit();
+    }
+
     try {
         $sql = "select * from settings where id=:id limit 1";
         $stmt = $pdo->prepare($sql);

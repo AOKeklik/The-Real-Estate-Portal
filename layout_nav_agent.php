@@ -3,8 +3,8 @@
         <li class="list-group-item <?php if($current_page=="agent_dashboard.php") echo "active"?>">
             <a href="<?php echo BASE_URL?>agent-dashboard">Dashboard</a>
         </li>
-        <li class="list-group-item">
-            <a href="user-payment.html">Make Payment</a>
+        <li class="list-group-item <?php if($current_page == "agent_payment.php") echo "active"?>">
+            <a href="<?php echo BASE_URL?>agent-payment">Make Payment</a>
         </li>
         <li class="list-group-item">
             <a href="user-orders.html">Orders</a>

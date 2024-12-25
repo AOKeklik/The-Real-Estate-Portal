@@ -4,7 +4,11 @@
     session_start();
     date_default_timezone_set("Europe/Warsaw");
 
-    define("APP_NAME", "The-Real-Estate-Portal");
+    require_once 'vendor/autoload.php';
+    use Dotenv\Dotenv;
+
+    $dotenv = Dotenv::createImmutable(__DIR__);
+    $dotenv->load();
 
     define("BASE_URL", "http://localhost/The-Real-Estate-Portal/");
     define("ADMIN_URL", BASE_URL."admin/");

@@ -2,7 +2,7 @@
     include "./layout_top.php";
 
     if(!isset($_SESSION["admin"])) {
-        header("Location: ".ADMIN_URL."locations");
+        header("Location: ".ADMIN_URL."login");
         exit();
     }
 

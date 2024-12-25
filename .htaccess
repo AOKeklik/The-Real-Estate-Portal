@@ -2,51 +2,56 @@ RewriteEngine On
 
 # -- admin ---    
 
-RewriteRule     ^admin/login$                       ./admin/auth_login.php              [NC,L]
-RewriteRule     ^admin/profile$                     ./admin/profile.php                 [NC,L]
-RewriteRule     ^admin/dashboard$                   ./admin/dashboard.php               [NC,L]
-RewriteRule     ^admin/setting$                     ./admin/setting.php                 [NC,L]
-    
-RewriteRule     ^admin/packages$                    ./admin/packages.php                [NC,L]
-RewriteRule     ^admin/package-create$              ./admin/package_create.php          [NC,L]
-RewriteRule     ^admin/package-edit/([0-9]+)$       ./admin/package_edit.php?id=$1      [NC,L]
-RewriteRule     ^admin/package-delete/([0-9]+)$     ./admin/package_delete.php?id=$1    [NC,L]
-    
-RewriteRule     ^admin/locations$                   ./admin/locations.php               [NC,L]
-RewriteRule     ^admin/location-create$             ./admin/location_create.php         [NC,L]
-RewriteRule     ^admin/location-edit/([0-9]+)$      ./admin/location_edit.php?id=$1     [NC,L]
-RewriteRule     ^admin/location-delete/([0-9]+)$    ./admin/location_delete.php?id=$1   [NC,L]
-    
-RewriteRule     ^admin/types$                       ./admin/types.php                   [NC,L]
-RewriteRule     ^admin/type-create$                 ./admin/type_create.php             [NC,L]
-RewriteRule     ^admin/type-edit/([0-9]+)$          ./admin/type_edit.php?id=$1         [NC,L]
-RewriteRule     ^admin/type-delete/([0-9]+)$        ./admin/type_delete.php?id=$1       [NC,L]
+RewriteRule     ^admin/login$                               ./admin/auth_login.php                                  [NC,L]
+RewriteRule     ^admin/profile$                             ./admin/profile.php                                     [NC,L]
+RewriteRule     ^admin/dashboard$                           ./admin/dashboard.php                                   [NC,L]
+RewriteRule     ^admin/setting$                             ./admin/setting.php                                     [NC,L]
 
-RewriteRule     ^admin/amenities$                   ./admin/amenities.php               [NC,L]
-RewriteRule     ^admin/amenity-create$              ./admin/amenity_create.php          [NC,L]
-RewriteRule     ^admin/amenity-edit/([0-9]+)$       ./admin/amenity_edit.php?id=$1      [NC,L]
-RewriteRule     ^admin/amenity-delete/([0-9]+)$     ./admin/amenity_delete.php?id=$1    [NC,L]
-    
-# -- frontend ---   
-    
-RewriteRule     ^pricing$                           page_pricing.php                    [NC,L]
-RewriteRule     ^locations$                         page_location.php                   [NC,L]
-RewriteRule     ^select-user$                       auth_select_user.php                [NC,L]
-    
-# -- customer ---   
-    
-RewriteRule     ^customer-login$                    auth_customer_login.php             [NC,L]
-RewriteRule     ^customer-register$                 auth_customer_register.php          [NC,L]
-RewriteRule     ^customer-forget$                   auth_customer_forget.php            [NC,L]
-RewriteRule     ^customer-dashboard$                customer_dashboard.php              [NC,L]
-RewriteRule     ^customer-profile$                  customer_profile.php                [NC,L]
-    
-# -- agent ---  
-    
-RewriteRule     ^agent-login$                       auth_agent_login.php                [NC,L]
-RewriteRule     ^agent-register$                    auth_agent_register.php             [NC,L]
-RewriteRule     ^agent-forget$                      auth_agent_forget.php               [NC,L]
-RewriteRule     ^agent-dashboard$                   agent_dashboard.php                 [NC,L]
-RewriteRule     ^agent-profile$                     agent_profile.php                   [NC,L]
+RewriteRule     ^admin/packages$                            ./admin/packages.php                                    [NC,L]
+RewriteRule     ^admin/package-create$                      ./admin/package_create.php                              [NC,L]
+RewriteRule     ^admin/package-edit/([0-9]+)$               ./admin/package_edit.php?id=$1                          [NC,L]
+RewriteRule     ^admin/package-delete/([0-9]+)$             ./admin/package_delete.php?id=$1                        [NC,L]
+
+RewriteRule     ^admin/locations$                           ./admin/locations.php                                   [NC,L]
+RewriteRule     ^admin/location-create$                     ./admin/location_create.php                             [NC,L]
+RewriteRule     ^admin/location-edit/([0-9]+)$              ./admin/location_edit.php?id=$1                         [NC,L]
+RewriteRule     ^admin/location-delete/([0-9]+)$            ./admin/location_delete.php?id=$1                       [NC,L]
+
+RewriteRule     ^admin/types$                               ./admin/types.php                                       [NC,L]
+RewriteRule     ^admin/type-create$                         ./admin/type_create.php                                 [NC,L]
+RewriteRule     ^admin/type-edit/([0-9]+)$                  ./admin/type_edit.php?id=$1                             [NC,L]
+RewriteRule     ^admin/type-delete/([0-9]+)$                ./admin/type_delete.php?id=$1                           [NC,L]
+
+RewriteRule     ^admin/amenities$                           ./admin/amenities.php                                   [NC,L]
+RewriteRule     ^admin/amenity-create$                      ./admin/amenity_create.php                              [NC,L]
+RewriteRule     ^admin/amenity-edit/([0-9]+)$               ./admin/amenity_edit.php?id=$1                          [NC,L]
+RewriteRule     ^admin/amenity-delete/([0-9]+)$             ./admin/amenity_delete.php?id=$1                        [NC,L]
+
+# -- frontend ---                       
+
+RewriteRule     ^pricing$                                   page_pricing.php                                        [NC,L]
+RewriteRule     ^locations$                                 page_location.php                                       [NC,L]
+RewriteRule     ^select-user$                               auth_select_user.php                                    [NC,L]
+
+# -- customer ---                               
+
+RewriteRule     ^customer-login$                            auth_customer_login.php                                 [NC,L]
+RewriteRule     ^customer-register$                         auth_customer_register.php                              [NC,L]
+RewriteRule     ^customer-forget$                           auth_customer_forget.php                                [NC,L]
+RewriteRule     ^customer-dashboard$                        customer_dashboard.php                                  [NC,L]
+RewriteRule     ^customer-profile$                          customer_profile.php                                    [NC,L]
+
+# -- agent ---                              
+
+RewriteRule     ^agent-login$                               auth_agent_login.php                                    [NC,L]
+RewriteRule     ^agent-register$                            auth_agent_register.php                                 [NC,L]
+RewriteRule     ^agent-forget$                              auth_agent_forget.php                                   [NC,L]
+RewriteRule     ^agent-dashboard$                           agent_dashboard.php                                     [NC,L]
+RewriteRule     ^agent-profile$                             agent_profile.php                                       [NC,L]
+RewriteRule     ^agent-payment$                             agent_payment.php                                       [NC,L]
+RewriteRule     ^agent-payment-paypal-success/(.+)$         agent_payment_paypal_success.php?transaction_id=$1      [NC,L]
+RewriteRule     ^agent-payment-paypal-cancel$               agent_payment_paypal_cancel.php                         [NC,L]
+RewriteRule     ^agent-payment-stripe-success$              agent_payment_stripe_success.php                        [NC,L]
+RewriteRule     ^agent-payment-stripe-cancel$               agent_payment_stripe_cancel.php                         [NC,L]
     
     

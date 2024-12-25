@@ -54,9 +54,13 @@
                                     </li>
                                 </ul>
                                 <div class="buy">
-                                    <a href="" class="btn btn-primary">
-                                        Choose Plan
-                                    </a>
+                                    <?php if(isset($_SESSION["agent"])):?>
+                                        <a href="<?php echo BASE_URL?>agent-payment" class="btn btn-primary">Choose Plan</a>
+                                    <?php elseif(isset($_SESSION["customer"])):?>
+                                        <a href="<?php echo BASE_URL?>customer-payment" class="btn btn-primary">Choose Plan</a>
+                                    <?php else:?>
+                                        <a href="<?php echo BASE_URL?>login" class="btn btn-primary">Choose Plan</a>
+                                    <?php endif?>
                                 </div>
                             </div>
                         </div>
