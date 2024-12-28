@@ -3,7 +3,7 @@
     
 
     if (!isset($_SESSION["agent"])){
-        header("Location: ".BASE_URL."login");
+        header("Location: ".BASE_URL."agent-login");
         exit();
     }
     if(!isset($_GET["transaction_id"])) {

@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="<?php echo PUBLIC_URL?>dist/css/owl.carousel.min.css">
     <link rel="stylesheet" href="<?php echo PUBLIC_URL?>dist/fontawesome-free/css/all.min.css">
     <link rel="stylesheet" href="<?php echo PUBLIC_URL?>dist/css/iziToast.min.css">
+    <link rel="stylesheet" href="<?php echo PUBLIC_URL?>dist/css/air-datepicker.min.css">
     <link rel="stylesheet" href="<?php echo PUBLIC_URL?>dist/css/spacing.css">
     <link rel="stylesheet" href="<?php echo PUBLIC_URL?>dist/css/style.css">
 
@@ -34,6 +35,7 @@
     <script src="<?php echo PUBLIC_URL?>dist/js/dataTables.bootstrap5.min.js"></script>
     <script src="<?php echo PUBLIC_URL?>dist/js/owl.carousel.min.js"></script>
     <script src="<?php echo PUBLIC_URL?>dist/js/jquery.meanmenu.js"></script>
+    <script src="<?php echo PUBLIC_URL?>dist/js/air-datepicker.min.js"></script>
     <script src="<?php echo PUBLIC_URL?>dist/tinymce/tinymce.min.js"></script>
     <script src="<?php echo PUBLIC_URL?>dist/js/iziToast.min.js"></script>
 

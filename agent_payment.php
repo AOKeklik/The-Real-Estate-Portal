@@ -86,7 +86,7 @@
                 'line_items' => [
                     [
                         'price_data' => [
-                            'currency' => 'usd',
+                            'currency' => $_ENV["STRIPE_CURRENCY"],
                             'product_data' => [
                                 'name' => 'Package Name:'.$paypal_order["name"]
                             ],

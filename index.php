@@ -2,7 +2,7 @@
     include "./layout_top.php";
 
     try {
-        $sql = "select * from locations order by id asc";
+        $sql = "select * from locations order by name asc";
         $stmtLoc = $pdo->prepare($sql);
         $stmtLoc->execute();
         $locations = $stmtLoc->fetchAll(PDO::FETCH_ASSOC);
@@ -11,7 +11,7 @@
     }
 
     try {
-        $sql = "select * from types order by id asc";
+        $sql = "select * from types order by name asc";
         $stmtTyp = $pdo->prepare($sql);
         $stmtTyp->execute();
         $types = $stmtTyp->fetchAll(PDO::FETCH_ASSOC);

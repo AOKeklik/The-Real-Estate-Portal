@@ -20,7 +20,7 @@
         <div class="section-header justify-content-between">
             <h1>Amenities</h1>
             <div class="ml-auto">
-                <a href="<?php echo ADMIN_URL?>amenity-create" class="btn btn-primary"><i class="fas fa-plus"></i> Add</a>
+                <a href="<?php echo ADMIN_URL?>amenity-add" class="btn btn-primary"><i class="fas fa-plus"></i> Add</a>
             </div>
         </div>
         <div class="section-body">

@@ -82,7 +82,7 @@
                                 </div>
                                 <div class="row align-items-center">
                                     <div class="col-md-2">
-                                        <i class="fa fa-heart" style="font-size: 2rem;display: flex;justify-content: center;" aria-hidden="true"></i>
+                                        <i class="<?php echo $amenity["icon"]?>" style="font-size: 2rem;display: flex;justify-content: center;" aria-hidden="true"></i>
                                     </div>
                                     <div class="col-md-10">
                                         <div class="form-group mb-3">

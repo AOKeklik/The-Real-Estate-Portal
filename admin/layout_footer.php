@@ -8,7 +8,7 @@
     <script>
         iziToast.show({
             message: "<?php echo $error_message?>",
-            position: "rightTop",
+            position: "topRight",
             color: "red"
         })
     </script>

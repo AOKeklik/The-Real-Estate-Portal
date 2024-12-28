@@ -21,7 +21,7 @@
         <div class="section-header justify-content-between">
             <h1>Packages</h1>
             <div class="ml-auto">
-                <a href="<?php ADMIN_URL?>package-create" class="btn btn-primary"><i class="fas fa-plus"></i> Add New</a>
+                <a href="<?php ADMIN_URL?>package-add" class="btn btn-primary"><i class="fas fa-plus"></i> Add New</a>
             </div>
         </div>
         <div class="section-body">

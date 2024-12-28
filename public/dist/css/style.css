@@ -2123,3 +2123,10 @@ a.links_gray {
 .table-responsive table {
     min-width: 900px;
 }
+.table-responsive td {
+    white-space: nowrap;
+}
+/* modal */
+.modal iframe {
+    width: 100%;
+}

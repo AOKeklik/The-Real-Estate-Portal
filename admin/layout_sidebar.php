@@ -16,38 +16,38 @@
                 <a class="nav-link" href="<?php echo ADMIN_URL?>setting"><i class="fas fa-cog"></i><span>Setting</span></a>
             </li>
 
-            <li class="nav-item dropdown <?php if($current_page=="packages.php" || $current_page=="package_create.php") echo "active"?>">
+            <li class="nav-item dropdown <?php if($current_page=="packages.php" || $current_page=="package_add.php") echo "active"?>">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-cubes"></i><span>Packages</span></a>
                 <ul class="dropdown-menu">
                     <li class="<?php if($current_page == "packages.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>packages"><i class="fas fa-angle-right"></i> Packages</a>
                     </li>
-                    <li class="<?php if($current_page == "package_create.php") echo "active"?>">
-                        <a class="nav-link" href="<?php echo ADMIN_URL?>package-create"><i class="fas fa-angle-right"></i> Create Package</a>
+                    <li class="<?php if($current_page == "package_add.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>package-add"><i class="fas fa-angle-right"></i> Add Package</a>
                     </li>
                 </ul>
             </li>
 
-            <li class="nav-item dropdown <?php if($current_page == "locations.php" || $current_page == "location_create.php") echo "active"?>">
+            <li class="nav-item dropdown <?php if($current_page == "locations.php" || $current_page == "location_add.php") echo "active"?>">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-map-marker"></i><span>Locations</span></a>
                 <ul class="dropdown-menu">
                     <li class="<?php if($current_page == "locations.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>locations"><i class="fas fa-angle-right"></i> Locations</a>
                     </li>
-                    <li class="<?php if($current_page == "location_create.php") echo "active"?>">
-                        <a class="nav-link" href="<?php echo ADMIN_URL?>location-create"><i class="fas fa-angle-right"></i> Create Location</a>
+                    <li class="<?php if($current_page == "location_add.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>location-add"><i class="fas fa-angle-right"></i> Add Location</a>
                     </li>
                 </ul>
             </li>
 
-            <li class="nav-item dropdown <?php if($current_page == "types.php" || $current_page == "type_create.php") echo "active"?>">
+            <li class="nav-item dropdown <?php if($current_page == "types.php" || $current_page == "type_add.php") echo "active"?>">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-folder"></i><span> Types</span></a>
                 <ul class="dropdown-menu">
                     <li class="<?php if($current_page == "types.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>types"><i class="fas fa-angle-right"></i> Types</a>
                     </li>
-                    <li class="<?php if($current_page == "type_create.php") echo "active"?>">
-                        <a class="nav-link" href="<?php echo ADMIN_URL?>type-create"><i class="fas fa-angle-right"></i> Create Type</a>
+                    <li class="<?php if($current_page == "type_add.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>type-add"><i class="fas fa-angle-right"></i> Add Type</a>
                     </li>
                 </ul>
             </li>
@@ -58,8 +58,8 @@
                     <li class="<?php if($current_page == "amenities.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>amenities"><i class="fas fa-angle-right"></i> Amenities</a>
                     </li>
-                    <li class="<?php if($current_page == "amenity_create.php") echo "active"?>">
-                        <a class="nav-link" href="<?php echo ADMIN_URL?>amenity-create"><i class="fas fa-angle-right"></i> Create Amenity</a>
+                    <li class="<?php if($current_page == "amenity_add.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>amenity-add"><i class="fas fa-angle-right"></i> Add Amenity</a>
                     </li>
                 </ul>
             </li>
