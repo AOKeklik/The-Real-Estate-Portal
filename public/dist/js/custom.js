@@ -41,9 +41,19 @@
         meanScreenWidth: "991",
     });
 
-    $(document).ready(function () {
-        $('#datatable').DataTable();
-    });
+    $('#datatable').DataTable({
+        language: {
+            emptyTable: "No data available in table." // Veri yok mesajı
+        },
+        "order": [[0, "desc"]], // İlk sütun (ID) büyükten küçüğe sıralanır
+        drawCallback: function (settings) {
+            if (settings.aoData.length === 0) {
+                $('#datatable_wrapper > *:last-child').hide();
+            } else {
+                $('#datatable_wrapper > *:last-child').show();
+            }
+        }
+    })
 
     tinymce.init({
         selector: '.editor',

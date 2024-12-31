@@ -7,24 +7,26 @@
     }
 
     try {
-        $sql = "
-            select * from orders 
-            join packages on orders.package_id=packages.id
-            where agent_id=:agent_id and currently_active=:currently_active 
-            order by orders.id DESC limit 1
-        ";
-        $stmtOrd = $pdo->prepare($sql);
-        $stmtOrd->bindValue(":agent_id",$_SESSION["agent"]["id"]);
-        $stmtOrd->bindValue(":currently_active",1);
-        $stmtOrd->execute();
+        $stmtOrd = $pdo->prepare("
+            select 
+                * 
+            from 
+                orders 
+            join 
+                packages on orders.package_id=packages.id
+            where 
+                agent_id=? and currently_active=? 
+            order by 
+                orders.id DESC limit 1
+        ");
+        $stmtOrd->execute([$_SESSION["agent"]["id"],1]);
         $order = $stmtOrd->fetch(PDO::FETCH_ASSOC);
     } catch(PDOException $err) {
         $error_message = $err->getMessage();
     }
 
     try {
-        $sql = "select * from packages order by id asc";
-        $stmtPac = $pdo->prepare($sql);
+        $stmtPac = $pdo->prepare("select * from packages order by id asc");
         $stmtPac->execute();
         $packages = $stmtPac->fetchAll(PDO::FETCH_ASSOC);
     }catch(PDOException $err){
@@ -32,54 +34,97 @@
     }
 
     if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['form-paypal'])) {
-        
-        $transaction_id = bin2hex(random_bytes(32/2)); //test
-
         try {
-            $sql = "select * from packages where id=:id limit 1";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(":id",$_POST["packageid"]);
-            $stmt->execute();
-            $paypal_order = $stmt->fetch(PDO::FETCH_ASSOC);
+            $transaction_id = bin2hex(random_bytes(32/2)); //test
+            $package_id = htmlspecialchars(trim($_POST["package_id"]));
+
+            $stmt = $pdo->prepare("
+                select 
+                    * 
+                from 
+                    packages 
+                where 
+                    id=? 
+                limit 1
+            ");
+            $stmt->execute([$package_id]);
+            $selected_package = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $stmt=$pdo->prepare("
+                SELECT
+                    *
+                FROM
+                    properties
+                WHERE
+                    agent_id=?
+            ");
+            $stmt->execute([$_SESSION["agent"]["id"]]);
+
+            if($stmt->rowCount() > $selected_package["allowed_properties"]) {
+                unset($_POST["form-paypal"]);
+                unset($_POST["packageid"]);
+                throw new PDOException("You are going to downgrade your package. Please delete some properties first so that it does not exceed the selected package\'s total allowed properties limit!");
+            }
 
             $_SESSION["order"] = [
                 "agent_id"=> $_SESSION["agent"]["id"],
-                "package_id"=> $paypal_order["id"],
+                "package_id"=> $selected_package["id"],
                 "payment_method"=> "PayPal",
-                "paid_amount"=> $paypal_order["price"],
-                "allowed_days"=> $paypal_order["allowed_days"],
-                "expire_date"=> date("Y-m-d",strtotime("+".$paypal_order["allowed_days"]." days"))
+                "paid_amount"=> $selected_package["price"],
+                "allowed_days"=> $selected_package["allowed_days"],
+                "expire_date"=> date("Y-m-d",strtotime("+".$selected_package["allowed_days"]." days"))
             ];            
+
+            unset($_POST["form-paypal"]);
+            unset($_POST["packageid"]);  
+
+            header("Location: ".BASE_URL."agent-payment-paypal-success/$transaction_id");
+            exit();
         }catch(PDOException $err){
             $error_message = $err->getMessage();
         }
-
-        unset($_POST["form-paypal"]);
-        unset($_POST["packageid"]);  
-
-        header("Location: ".BASE_URL."agent-payment-paypal-success/$transaction_id");
-        exit();
     }
 
     if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['form-stripe'])) {
-
         try {
-            $sql = "select * from packages where id=:id limit 1";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(":id",$_POST["packageid"]);
-            $stmt->execute();
-            $paypal_order = $stmt->fetch(PDO::FETCH_ASSOC);
+            $package_id = htmlspecialchars(trim($_POST["package_id"]));
+
+            $stmt = $pdo->prepare("
+                select 
+                    * 
+                from 
+                    packages 
+                where 
+                    id=? 
+                limit 1
+            ");
+            $stmt->execute([$package_id]);
+            $selected_package = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $stmt=$pdo->prepare("
+                SELECT
+                    *
+                FROM
+                    properties
+                WHERE
+                    agent_id=?
+            ");
+            $stmt->execute([$_SESSION["agent"]["id"]]);
+
+            if($stmt->rowCount() > $selected_package["allowed_properties"]) {
+                unset($_POST["form-paypal"]);
+                unset($_POST["packageid"]);
+                throw new PDOException("You are going to downgrade your package. Please delete some properties first so that it does not exceed the selected package\'s total allowed properties limit!");
+            }
 
             $_SESSION["order"] = [
                 "agent_id"=> $_SESSION["agent"]["id"],
-                "package_id"=> $paypal_order["id"],
+                "package_id"=> $selected_package["id"],
                 "payment_method"=> "Stripe",
-                "paid_amount"=> $paypal_order["price"],
-                "allowed_days"=> $paypal_order["allowed_days"],
-                "expire_date"=> date("Y-m-d",strtotime("+".$paypal_order["allowed_days"]." days"))
+                "paid_amount"=> $selected_package["price"],
+                "allowed_days"=> $selected_package["allowed_days"],
+                "expire_date"=> date("Y-m-d",strtotime("+".$selected_package["allowed_days"]." days"))
             ];        
-            
-            // print_r($_SESSION["order"]);
 
             \Stripe\Stripe::setApiKey($_ENV["STRIPE_TEST_SK"]);
             $response = \Stripe\Checkout\Session::create([
@@ -88,9 +133,9 @@
                         'price_data' => [
                             'currency' => $_ENV["STRIPE_CURRENCY"],
                             'product_data' => [
-                                'name' => 'Package Name:'.$paypal_order["name"]
+                                'name' => 'Package Name:'.$selected_package["name"]
                             ],
-                            'unit_amount' => $paypal_order['price'] * 100,
+                            'unit_amount' => $selected_package['price'] * 100,
                         ],
                         'quantity' => 1,
                     ],
@@ -146,7 +191,7 @@
                         <tr>
                             <td>
                                 <form action="" method="POST">
-                                <select name="packageid" class="form-control select2">
+                                <select name="package_id" class="form-control select2">
                                     <?php if($stmtPac->rowCount() > 0):
                                         foreach($packages as $package):?>
                                             <option value="<?php echo $package["id"]?>"><?php echo $package["name"]?> (<?php echo $package["price"]?> PLN)</option>
@@ -161,7 +206,7 @@
                         <tr>
                             <td>
                                 <form action="" method="POST">
-                                <select name="packageid" class="form-control select2">
+                                <select name="package_id" class="form-control select2">
                                     <?php if($stmtPac->rowCount() > 0):
                                         foreach($packages as $package):?>
                                             <option value="<?php echo $package["id"]?>"><?php echo $package["name"]?> (<?php echo $package["price"]?> PLN)</option>

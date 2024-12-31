@@ -22,6 +22,31 @@
             if(!in_array(pathinfo($_FILES["photo"]["name"],PATHINFO_EXTENSION),["jpg","jpeg","png"]))
                 throw new PDOException("The file type is not allowed!");
 
+
+            $stmt =$pdo->prepare("
+                select 
+                    count(property_photos.id) as total_photos, 
+                    packages.allowed_photos
+                from 
+                    orders
+                inner join 
+                    packages ON packages.id = orders.package_id
+                left join 
+                    property_photos on property_photos.property_id=?
+                where 
+                    orders.agent_id=? and orders.currently_active=?
+                group by
+                    packages.allowed_videos
+            ");
+            $stmt->execute([$property_id,$_SESSION["agent"]["id"],1]);
+            $query=$stmt->fetch(pdo::FETCH_ASSOC);
+
+            if($stmt->rowCount() == 0)
+                throw new PDOException("No active package found. Please select a package to create a property!");
+
+            if($query["total_photos"] != -1 && $query["total_photos"] >= $query["allowed_photos"])
+                throw new PDOException("You have already added your maximum number of allowed photos. <br>Please upgrade your package. <br> Or please remove any of the added photos in order to add a new one!");
+
             $path = "./public/uploads/property/photo/";
             $img_name = $_FILES["photo"]["name"];
             $img_tmp = $_FILES["photo"]["tmp_name"];
@@ -30,8 +55,9 @@
 
             $stmt = $pdo->prepare("
                 insert into property_photos 
-                (property_id,photo) 
-                values (?,?)
+                    (property_id,photo) 
+                values 
+                    (?,?)
             ");
             $stmt->execute([$property_id,$photo]);
 

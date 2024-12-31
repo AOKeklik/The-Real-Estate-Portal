@@ -153,7 +153,14 @@
                     onClosing: function(){
                         if(res.success) {
                             $(".video-all > .row > p").remove()
-                            $(".video-all > .row").prepend(res.success.html).slideDown()
+                            $(".video-all > .row").prepend(res.success.html).slideDown(500, function (){
+                                $(".video-button").magnificPopup({
+                                    type: "iframe",
+                                    gallery: {
+                                        enabled: true,
+                                    },
+                                })
+                            })
                         }
 
                         $(".col-lg-9.col-md-12").css("pointer-events","")

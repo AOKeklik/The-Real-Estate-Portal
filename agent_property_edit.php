@@ -14,11 +14,17 @@
     $id=$_GET["id"];
 
     try{
-        $stmtPrt = $pdo->prepare("select * from properties where id=? limit 1");
-        $stmtPrt->execute([$id]);
+        $stmtPrt = $pdo->prepare("select * from properties where id=? and agent_id=? limit 1");
+        $stmtPrt->execute([$id,$_SESSION["agent"]["id"]]);
         $property = $stmtPrt->fetch(PDO::FETCH_ASSOC);
+        
+        if($stmtPrt->rowCount() == 0)
+            throw new PDOException("You do not have permission to update this property!");
+                
     }catch(PDOException $err){
-        $error_message=$err->getMessage();
+        $_SESSION["error"]=$err->getMessage();
+        header("Location: ".BASE_URL."agent-properties");
+        exit();
     }
 
     try{
@@ -63,6 +69,7 @@
         $built_year = htmlspecialchars(trim($_POST["built_year"]));
         $map = htmlspecialchars(trim($_POST["map"]));
         $amenities = !empty($_POST["amenities"]) ? implode(",",$_POST["amenities"]) : null;
+        $is_featured = isset($_POST["is_featured"]) && $_POST["is_featured"] == "Yes" ? 1 : 0;
 
         if($name === "")
         $errors["name"][] = "<small class='form-text text-danger'>The name field is required!</small>";
@@ -136,9 +143,7 @@
                     $featured_photo = uniqid().".".$img_ext;
 
                 $stmt = $pdo->prepare("
-                    update properties
-                    set 
-                    agent_id=:agent_id,
+                    update properties set 
                     name=:name,
                     slug=:slug,
                     price=:price,
@@ -156,32 +161,33 @@
                     address=:address,
                     built_year=:built_year,
                     map=:map,
-                    amenities=:amenities
+                    amenities=:amenities,
+                    is_featured=:is_featured
                     where id=:id
                 ");
-                $stmt->bindValue(":id",$id);
-                $stmt->bindValue(":agent_id",$_SESSION["agent"]["id"]);
-                $stmt->bindValue(":name",$name);
-                $stmt->bindValue(":slug",$slug);
-                $stmt->bindValue(":price",$price);
-                $stmt->bindValue(":featured_photo",$featured_photo);
-                $stmt->bindValue(":description",empty($description) ? null : $description);
-                $stmt->bindValue(":location_id",$location_id);
-                $stmt->bindValue(":type_id",$type_id);
-                $stmt->bindValue(":purpose",$purpose);
-                $stmt->bindValue(":bedroom",$bedroom === "" ? null : $bedroom);
-                $stmt->bindValue(":bathroom",$bathroom === "" ? null : $bathroom);
-                $stmt->bindValue(":size",$size);
-                $stmt->bindValue(":floor",$floor === "" ? null : $floor);
-                $stmt->bindValue(":garage",$garage === "" ? null : $garage);
-                $stmt->bindValue(":balcony",$balcony === "" ? null : $balcony);
-                $stmt->bindValue(":address",$address);
-                $stmt->bindValue(":built_year",empty($built_year) ? null : $built_year);
-                $stmt->bindValue(":map",$map);
-                $stmt->bindValue(":amenities",empty($amenities) ? null : $amenities);
-                $stmt->execute();
 
-                if(!$stmt->execute())
+                if(!$stmt->execute([
+                    ":name" => $name,
+                    ":slug" =>$slug,
+                    ":price"=>$price,
+                    ":description"=>empty($description) ? null : $description,
+                    ":featured_photo"=>$featured_photo,
+                    ":location_id"=>$location_id,
+                    ":type_id"=>$type_id,
+                    ":purpose"=>$purpose,
+                    ":bedroom"=>$bedroom === "" ? null : $bedroom,
+                    ":bathroom"=>$bathroom === "" ? null : $bathroom,
+                    ":size"=>$size,
+                    ":floor"=>$floor === "" ? null : $floor,
+                    ":garage"=>$garage === "" ? null : $garage,
+                    ":balcony"=>$balcony === "" ? null : $balcony,
+                    ":address"=>$address,
+                    ":built_year"=>empty($built_year) ? null : $built_year,
+                    ":map"=>$map,
+                    ":amenities"=>empty($amenities) ? null : $amenities,
+                    ":is_featured"=> $is_featured,
+                    ":id"=>$id
+                ]))
                     throw new PDOException("An error occurred while creating the property. Please try again later!");
 
                 if(!empty($img_name)) {
@@ -261,9 +267,18 @@
                                     <img style="width:100%" src="<?php echo PUBLIC_URL?>uploads/property/<?php echo $property["featured_photo"]?>" alt="">
                                 </div>
                                 <div class="col-md-9">
-                                    <label for="name" class="form-label">Featured Photo *</label>
-                                    <input type="file" name="featured_photo" class="form-control" value="<?php if(isset($_POST["featured_photo"])) echo $_POST["featured_photo"]?>">
-                                    <?php if(isset($errors["featured_photo"])) echo $errors["featured_photo"][0]?>
+                                    <div>
+                                        <label for="name" class="form-label">Featured Photo *</label>
+                                        <input type="file" name="featured_photo" class="form-control mb-3" value="<?php if(isset($_POST["featured_photo"])) echo $_POST["featured_photo"]?>">
+                                        <?php if(isset($errors["featured_photo"])) echo $errors["featured_photo"][0]?>
+
+                                        <div class="form-group mb-3">
+                                            <label class="mb-2">Featured *</label>
+                                            <div class="toggle-container">
+                                                <input type="checkbox" data-toggle="toggle" data-on="Yes" data-off="No" data-onstyle="success" data-offstyle="danger" name="is_featured" value="Yes" <?php if($property["is_featured"] == 1) echo "checked"?>>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -323,47 +338,47 @@
                         <div class="col-md-4 mb-3">
                             <label for="" class="form-label">Bedrooms *</label>
                             <input type="text" name="bedroom" class="form-control" value="<?php echo $property["bedroom"]?>">
-                            <?php if(isset($errors["bedroom"])) echo $errors["bedroom"]?>
+                            <?php if(isset($errors["bedroom"])) echo $errors["bedroom"][0]?>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="" class="form-label">Bathrooms *</label>
                             <input type="text" name="bathroom" class="form-control" value="<?php echo $property["bathroom"]?>">
-                            <?php if(isset($errors["bathroom"])) echo $errors["bathroom"]?>
+                            <?php if(isset($errors["bathroom"])) echo $errors["bathroom"][0]?>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="" class="form-label">Size (Sqft) *</label>
                             <input type="text" name="size" class="form-control" value="<?php echo $property["size"]?>">
-                            <?php if(isset($errors["size"])) echo $errors["size"]?>
+                            <?php if(isset($errors["size"])) echo $errors["size"][0]?>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="" class="form-label">Floor</label>
                             <input type="text" name="floor" class="form-control" value="<?php echo $property["floor"]?>">
-                            <?php if(isset($errors["floor"])) echo $errors["floor"]?>
+                            <?php if(isset($errors["floor"])) echo $errors["floor"][0]?>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="" class="form-label">Garage</label>
                             <input type="text" name="garage" class="form-control" value="<?php echo $property["garage"]?>">
-                            <?php if(isset($errors["garage"])) echo $errors["garage"]?>
+                            <?php if(isset($errors["garage"])) echo $errors["garage"][0]?>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="" class="form-label">Balcony</label>
                             <input type="text" name="balcony" class="form-control" value="<?php echo $property["balcony"]?>">
-                            <?php if(isset($errors["balcony"])) echo $errors["balcony"]?>
+                            <?php if(isset($errors["balcony"])) echo $errors["balcony"][0]?>
                         </div>
                         <div class="col-md-8 mb-3">
                             <label for="" class="form-label">Address</label>
                             <input type="text" name="address" class="form-control" value="<?php echo $property["address"]?>">
-                            <?php if(isset($errors["address"])) echo $errors["address"]?>
+                            <?php if(isset($errors["address"])) echo $errors["address"][0]?>
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="datepicker" class="form-label">Built Year</label>
                             <input type="text" id="datepicker" name="built_year" class="form-control" value="<?php echo $property["built_year"]?>">
-                            <?php if(isset($errors["built_year"])) echo $errors["built_year"]?>
+                            <?php if(isset($errors["built_year"])) echo $errors["built_year"][0]?>
                         </div>
                         <div class="col-md-12 mb-3">
                             <label for="" class="form-label">Location Map</label>
                             <textarea name="map" class="form-control editor h-150" cols="30" rows="10"><?php echo $property["map"]?></textarea>
-                            <?php if(isset($errors["map"])) echo $errors["map"]?>
+                            <?php if(isset($errors["map"])) echo $errors["map"][0]?>
                         </div>
                         <div class="col-md-12 mb-3">
                             <label for="" class="form-label">Amenities</label>

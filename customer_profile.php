@@ -34,8 +34,8 @@
             if(!isset($_FILES["photo"]) && empty($_FILES["photo"]["name"]))
                 $errors["photo"][] = "<small class='form-text text-danger'>The photo field is required!</small>";
             
-            if($_FILES["photo"]["size"] >= 500 * 1000) //500kb
-                $errors["photo"][] = "<small class='form-text text-danger'>File size exceeds the 2MB limit!</small>";
+            if($_FILES["photo"]["size"] >= 1000 * 1000) //1mb
+                $errors["photo"][] = "<small class='form-text text-danger'>File size exceeds the 1MB limit!</small>";
 
             $allowed = ["jpg","jpeg","pngg"];
 
@@ -45,24 +45,22 @@
 
         try {
             if(empty($errors)) {
-                $sql = "update customers set full_name=:full_name,password=:password,photo=:photo where id=:id";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":full_name", $full_name);
-                $stmt->bindValue(":id", $_SESSION["customer"]["id"]);
-    
-                if(empty($password)) {
-                    $password = $_SESSION["customer"]["password"];
-                    $stmt->bindValue(":password",$password);
-                }else {
+                if(empty($_FILES["photo"]["name"]))
+                    $photo = $_SESSION["customer"]["photo"];
+                else
+                    $photo = uniqid().".".pathinfo($_FILES["photo"]["name"],PATHINFO_EXTENSION);
+
+                if(empty($password))
+                    $password = $_SESSION["customer"]["password"];    
+                else
                     $password =  password_hash($password,PASSWORD_DEFAULT);
-                    $stmt->bindValue(":password", $password);
-                }
-    
-                $image_name = $_SESSION["customer"]["photo"];
+
+                $stmt = $pdo->prepare("update customers set full_name=?,password=?,photo=? where id=?");
+            
+                if(!$stmt->execute([$full_name,$password,$photo,$_SESSION["customer"]["id"]]))
+                    throw new PDOException("An error occurred while updating. Please try again later!");
                 
                 if(!empty($_FILES["photo"]["name"])) {
-                    $image_name = uniqid().".".pathinfo($_FILES["photo"]["name"],PATHINFO_EXTENSION);
-
                     if(!is_dir("./public/uploads/customer"))
                         mkdir("./public/uploads/customer",0777,true);
     
@@ -70,7 +68,7 @@
                         unlink("./public/uploads/customer/".$_SESSION["customer"]["photo"]);
     
                     list($width,$height) = getimagesize($_FILES["photo"]["tmp_name"]);
-                    $thumbnail = imagecreatetruecolor(300,300);
+                    $thumbnail = imagecreatetruecolor($width,$height);
                     
                     switch(pathinfo($_FILES["photo"]["name"],PATHINFO_EXTENSION)){
                         case "jpg": case "jpeg": $sourceimage = imagecreatefromjpeg($_FILES["photo"]["tmp_name"]); break;
@@ -78,16 +76,11 @@
                         default: throw new PDOException("Unsupported image type!");
                     }
     
-                    imagecopyresampled($thumbnail,$sourceimage,0,0,0,0,300,300,$width,$height);
-                    imagejpeg($thumbnail,"./public/uploads/customer/".$image_name,90);
+                    imagecopyresampled($thumbnail,$sourceimage,0,0,0,0,$width,$height,$width,$height);
+                    imagejpeg($thumbnail,"./public/uploads/customer/".$photo,90);
                     imagedestroy($thumbnail);
                     imagedestroy($sourceimage);                   
                 }
-                    
-                $stmt->bindValue(":photo",$image_name);
-            
-                if(!$stmt->execute())
-                    throw new PDOException("An error occurred while updating. Please try again later!");
 
 
                 unset($_POST["full_name"]);
@@ -96,9 +89,11 @@
 
                 $_SESSION["customer"]["full_name"] = $full_name;
                 $_SESSION["customer"]["password"] = $password;
-                $_SESSION["customer"]["photo"] = $image_name;
+                $_SESSION["customer"]["photo"] = $photo;
 
-                $success_message = "Your information has been updated successfully!";
+                $_SESSION["success"] = "Your information has been updated successfully!";
+                header("Location: ".BASE_URL."customer-profile");
+                exit();
             }
         }catch(PDOException $err) {
             $error_message = $err->getMessage();
@@ -127,22 +122,26 @@
             <div class="col-lg-9 col-md-12">
                 <form action="" method="post" enctype="multipart/form-data">
                     <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label for="">Existing Photo</label>
-                            <div class="form-group">
-                                <?php if(!is_null($_SESSION["customer"]["photo"])):?>
-                                    <img src="<?php echo PUBLIC_URL."uploads/customer/".$_SESSION["customer"]["photo"]?>" alt="" class="user-photo">
-                                <?php else:?>
-                                    <img src="https://placehold.co/300x300" alt="" class="user-photo">
-                                <?php endif?>
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <label for="">Existing Photo</label>
+                                    <div class="form-group">
+                                        <?php if(!is_null($_SESSION["customer"]["photo"])):?>
+                                            <img src="<?php echo PUBLIC_URL."uploads/customer/".$_SESSION["customer"]["photo"]?>" alt="" style="width:100%">
+                                        <?php else:?>
+                                            <img src="https://placehold.co/300x300" alt="" class="user-photo">
+                                        <?php endif?>
+                                    </div>
+                                </div>
+                                <div class="col-md-9 mb-3">
+                                    <label for="">Change Photo</label>
+                                    <div class="form-group">
+                                        <input type="file" name="photo" class="form-control">
+                                    </div>
+                                    <?php if(isset($errors["photo"])): echo $errors["photo"][0];endif?>
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-12 mb-3">
-                            <label for="">Change Photo</label>
-                            <div class="form-group">
-                                <input type="file" name="photo">
-                            </div>
-                            <?php if(isset($errors["photo"])): echo $errors["photo"][0];endif?>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="">Full Name *</label>

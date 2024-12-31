@@ -52,7 +52,7 @@
                                                     <td><?php echo $location["slug"]?></td>
                                                     <td class="pt_10 pb_10">
                                                         <a href="<?php echo ADMIN_URL?>location-edit/<?php echo $location["id"]?>" class="btn btn-primary"><i class="fas fa-edit"></i></a>
-                                                        <a href="#" data-id="<?php echo $location["id"]?>" class="btn btn-danger" onClick="return confirm('Are you sure?');"><i class="fas fa-trash"></i></a>
+                                                        <a href="#" data-id="<?php echo $location["id"]?>" class="btn btn-danger"><i class="fas fa-trash"></i></a>
                                                     </td>
                                                 </tr>
                                             <?php endforeach;?>
@@ -72,18 +72,27 @@
         $(".btn-danger").click(function (e) {
             e.preventDefault()
 
+            if(!confirm('Are you sure?')) return
+
             $(e.target).closest("tr").css("pointer-events","none")
 
+            const formData = new FormData()
+
+            formData.append("id",$(this).data("id"))
+
             $.ajax({
-                type: "GET",
-                url: "<?php echo ADMIN_URL?>location-delete/" + $(this).data("id"),
+                type: "POST",
+                url: "<?php echo ADMIN_URL?>location_delete.php",
                 contentType: false,
                 processData: false,
+                data: formData,
                 success: function (result) {
+                    console.log(result)
                     const res = JSON.parse(result)
+                    console.log(res)
 
                     iziToast.show({
-                        message: res.success ?? res.error,
+                        message: res.success ? res.success.message : res.error.message,
                         position: "topRight",
                         color: res.success ? "green" : "red",
                         onClosing: function(){

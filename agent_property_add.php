@@ -6,6 +6,56 @@
         exit();
     }
 
+    try{
+        $stmt = $pdo->prepare("
+            SELECT 
+                * 
+            FROM
+                orders
+            WHERE
+                agent_id=? AND purchase_date>expire_date AND currently_active=?
+        ");
+        $stmt->execute([$_SESSION["agent"]["id"],1]);
+
+        if($stmt->rowCount() > 0) {
+            $_SESSION["error"] = "Your active package has expired. Please select a package to create a property!";
+            header("Location: ".BASE_URL."agent-payment");
+            exit();
+        }
+
+        $stmt=$pdo->prepare("
+            select 
+                count(properties.id) as total_properties, 
+                packages.allowed_properties
+            from 
+                orders
+            join 
+                packages ON orders.package_id = packages.id
+            left join 
+                properties on properties.agent_id = orders.agent_id
+            where 
+                orders.agent_id=? and orders.currently_active=?
+            group by
+                packages.id;
+        ");
+        $stmt->execute([$_SESSION["agent"]["id"],1]);
+        $query = $stmt->fetch(pdo::FETCH_ASSOC);
+
+        if($stmt->rowCount() == 0) {
+            $_SESSION["error"] = "No active package found. Please select a package to create a property!";
+            header("Location: ".BASE_URL."agent-payment");
+            exit();
+        }
+
+        if($query["allowed_properties"] != -1 && $query["total_properties"] >= $query["allowed_properties"])
+            throw new PDOException("You have already added your maximum number of allowed properties. <br>Please upgrade your package. <br> Or please remove any of the added properties in order to add a new one!");
+
+    }catch(PDOException $err){
+        $_SESSION["error"] = $err->getMessage();
+        header("Location: ".BASE_URL."agent-properties");
+        exit();
+    }
+
     try {
         $stmtLoc = $pdo->prepare("select * from locations order by name asc");
         $stmtLoc->execute();
@@ -50,6 +100,7 @@
         $built_year = htmlspecialchars(trim($_POST["built_year"]));
         $map = htmlspecialchars(trim($_POST["map"]));
         $amenities = !empty($_POST["amenities"]) ? implode(",",$_POST["amenities"]) : null;
+        $is_featured = isset($_POST["is_featured"]) && $_POST["is_featured"] == "Yes" ? 1 : 0;
 
         
         if($name === "")
@@ -121,9 +172,9 @@
 
                 $sql="
                     insert into properties
-                    (agent_id,name,slug,price,description,featured_photo,location_id,type_id,purpose,bedroom,bathroom,size,floor,garage,balcony,address,built_year,map,amenities)
+                    (agent_id,name,slug,price,description,featured_photo,location_id,type_id,purpose,bedroom,bathroom,size,floor,garage,balcony,address,built_year,map,amenities,is_featured)
                     values
-                    (:agent_id,:name,:slug,:price,:description,:featured_photo,:location_id,:type_id,:purpose,:bedroom,:bathroom,:size,:floor,:garage,:balcony,:address,:built_year,:map,:amenities)
+                    (:agent_id,:name,:slug,:price,:description,:featured_photo,:location_id,:type_id,:purpose,:bedroom,:bathroom,:size,:floor,:garage,:balcony,:address,:built_year,:map,:amenities,:is_featured)
                 ";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":agent_id",$_SESSION["agent"]["id"]);
@@ -145,6 +196,7 @@
                 $stmt->bindValue(":built_year",empty($built_year) ? null : $built_year);
                 $stmt->bindValue(":map",$map);
                 $stmt->bindValue(":amenities",empty($amenities) ? null : $amenities);
+                $stmt->bindValue(":is_featured",$is_featured);
                 $stmt->execute();
 
                 if($stmt->rowCount() == 0)
@@ -222,9 +274,18 @@
                                     <img style="width:100%" src="https://placehold.co/1000x700" alt="">
                                 </div>
                                 <div class="col-md-9">
-                                    <label for="name" class="form-label">Featured Photo *</label>
-                                    <input type="file" name="featured_photo" class="form-control" value="<?php if(isset($_POST["featured_photo"])) echo $_POST["featured_photo"]?>">
-                                    <?php if(isset($errors["featured_photo"])) echo $errors["featured_photo"][0]?>
+                                    <div>
+                                        <label for="name" class="form-label">Featured Photo *</label>
+                                        <input type="file" name="featured_photo" class="form-control" value="<?php if(isset($_POST["featured_photo"])) echo $_POST["featured_photo"]?>">
+                                        <?php if(isset($errors["featured_photo"])) echo $errors["featured_photo"][0]?>
+
+                                        <div class="form-group mb-3">
+                                            <label class="mb-2">Featured *</label>
+                                            <div class="toggle-container">
+                                                <input type="checkbox" data-toggle="toggle" data-on="Yes" data-off="No" data-onstyle="success" data-offstyle="danger" name="is_featured" value="Yes" <?php if(isset($_POST["is_featured"]) && $_POST["is_featured"] == "Yes") echo "checked"?>>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

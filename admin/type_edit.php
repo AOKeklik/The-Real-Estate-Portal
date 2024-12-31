@@ -16,10 +16,8 @@
     $errors = [];
 
     try {
-        $sql = "select * from types where id=:id limit 1";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(":id",$id);
-        $stmt->execute();
+        $stmt = $pdo->prepare("select * from types where id=? limit 1");
+        $stmt->execute([$id]);
         $type = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if($stmt->rowCount() == 0)
@@ -39,12 +37,15 @@
 
         if(empty($errors)) {
             try {
-                $sql = "update types set name=:name where id=:id";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":name",$name);
-                $stmt->bindValue(":id",$id);
+                $stmt = $pdo->prepare("select * from types where lower(name)=lower(?) and id!=? limit 1");
+                $stmt->execute([$name,$id]);
 
-                if(!$stmt->execute())
+                if($stmt->rowCount() > 0)
+                    throw new PDOException("The type value must be unique!");
+
+                $stmt = $pdo->prepare("update types set name=? where id=?");
+
+                if(!$stmt->execute([$name,$id]))
                     throw new PDOException("An error occurred while updating. Please try again later!");
 
                 unset($_POST["form"]);

@@ -20,11 +20,14 @@
 
         if(empty($errors)) {
             try {
-                $sql = "insert into amenities (name,icon) values (:name,:icon)";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":name",$name);
-                $stmt->bindValue(":icon",$icon);
-                $stmt->execute();
+                $stmt = $pdo->prepare("select * from amenities where lower(name)=lower(?) limit 1");
+                $stmt->execute([$name]);
+
+                if($stmt->rowCount() > 0)
+                    throw new PDOException("The amenity value must be unique!");
+                
+                $stmt = $pdo->prepare("insert into amenities (name,icon) values (?,?)");
+                $stmt->execute([$name,$icon]);
                 
                 if($stmt->rowCount() == 0)
                     throw new PDOException("An error occurred while creating the type. Please try again later!");

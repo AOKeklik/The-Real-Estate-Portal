@@ -42,9 +42,6 @@
         if(empty($phone))
             $errors["phone"][] = "<small class='form-text text-danger'>The phone field is required!</small>";
 
-        if(!preg_match("/^\+?[1-9]\d{1,14}$/", $phone))
-            $errors["phone"][] = "<small class='form-text text-danger'>Invalid phone number format. Please try again!</small>";
-
         if(empty($country))
             $errors["country"][] = "<small class='form-text text-danger'>The country field is required!</small>";
 
@@ -171,8 +168,9 @@
                 $_SESSION["agent"]["instagram"] = $instagram;
                 $_SESSION["agent"]["youtube"] = $youtube;
 
-                $success_message = "Your information has been updated successfully!";
-
+                $_SESSION["success"] = "Your information has been updated successfully!";
+                header("Location: ".BASE_URL."agent-profile");
+                exit();
             } catch (PDOException $err) {
                 $error_message = $err->getMessage();
             }
@@ -200,7 +198,7 @@
             <div class="col-lg-9 col-md-12">
                 <form action="" method="post" enctype="multipart/form-data">
                     <div class="row">
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-3 mb-3">
                             <label for="">Existing Photo</label>
                             <div class="form-group">
                                 <?php if(empty($_SESSION["agent"]["photo"])):?>
@@ -210,13 +208,15 @@
                                 <?php endif?>
                             </div>
                         </div>
-                        <div class="col-md-12 mb-3">
+                        <div class="col-md-9 mb-3">
                             <label for="">Change Photo</label>
                             <div class="form-group">
-                                <input type="file" name="photo">
+                                <input type="file" name="photo" class="form-control">
                             </div>
                             <?php if(isset($errors["photo"])) echo $errors["photo"][0]?>
                         </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-4 mb-3">
                             <label for="">Name *</label>
                             <div class="form-group">

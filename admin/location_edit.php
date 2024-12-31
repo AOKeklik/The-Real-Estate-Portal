@@ -14,10 +14,8 @@
     $id = $_GET["id"];
 
     try {
-        $sql = "select * from locations where id=:id limit 1";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(":id",$id);
-        $stmt->execute();
+        $stmt = $pdo->prepare("select * from locations where id=? limit 1");
+        $stmt->execute([$id]);
         $location = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if($stmt->rowCount() == 0)
@@ -67,15 +65,16 @@
                     $photo = $location["photo"];
                 else
                     $photo = uniqid().".".$img_ext;
+
+                $stmt = $pdo->prepare("select * from locations where slug=? and id!=?");
+                $stmt->execute([$slug,$id]);
+
+                if($stmt->rowCount() > 0)
+                    throw new PDOException("The slug value must be unique!");
+                
+                $stmt = $pdo->prepare("update locations set photo=?,name=?,slug=? where id=?");
     
-                $sql = "update locations set photo=:photo,name=:name,slug=:slug where id=:id";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":photo",$photo);
-                $stmt->bindValue(":name",$name);
-                $stmt->bindValue(":slug",$slug);
-                $stmt->bindValue(":id",$id);
-    
-                if(!$stmt->execute())
+                if(!$stmt->execute([$photo,$name,$slug,$id]))
                     throw new PDOException("An error occurred while updating. Please try again later!");
     
                 if(!empty($img_name)) {
@@ -110,7 +109,7 @@
                 exit();
             } catch (PDOException $err) {
                 $_SESSION["error"] = $err->getMessage();
-                header("Location: ".ADMIN_URL."locations");
+                header("Location: ".ADMIN_URL."location-edit/".$id);
                 exit();
             }
         }
@@ -131,14 +130,18 @@
                     <div class="card">
                         <div class="card-body">
                             <form action="" method="post" enctype="multipart/form-data">
-                                <div class="row">                               
-                                    <div class="form-group mb-3">
-                                        <label>Photo</label>
-                                        <img src="<?php echo PUBLIC_URL?>uploads/location/<?php echo $location["photo"]?>" alt="" class="d-block p-2 w-25">
-                                        <div>
-                                            <input type="file" name="photo">
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <img src="<?php echo PUBLIC_URL?>uploads/location/<?php echo $location["photo"]?>" alt="" style="width:100%">
+                                    </div>
+                                    <div class="col-md-9 mb-3">
+                                        <div class="form-group">
+                                            <label>Photo</label>
+                                            <div>
+                                                <input type="file" name="photo" class="form-control">
+                                            </div>
+                                            <?php if(isset($errors["photo"])) echo $errors["photo"][0]?>
                                         </div>
-                                        <?php if(isset($errors["photo"])) echo $errors["photo"][0]?>
                                     </div>
                                 </div>
                                 <div class="row">                               

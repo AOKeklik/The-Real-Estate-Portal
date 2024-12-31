@@ -44,7 +44,7 @@
                                     </li>
                                     <li>
                                         <span class="fa-li"><i class="fas fa-<?php if($package["allowed_featured_properties"] == 0): echo "times"; else: echo "check";endif?>"></i></span>
-                                        <?php echo $package["allowed_featured_properties"]?> Featured Properties
+                                        <?php echo $package["allowed_featured_properties"] == 0 ? "No" : $package["allowed_featured_properties"]?> Featured Properties
                                     </li>
                                     <li>
                                         <span class="fa-li"><i class="fas fa-check"></i></span><?php echo $package["allowed_photos"]?> Photos per Property

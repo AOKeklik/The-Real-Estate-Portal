@@ -16,10 +16,14 @@
 
         if(empty($errors)) {
             try {
-                $sql = "insert into types (name) values (:name)";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":name",$name);
-                $stmt->execute();
+                $stmt = $pdo->prepare("select * from types where lower(name)=lower(?) limit 1");
+                $stmt->execute([$name]);
+
+                if($stmt->rowCount() > 0)
+                    throw new PDOException("The name value must be unique!");
+
+                $stmt = $pdo->prepare("insert into types (name) values (?)");
+                $stmt->execute([$name]);
 
                 if($stmt->rowCount() == 0)
                     throw new PDOException("An error occurred while creating the type. Please try again later!");

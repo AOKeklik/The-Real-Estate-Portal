@@ -14,7 +14,16 @@
     $property_id =$_GET["id"];
 
     try{
-        $stmt=$pdo->prepare("select * from property_photos where property_id=? order by id desc");
+        $stmt=$pdo->prepare("
+            select 
+                * 
+            from 
+                property_photos 
+            where 
+                property_id=?
+            order by 
+                id desc
+        ");
         $stmt->execute([$property_id]);
         $photos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }catch(PDOException $err){
@@ -152,12 +161,13 @@
                     onClosing: function(){
                         if(res.success) {
                             $(".photo-all > .row > p").remove()
-                            $("#photo-gallery").prepend(res.success.html).slideDown()
-                            $("#photo-gallery").find('.magnific').magnificPopup({
-                                type: 'image',
-                                gallery: {
-                                    enabled: true
-                                }
+                            $("#photo-gallery").prepend(res.success.html).slideDown(500, function (){
+                                $("#photo-gallery .magnific").magnificPopup({
+                                    type: 'image',
+                                    gallery: {
+                                        enabled: true
+                                    }
+                                })
                             })
                         }
                             

@@ -6,45 +6,39 @@
         exit();
     }
 
-    if(!isset($_GET["id"])) {
-        $_SESSION["error"] = "The selected location is not available.";
-        header("Location: ".ADMIN_URL."locations");
-        exit();
-    }
+    if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["id"])){
+        try {
+            $id = htmlspecialchars(trim($_POST["id"]));
 
-    $id = $_GET["id"];
+            $stmt = $pdo->prepare("select * from locations where id=?");
+            $stmt->execute([$id]);
+            $location = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    try {
-        $sql = "select * from locations where id=:id";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(":id",$id);
-        $stmt->execute();
-        $location = $stmt->fetch(PDO::FETCH_ASSOC);
+            if($stmt->rowCount() == 0)
+                throw new PDOException("The selected location is not available.");
 
-        if($stmt->rowCount() == 0)
-            throw new PDOException("The selected location is not available.");
+            $stmt = $pdo->prepare("select * from properties where location_id=?");
+            $stmt->execute([$id]);
 
-    } catch (PDOException $err) {
-        echo $err->getMessage();
-    }
+            if($stmt->rowCount() > 0)
+                throw new PDOException("This record cannot be deleted because it is linked to other data!");
 
-    try {
-        $sql = "delete from locations where id=:id";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindValue(":id",$id);
-        $stmt->execute();
+            $stmt = $pdo->prepare("delete from locations where id=?");
+            $stmt->execute([$id]);
 
-        if($stmt->rowCount() == 0)
-            throw new PDOException(json_encode(["error"=>"The location could not be deleted or does not exist!"]));
+            if($stmt->rowCount() == 0)
+                throw new PDOException("The location could not be deleted or does not exist!");
 
-        $path = "../public/uploads/location/";
+            $path = "../public/uploads/location/";
 
-        if(is_file($path.$location["photo"]))
-            unlink($path.$location["photo"]);
+            if(is_file($path.$location["photo"]))
+                unlink($path.$location["photo"]);
 
-        echo json_encode(["success"=>"The location deleted successfully!"]);
+            unset($_POST["id"]);
 
-    } catch (PDOException $err) {
-        echo $err->getMessage();
+            echo json_encode(["success"=>["message"=>"The location deleted successfully!"]]);
+        } catch (PDOException $err) {
+            echo json_encode(["error"=>["message"=>$err->getMessage()]]);
+        }
     }
 ?>

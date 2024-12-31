@@ -15,12 +15,10 @@ RewriteRule     ^admin/package-delete/([0-9]+)$             ./admin/package_dele
 RewriteRule     ^admin/locations$                           ./admin/locations.php                                   [NC,L]
 RewriteRule     ^admin/location-add$                        ./admin/location_add.php                                [NC,L]
 RewriteRule     ^admin/location-edit/([0-9]+)$              ./admin/location_edit.php?id=$1                         [NC,L]
-RewriteRule     ^admin/location-delete/([0-9]+)$            ./admin/location_delete.php?id=$1                       [NC,L]
 
 RewriteRule     ^admin/types$                               ./admin/types.php                                       [NC,L]
 RewriteRule     ^admin/type-add$                            ./admin/type_add.php                                    [NC,L]
 RewriteRule     ^admin/type-edit/([0-9]+)$                  ./admin/type_edit.php?id=$1                             [NC,L]
-RewriteRule     ^admin/type-delete/([0-9]+)$                ./admin/type_delete.php?id=$1                           [NC,L]
 
 RewriteRule     ^admin/amenities$                           ./admin/amenities.php                                   [NC,L]
 RewriteRule     ^admin/amenity-add$                         ./admin/amenity_add.php                                 [NC,L]

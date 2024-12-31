@@ -47,7 +47,7 @@
                                                     <td><?php echo $amenity["name"]?></td>
                                                     <td class="pt_10 pb_10">
                                                         <a href="<?php echo ADMIN_URL?>amenity-edit/<?php echo $amenity["id"]?>" class="btn btn-primary"><i class="fas fa-edit"></i></a>
-                                                        <a href="<?php echo ADMIN_URL?>amenity-delete/<?php echo $amenity["id"]?>" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                                        <a data-id="<?php echo $amenity["id"]?>" href="" class="btn btn-danger"><i class="fas fa-trash"></i></a>
                                                     </td>
                                                 </tr>
                                         <?php endforeach;endif?>
@@ -70,16 +70,22 @@
 
             $(e.target).closest("tr").css("pointer-events","none")
 
+            const formData = new FormData()
+
+            formData.append("id",$(this).data("id"))
+
             $.ajax({
-                url: $(this).closest("a").attr("href"),
-                type:"GET",
+                url:"<?php echo ADMIN_URL?>amenity_delete.php",
+                type:"POST",
                 contentType: false,
                 processData: false,
+                data: formData,
                 success: function (response) {
+                    console.log(response)
                     const res = JSON.parse(response)
 
                     iziToast.show({
-                        message: res.success ?? res.error,
+                        message: res.success?.message ?? res.error?.message,
                         position: "topRight",
                         color: res.success ? "green" : "red",
                         onClosing: function () {

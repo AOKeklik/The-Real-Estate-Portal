@@ -54,9 +54,6 @@
         if(empty($phone))
             $errors["phone"][] = "<small class='form-text text-danger'>The phone field is required!</small>";
 
-        if(!preg_match("/^\+?[1-9]\d{1,14}$/", $phone))
-            $errors["phone"][] = "<small class='form-text text-danger'>Invalid phone number format. Please try again!</small>";
-
         if(empty($country))
             $errors["country"][] = "<small class='form-text text-danger'>The country field is required!</small>";
 
@@ -77,10 +74,8 @@
 
         if(empty($errors)) {
             try {
-                $sql = "select * from agents where email=:email limit 1";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":email",$email);
-                $stmt->execute();
+                $stmt = $pdo->prepare("select * from agents where email=? limit 1");
+                $stmt->execute([$email]);
 
                 if($stmt->rowCount() > 0)
                     throw new PDOException("Email address already in use!");
@@ -145,7 +140,9 @@
                         unset($_POST["city"]);
                         unset($_POST["zip_code"]);
 
-                        $success_message = "Registration is successful. Check your email and verify registration to login.";
+                        $_SESSION["success"] = "Registration is successful. Check your email and verify registration to login.";
+                        header("Location: ".BASE_URL."agent-login");
+                        exit();
                     }
                 } catch(Exception $err) {
                     $error_message = $err->getMessage();                    

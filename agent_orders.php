@@ -6,20 +6,19 @@
     }
 
     try{
-        $sql = "
+        $stmt = $pdo->prepare("
             select * from orders
             join packages on orders.package_id=packages.id
+            where agent_id=?
             order by orders.id desc
-        ";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute();
+        ");
+        $stmt->execute([$_SESSION["agent"]["id"]]);
         $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }catch(PDOException $err){
         $error_message=$err->getMessage();
     }
-
 ?>
-<div class="page-top" style="background-image: url('uploads/banner.jpg')">
+<div class="page-top" style="background-image: url('')">
     <div class="bg"></div>
     <div class="container">
         <div class="row">
@@ -38,8 +37,8 @@
             </div>
             <div class="col-lg-9 col-md-12">
                 <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <tbody>
+                    <table class="table table-bordered" id="datatable">
+                        <thead>
                             <tr>
                                 <th>SL</th>
                                 <th>Payment Id</th>
@@ -50,8 +49,9 @@
                                 <th>Payment Method</th>
                                 <th>Status</th>
                             </tr>
-                            <?php if($stmt->rowCount() > 0):
-                                foreach($orders as $order):?>
+                        </thead>
+                        <tbody>
+                            <?php if($stmt->rowCount() > 0): foreach($orders as $order):?>
                                     <tr>
                                         <td><?php echo $order["id"]?></td>
                                         <td><?php echo $order["transaction_id"]?></td>

@@ -9,19 +9,36 @@
     try{
         $stmt = $pdo->prepare("
             select 
-                properties.id, properties.name, properties.featured_photo as photo, properties.status, properties.location_id as location,            
-                agents.full_name as agent, types.name as type, locations.name as location, properties.purpose, 
+                properties.id, 
+                properties.name,  
+                properties.is_featured as featured, 
+                properties.featured_photo as photo, 
+                properties.status, 
+                properties.location_id as location,            
+                agents.full_name as agent, 
+                types.name as type, 
+                locations.name as location, 
+                properties.purpose, 
                 group_concat(concat(amenities.name,'|',amenities.icon) separator ',') as amenities,
                 properties.map
-            from properties 
-            join types on properties.type_id=types.id
-            join locations on properties.location_id=locations.id
-            join agents on properties.agent_id=agents.id
-            join amenities on find_in_set(amenities.id,properties.amenities)
-            group by properties.id
-            order by properties.id desc
+            from 
+                properties 
+            left join 
+                types on types.id=properties.type_id
+            left join 
+                locations on locations.id=properties.location_id
+            left join 
+                agents on agents.id=properties.agent_id
+            left join 
+                amenities on find_in_set(amenities.id, properties.amenities)
+            where 
+                agent_id=?
+            group by 
+                properties.id
+            order by 
+                properties.id desc;
         ");
-        $stmt->execute();
+        $stmt->execute([$_SESSION["agent"]["id"]]);
         $properties = $stmt->fetchAll(PDO::FETCH_ASSOC);
     }catch(PDOException $err){
         $error_message=$err->getMessage();
@@ -67,7 +84,15 @@
                                     <td>
                                         <img width="110" src="<?php echo PUBLIC_URL?>uploads/property/<?php echo $property["photo"]?>" alt="">
                                     </td>
-                                    <td><?php echo $property["name"]?></td>
+                                    <td>
+                                        <?php echo $property["name"]?>
+                                        <br>
+                                        <?php if($property["featured"] == 1):?>
+                                            <span class="badge bg-success">Featured</span>
+                                        <?php else:?>
+                                            <span class="badge bg-danger">No Featured</span>
+                                        <?php endif?>
+                                    </td>
                                     <td><?php echo $property["type"]?></td>
                                     <td><?php echo $property["location"]?></td>
                                     <td><?php echo $property["purpose"]?></td>
@@ -113,6 +138,13 @@
                                                             <div class="col-md-9">
                                                                 <?php 
                                                                     if($key == "map") echo html_entity_decode($val);
+                                                                    elseif($key == "featured") {
+                                                                        if($val == 1):
+                                                                            echo "<span class='badge bg-success'>Featured</span>";
+                                                                        else:
+                                                                            echo "<span class='badge bg-danger'>No Featured</span>";
+                                                                        endif;
+                                                                    }
                                                                     elseif($key == "photo") echo "<img style='width:100%' src='".PUBLIC_URL."uploads/property/".$val."' alt=''>";
                                                                     elseif($key == "amenities") {?> 
                                                                         <div class="row">
@@ -163,10 +195,8 @@
             success: function (response){
                 const res = JSON.parse(response)
 
-                console.log(res)
-
                 iziToast.show({
-                    message: res.success ?? res.error,
+                    message: res.success?.message ?? res.error?.message,
                     position: "topRight",
                     color: res.success ? "green" : "red",
                     onClosing: function () {

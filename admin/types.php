@@ -45,7 +45,7 @@
                                                     <td><?php echo $type["name"]?></td>
                                                     <td class="pt_10 pb_10">
                                                         <a href="<?php echo ADMIN_URL?>type-edit/<?php echo $type["id"]?>" class="btn btn-primary"><i class="fas fa-edit"></i></a>
-                                                        <a href="<?php echo ADMIN_URL?>type-delete/<?php echo $type["id"]?>" href="" class="btn btn-danger" onClick="return confirm('Are you sure?');"><i class="fas fa-trash"></i></a>
+                                                        <a data-id="<?php echo $type["id"]?>" href="" class="btn btn-danger"><i class="fas fa-trash"></i></a>
                                                     </td>
                                                 </tr>
                                         <?php endforeach;endif?>
@@ -64,18 +64,26 @@
         $(".btn-danger").click(function (e) {
             e.preventDefault()
 
+            if(!confirm('Are you sure?')) return
+
             $(this).closest("tr").css("pointer-events","none")
 
+            const formData = new FormData()
+
+            formData.append("id",$(this).data("id"))
+
             $.ajax({
-                url: $(this).attr("href"),
-                type: "GET",
+                url: "<?php echo ADMIN_URL?>type_delete.php",
+                type: "POST",
                 contentType: false,
                 processData: false,
+                data: formData,
                 success: function (response) {
+                    console.log(response)
                     const res = JSON.parse(response)
 
                     iziToast.show({
-                        message: res.success ?? res.error,
+                        message: res.success ? res.success.message : res.error.message,
                         position: "topRight",
                         color: res.success ? "green" : "red",
                         onClosing: function () {

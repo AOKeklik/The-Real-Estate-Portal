@@ -37,12 +37,14 @@
             try {
                 $photo = uniqid().".".pathinfo($_FILES["photo"]["name"],PATHINFO_EXTENSION);
 
-                $sql = "insert into locations (photo,name,slug) values (:photo,:name,:slug)";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":photo",$photo);
-                $stmt->bindValue(":name",$name);
-                $stmt->bindValue(":slug",$slug);
-                $stmt->execute();
+                $stmt = $pdo->prepare("select * from locations where slug=? limit 1");
+                $stmt->execute([$slug]);
+
+                if($stmt->rowCount() > 0)
+                    throw new PDOException("The slug value must be unique!");
+
+                $stmt = $pdo->prepare("insert into locations (photo,name,slug) values (?,?,?)");
+                $stmt->execute([$photo,$name,$slug]);
                 
                 if($stmt->rowCount() == 0)
                     throw new PDOException("An error occurred while updating. Please try again later!");
@@ -92,13 +94,19 @@
                     <div class="card">
                         <div class="card-body">
                             <form action="" method="post" enctype="multipart/form-data">
-                                <div class="form-group mb-3">
-                                    <label>Photo</label>
-                                    <img src="https://placehold.co/1000x600" alt="" class="d-block p-2 w-25">
-                                    <div>
-                                        <input type="file" name="photo">
+                                <div class="row">
+                                    <div class="col-md-3 mb-3">
+                                        <img src="https://placehold.co/1000x600" alt="" style="width:100%">
                                     </div>
-                                    <?php if(isset($errors["photo"])) echo $errors["photo"][0]?>
+                                    <div class="col-md-9 mb-3">
+                                        <div class="form-group">
+                                            <label>Photo</label>
+                                            <div>
+                                                <input type="file" name="photo" class="form-control">
+                                            </div>
+                                            <?php if(isset($errors["photo"])) echo $errors["photo"][0]?>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">

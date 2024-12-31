@@ -15,9 +15,9 @@
 
     if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["form"])) {
 
-        $email = isset($_POST["email"]) ? htmlspecialchars(trim($_POST["email"])) : "";
-        $password = isset($_POST["password"]) ? htmlspecialchars(trim($_POST["password"])) : "";
-        $confirm_password = isset($_POST["confirm_password"]) ? htmlspecialchars(trim($_POST["confirm_password"])) : "";
+        $email = htmlspecialchars(trim($_POST["email"]));
+        $password = htmlspecialchars(trim($_POST["password"]));
+        $confirm_password = htmlspecialchars(trim($_POST["confirm_password"]));
 
         if(empty($email))
             $errors["email"][] = "<small class='form-text text-danger'>The email field is required!</small>";
@@ -37,10 +37,8 @@
 
         if(empty($errors)) {
             try {
-                $sql = "select * from customers where email=:email";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindValue(":email",$_POST["email"]);
-                $stmt->execute();
+                $sql = $pdo->prepare("select * from customers where email=?");
+                $stmt->execute([$email]);
 
                 if($stmt->rowCount() > 0)
                     throw new PDOException("Email address already in use!");
