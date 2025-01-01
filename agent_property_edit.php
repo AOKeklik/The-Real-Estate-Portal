@@ -14,7 +14,16 @@
     $id=$_GET["id"];
 
     try{
-        $stmtPrt = $pdo->prepare("select * from properties where id=? and agent_id=? limit 1");
+        $stmtPrt = $pdo->prepare("
+            select 
+                * 
+            from 
+                properties 
+            where 
+                id=? and agent_id=? 
+            limit 
+                1
+        ");
         $stmtPrt->execute([$id,$_SESSION["agent"]["id"]]);
         $property = $stmtPrt->fetch(PDO::FETCH_ASSOC);
         
@@ -28,7 +37,14 @@
     }
 
     try{
-        $stmtLoc = $pdo->prepare("select * from locations order by name asc");
+        $stmtLoc = $pdo->prepare("
+            select 
+                * 
+            from 
+                locations 
+            order by 
+                name asc
+        ");
         $stmtLoc->execute();
         $allLocations = $stmtLoc->fetchAll(PDO::FETCH_ASSOC);
     } catch(PDOException $err){
@@ -36,7 +52,14 @@
     }
 
     try{
-        $stmtTyp = $pdo->prepare("select * from types order by name asc");
+        $stmtTyp = $pdo->prepare("
+            select 
+                * 
+            from 
+                types 
+            order by 
+                name asc
+        ");
         $stmtTyp->execute();
         $allTypes = $stmtTyp->fetchAll(PDO::FETCH_ASSOC);
     } catch(PDOException $err){
@@ -44,12 +67,20 @@
     }
 
     try{
-        $stmtAmt = $pdo->prepare("select * from amenities order by name asc");
+        $stmtAmt = $pdo->prepare("
+            select 
+                * 
+            from 
+                amenities 
+            order by 
+                name asc
+        ");
         $stmtAmt->execute();
         $allAmenities = $stmtAmt->fetchAll(PDO::FETCH_ASSOC);
     } catch(PDOException $err){
         $error_message=$err->getMessage();
     }
+
 
     if($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["form"]) {
         $name = htmlspecialchars(trim($_POST["name"]));
@@ -141,6 +172,45 @@
                     $featured_photo = $property["featured_photo"];
                 else
                     $featured_photo = uniqid().".".$img_ext;
+
+
+                $stmt = $pdo->prepare("
+                    select
+                        count(properties.id) as featured_properties,
+                        packages.allowed_featured_properties
+                    from
+                        agents
+                    LEFT JOIN
+                        orders on orders.agent_id=agents.id
+                    left join
+                        packages on packages.id=orders.package_id
+                    left join 
+                        properties on properties.is_featured=1 and properties.agent_id=agents.id
+                    where
+                        agents.id=? and orders.currently_active=?
+                    group by 
+                        packages.allowed_featured_properties
+                    limit 
+                        1
+                ");
+                $stmt->execute([$_SESSION["agent"]["id"],1]);
+                $check_package=$stmt->fetch(PDO::FETCH_ASSOC);   
+                
+                if (
+                    empty($check_package) &&
+                    isset($_POST["is_featured"]) && 
+                    $_POST["is_featured"] == "Yes"
+                )
+                    throw new PDOException("You have no featured property left. Please upgrade your package.");
+        
+                if( 
+                    $property["is_featured"] == 0 &&
+                    $check_package["featured_properties"] >= $check_package["allowed_featured_properties"] &&
+                    isset($_POST["is_featured"]) && 
+                    $_POST["is_featured"] == "Yes"
+                )
+                    throw new PDOException("You have no featured property left. Please upgrade your package.");
+
 
                 $stmt = $pdo->prepare("
                     update properties set 
@@ -268,9 +338,11 @@
                                 </div>
                                 <div class="col-md-9">
                                     <div>
-                                        <label for="name" class="form-label">Featured Photo *</label>
-                                        <input type="file" name="featured_photo" class="form-control mb-3" value="<?php if(isset($_POST["featured_photo"])) echo $_POST["featured_photo"]?>">
-                                        <?php if(isset($errors["featured_photo"])) echo $errors["featured_photo"][0]?>
+                                        <div class="form-group mb-3">
+                                            <label for="name" class="form-label">Featured Photo *</label>
+                                            <input type="file" name="featured_photo" class="form-control mb-3" value="<?php if(isset($_POST["featured_photo"])) echo $_POST["featured_photo"]?>">
+                                            <?php if(isset($errors["featured_photo"])) echo $errors["featured_photo"][0]?>
+                                        </div>
 
                                         <div class="form-group mb-3">
                                             <label class="mb-2">Featured *</label>

@@ -2,8 +2,14 @@
     include "./layout_top.php";
 
     try {
-        $sql = "select * from locations order by name asc";
-        $stmtLoc = $pdo->prepare($sql);
+        $stmtLoc = $pdo->prepare("
+            select 
+                * 
+            from 
+                locations 
+            order by 
+                name asc
+        ");
         $stmtLoc->execute();
         $locations = $stmtLoc->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $err) {   
@@ -11,12 +17,46 @@
     }
 
     try {
-        $sql = "select * from types order by name asc";
-        $stmtTyp = $pdo->prepare($sql);
+        $stmtTyp = $pdo->prepare("
+            select 
+                * 
+            from 
+                types 
+            order by 
+                name asc
+        ");
         $stmtTyp->execute();
         $types = $stmtTyp->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $err) {
         $error_message = $err->getMessage();
+    }
+
+    try{
+        $stmtPro = $pdo->prepare("
+            select
+                properties.*,
+                locations.name as location_name,
+                types.name as type_name,
+                agents.full_name,
+                agents.photo,
+                agents.company
+            from
+                properties
+            left join
+                locations on locations.id=properties.location_id
+            left join
+                types on types.id=properties.type_id
+            left join
+                agents on agents.id=properties.agent_id
+            order by
+                rand()
+            limit 
+                6
+        ");
+        $stmtPro->execute();
+        $properties=$stmtPro->fetchAll(PDO::FETCH_ASSOC);
+    }catch(PDOException $err){
+        $error_message=$err->getMessage();
     }
 ?>
 
@@ -91,247 +131,58 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="item">
-                        <div class="photo">
-                            <img class="main" src="https://placehold.co/1200x660" alt="">
-                            <div class="top">
-                                <div class="status-sale">
-                                    For Sale
+                <?php if($stmtPro->rowCount() > 0): foreach($properties as $property):?>
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                        <div class="item">
+                            <div class="photo">
+                                <img class="main" src="<?php echo PUBLIC_URL?>uploads/property/<?php echo $property["featured_photo"]?>" alt="">
+                                <div class="top">
+                                    <?php if(preg_match("/sale/i", $property["purpose"])):?>
+                                        <div class="status-sale">For Sale</div>
+                                    <?php else:?>
+                                        <div class="status-rent">For Rent</div>
+                                    <?php endif?>
+                                    <?php if($property["is_featured"] == 1):?>
+                                        <div class="featured">Featured</div>
+                                    <?php endif?>
                                 </div>
-                                <div class="featured">
-                                    Featured
-                                </div>
+                                <div class="price"><?php echo $property["price"]?> PLN</div>
+                                <div class="wishlist"><a href=""><i class="far fa-heart"></i></a></div>
                             </div>
-                            <div class="price">$56,000</div>
-                            <div class="wishlist"><a href=""><i class="far fa-heart"></i></a></div>
-                        </div>
-                        <div class="text">
-                            <h3><a href="property.html">Sea Side Property</a></h3>
-                            <div class="detail">
-                                <div class="stat">
-                                    <div class="i1">2500 sqft</div>
-                                    <div class="i2">2 Bed</div>
-                                    <div class="i3">2 Bath</div>
-                                </div>
-                                <div class="address">
-                                    <i class="fas fa-map-marker-alt"></i> 937 Jamajo Blvd, Orlando FL 32803
-                                </div>
-                                <div class="type-location">
-                                    <div class="i1">
-                                        <i class="fas fa-edit"></i> Villa
+                            <div class="text">
+                                <h3><a href="<?php echo BASE_URL?>property/<?php echo $property["slug"]?>"><?php echo $property["name"]?></a></h3>
+                                <div class="detail">
+                                    <div class="stat">
+                                        <div class="i1"><?php echo $property["size"]?> sqft</div>
+                                        <div class="i2"><?php echo $property["bedroom"]?> Bed</div>
+                                        <div class="i3"><?php echo $property["bathroom"]?> Bath</div>
                                     </div>
-                                    <div class="i2">
-                                        <i class="fas fa-location-arrow"></i> Orland
+                                    <div class="address">
+                                        <i class="fas fa-map-marker-alt"></i> <?php echo $property["address"]?>
                                     </div>
-                                </div>
-                                <div class="agent-section">
-                                    <img class="agent-photo" src="https://placehold.co/500x500" alt="">
-                                    <a href="">Robert Johnson (AA Property)</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="item">
-                        <div class="photo">
-                            <img class="main" src="https://placehold.co/1200x660" alt="">
-                            <div class="top">
-                                <div class="status-rent">
-                                    For Rent
-                                </div>
-                                <div class="featured">
-                                    Featured
-                                </div>
-                            </div>
-                            <div class="price">$4,900</div>
-                            <div class="wishlist"><a href=""><i class="far fa-heart"></i></a></div>
-                        </div>
-                        <div class="text">
-                            <h3><a href="property.html">Modern Villa</a></h3>
-                            <div class="detail">
-                                <div class="stat">
-                                    <div class="i1">2500 sqft</div>
-                                    <div class="i2">2 Bed</div>
-                                    <div class="i3">2 Bath</div>
-                                </div>
-                                <div class="address">
-                                    <i class="fas fa-map-marker-alt"></i> 2006 E Central Blvd, Orlando FL 32803
-                                </div>
-                                <div class="type-location">
-                                    <div class="i1">
-                                        <i class="fas fa-edit"></i> Condo
+                                    <div class="type-location">
+                                        <div class="i1">
+                                            <i class="fas fa-edit"></i> <?php echo $property["type_name"]?>
+                                        </div>
+                                        <div class="i2">
+                                            <i class="fas fa-location-arrow"></i> <?php echo $property["location_name"]?>
+                                        </div>
                                     </div>
-                                    <div class="i2">
-                                        <i class="fas fa-location-arrow"></i> Orland
+                                    <div class="agent-section">
+                                        <?php if(is_null($property["photo"])):?>
+                                            <img class="agent-photo" src="<?php echo PUBLIC_URL?>uploads/user.png?>" alt="">
+                                        <?php else:?>
+                                            <img class="agent-photo" src="<?php echo PUBLIC_URL?>uploads/agent/<?php echo $property["photo"]?>" alt="">
+                                        <?php endif?>
+                                        <a href="">
+                                            <?php echo $property["full_name"]?>
+                                        </a>
                                     </div>
-                                </div>
-                                <div class="agent-section">
-                                    <img class="agent-photo" src="https://placehold.co/500x500" alt="">
-                                    <a href="">Eric Williams (BB Property)</a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="item">
-                        <div class="photo">
-                            <img class="main" src="https://placehold.co/1200x660" alt="">
-                            <div class="top">
-                                <div class="status-sale">
-                                    For Sale
-                                </div>
-                            </div>
-                            <div class="price">$79,000</div>
-                            <div class="wishlist"><a href=""><i class="far fa-heart"></i></a></div>
-                        </div>
-                        <div class="text">
-                            <h3><a href="property.html">Home with Swimming Pool</a></h3>
-                            <div class="detail">
-                                <div class="stat">
-                                    <div class="i1">2500 sqft</div>
-                                    <div class="i2">2 Bed</div>
-                                    <div class="i3">2 Bath</div>
-                                </div>
-                                <div class="address">
-                                    <i class="fas fa-map-marker-alt"></i> 3152 Plaza Terrace, Orlando FL 32803
-                                </div>
-                                <div class="type-location">
-                                    <div class="i1">
-                                        <i class="fas fa-edit"></i> Apartment
-                                    </div>
-                                    <div class="i2">
-                                        <i class="fas fa-location-arrow"></i> New York
-                                    </div>
-                                </div>
-                                <div class="agent-section">
-                                    <img class="agent-photo" src="https://placehold.co/500x500" alt="">
-                                    <a href="">Brent Grundy (CC Property)</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="item">
-                        <div class="photo">
-                            <img class="main" src="https://placehold.co/1200x660" alt="">
-                            <div class="top">
-                                <div class="status-sale">
-                                    For Sale
-                                </div>
-                            </div>
-                            <div class="price">$79,000</div>
-                            <div class="wishlist"><a href=""><i class="far fa-heart"></i></a></div>
-                        </div>
-                        <div class="text">
-                            <h3><a href="property.html">Apartment in New York</a></h3>
-                            <div class="detail">
-                                <div class="stat">
-                                    <div class="i1">2500 sqft</div>
-                                    <div class="i2">2 Bed</div>
-                                    <div class="i3">2 Bath</div>
-                                </div>
-                                <div class="address">
-                                    <i class="fas fa-map-marker-alt"></i> 3152 Plaza Terrace, Orlando FL 32803
-                                </div>
-                                <div class="type-location">
-                                    <div class="i1">
-                                        <i class="fas fa-edit"></i> Apartment
-                                    </div>
-                                    <div class="i2">
-                                        <i class="fas fa-location-arrow"></i> New York
-                                    </div>
-                                </div>
-                                <div class="agent-section">
-                                    <img class="agent-photo" src="https://placehold.co/500x500" alt="">
-                                    <a href="">Jason Schwartz (DD Property)</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="item">
-                        <div class="photo">
-                            <img class="main" src="https://placehold.co/1200x660" alt="">
-                            <div class="top">
-                                <div class="status-sale">
-                                    For Sale
-                                </div>
-                            </div>
-                            <div class="price">$79,000</div>
-                            <div class="wishlist"><a href=""><i class="far fa-heart"></i></a></div>
-                        </div>
-                        <div class="text">
-                            <h3><a href="property.html">Nice Condo in Orlando</a></h3>
-                            <div class="detail">
-                                <div class="stat">
-                                    <div class="i1">2500 sqft</div>
-                                    <div class="i2">2 Bed</div>
-                                    <div class="i3">2 Bath</div>
-                                </div>
-                                <div class="address">
-                                    <i class="fas fa-map-marker-alt"></i> 3152 Plaza Terrace, Orlando FL 32803
-                                </div>
-                                <div class="type-location">
-                                    <div class="i1">
-                                        <i class="fas fa-edit"></i> Apartment
-                                    </div>
-                                    <div class="i2">
-                                        <i class="fas fa-location-arrow"></i> New York
-                                    </div>
-                                </div>
-                                <div class="agent-section">
-                                    <img class="agent-photo" src="https://placehold.co/500x500" alt="">
-                                    <a href="">Michael Wyatt (EE Property)</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-sm-12">
-                    <div class="item">
-                        <div class="photo">
-                            <img class="main" src="https://placehold.co/1200x660" alt="">
-                            <div class="top">
-                                <div class="status-sale">
-                                    For Sale
-                                </div>
-                            </div>
-                            <div class="price">$79,000</div>
-                            <div class="wishlist"><a href=""><i class="far fa-heart"></i></a></div>
-                        </div>
-                        <div class="text">
-                            <h3><a href="property.html">Nice Villa in Boston</a></h3>
-                            <div class="detail">
-                                <div class="stat">
-                                    <div class="i1">2500 sqft</div>
-                                    <div class="i2">2 Bed</div>
-                                    <div class="i3">2 Bath</div>
-                                </div>
-                                <div class="address">
-                                    <i class="fas fa-map-marker-alt"></i> 3152 Plaza Terrace, Orlando FL 32803
-                                </div>
-                                <div class="type-location">
-                                    <div class="i1">
-                                        <i class="fas fa-edit"></i> Apartment
-                                    </div>
-                                    <div class="i2">
-                                        <i class="fas fa-location-arrow"></i> New York
-                                    </div>
-                                </div>
-                                <div class="agent-section">
-                                    <img class="agent-photo" src="https://placehold.co/500x500" alt="">
-                                    <a href="">Joshua Lash (FF Property)</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                <?php endforeach;endif?>
             </div>
         </div>
     </div>

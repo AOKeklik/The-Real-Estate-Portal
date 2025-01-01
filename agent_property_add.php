@@ -56,8 +56,52 @@
         exit();
     }
 
+    try{
+        $stmt = $pdo->prepare("
+            select
+                count(properties.id) as featured_properties,
+                packages.allowed_featured_properties
+            from
+                agents
+            LEFT JOIN
+                orders on orders.agent_id=agents.id
+            left join
+                packages on packages.id=orders.package_id
+            left join 
+                properties on properties.is_featured=1 and properties.agent_id=agents.id
+            where
+                agents.id=? and orders.currently_active=?
+            group by 
+                packages.allowed_featured_properties
+            limit 
+                1
+        ");
+        $stmt->execute([$_SESSION["agent"]["id"],1]);
+        $package=$stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $is_allow_featured = true;
+
+        if(empty($package)) 
+            $is_allow_featured = false;
+        else {
+            if($package["featured_properties"] >= $package["allowed_featured_properties"])
+            $is_allow_featured = false;
+        } 
+
+    }catch(PDOException $err){
+        $error_message=$err->getMessage();
+    }
+
+
     try {
-        $stmtLoc = $pdo->prepare("select * from locations order by name asc");
+        $stmtLoc = $pdo->prepare("
+            select 
+                * 
+            from 
+                locations 
+            order by 
+                name asc
+            ");
         $stmtLoc->execute();
         $allLocations = $stmtLoc->fetchAll(PDO::FETCH_ASSOC);
     } catch(PDOException $err){
@@ -65,7 +109,14 @@
     }
 
     try{
-        $stmtTyp = $pdo->prepare("select * from types order by name asc");
+        $stmtTyp = $pdo->prepare("
+            select 
+                * 
+            from 
+                types 
+            order by 
+                name asc
+            ");
         $stmtTyp->execute();
         $allTypes = $stmtTyp->fetchAll(PDO::FETCH_ASSOC);
     }catch(PDOException $err){
@@ -73,7 +124,14 @@
     }
 
     try{
-        $stmtAme=$pdo->prepare("select * from amenities order by name asc");
+        $stmtAme=$pdo->prepare("
+            select 
+                * 
+            from 
+                amenities 
+            order by 
+                name asc
+            ");
         $stmtAme->execute();
         $allAmenities=$stmtAme->fetchAll(PDO::FETCH_ASSOC);
     }catch(PDOException $err){
@@ -171,10 +229,11 @@
                 $featured_photo = uniqid().".".$img_ext;
 
                 $sql="
-                    insert into properties
-                    (agent_id,name,slug,price,description,featured_photo,location_id,type_id,purpose,bedroom,bathroom,size,floor,garage,balcony,address,built_year,map,amenities,is_featured)
+                    insert into 
+                        properties
+                        (agent_id,name,slug,price,description,featured_photo,location_id,type_id,purpose,bedroom,bathroom,size,floor,garage,balcony,address,built_year,map,amenities,is_featured)
                     values
-                    (:agent_id,:name,:slug,:price,:description,:featured_photo,:location_id,:type_id,:purpose,:bedroom,:bathroom,:size,:floor,:garage,:balcony,:address,:built_year,:map,:amenities,:is_featured)
+                        (:agent_id,:name,:slug,:price,:description,:featured_photo,:location_id,:type_id,:purpose,:bedroom,:bathroom,:size,:floor,:garage,:balcony,:address,:built_year,:map,:amenities,:is_featured)
                 ";
                 $stmt = $pdo->prepare($sql);
                 $stmt->bindValue(":agent_id",$_SESSION["agent"]["id"]);
@@ -275,16 +334,20 @@
                                 </div>
                                 <div class="col-md-9">
                                     <div>
-                                        <label for="name" class="form-label">Featured Photo *</label>
-                                        <input type="file" name="featured_photo" class="form-control" value="<?php if(isset($_POST["featured_photo"])) echo $_POST["featured_photo"]?>">
-                                        <?php if(isset($errors["featured_photo"])) echo $errors["featured_photo"][0]?>
-
                                         <div class="form-group mb-3">
-                                            <label class="mb-2">Featured *</label>
-                                            <div class="toggle-container">
-                                                <input type="checkbox" data-toggle="toggle" data-on="Yes" data-off="No" data-onstyle="success" data-offstyle="danger" name="is_featured" value="Yes" <?php if(isset($_POST["is_featured"]) && $_POST["is_featured"] == "Yes") echo "checked"?>>
-                                            </div>
+                                            <label for="name" class="form-label">Featured Photo *</label>
+                                            <input type="file" name="featured_photo" class="form-control" value="<?php if(isset($_POST["featured_photo"])) echo $_POST["featured_photo"]?>">
+                                            <?php if(isset($errors["featured_photo"])) echo $errors["featured_photo"][0]?>
                                         </div>
+
+                                        <?php if($is_allow_featured):?>
+                                            <div class="form-group mb-3">
+                                                <label class="mb-2">Featured *</label>
+                                                <div class="toggle-container">
+                                                    <input type="checkbox" data-toggle="toggle" data-on="Yes" data-off="No" data-onstyle="success" data-offstyle="danger" name="is_featured" value="Yes" <?php if(isset($_POST["is_featured"]) && $_POST["is_featured"] == "Yes") echo "checked"?>>
+                                                </div>
+                                            </div>
+                                        <?php endif?>
                                     </div>
                                 </div>
                             </div>

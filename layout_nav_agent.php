@@ -13,7 +13,7 @@
             <a href="<?php echo BASE_URL?>agent-properties">All Properties</a>
         </li>
         <li class="list-group-item <?php if($current_page == "agent_property_add.php") echo "active"?>">
-            <a href="<?php BASE_URL?>agent-property-add">Add Property</a>
+            <a href="<?php echo BASE_URL?>agent-property-add">Add Property</a>
         </li>
         <li class="list-group-item <?php if($current_page == "agent_profile.php") echo "active"?>">
             <a href="<?php echo BASE_URL?>agent-profile">Edit Profile</a>
