@@ -73,20 +73,19 @@
                             </p>
                         </div>
                         <div class="search-section">
-                            <form action="" method="post">
+                            <form action="<?php echo BASE_URL?>properties" method="GET">
                                 <div class="inner">
                                     <div class="row">
                                         <div class="col-lg-3">
                                             <div class="form-group">
-                                                <input type="text" name="" class="form-control" placeholder="Find Anything ...">
+                                                <input type="text" name="search" class="form-control" placeholder="Find Anything ...">
                                             </div>
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
-                                                <select name="" class="form-select select2">
+                                                <select name="location_id" class="form-select select2">
                                                     <option value="">Select Location</option>
-                                                    <?php if($stmtLoc->rowCount() > 0):
-                                                        foreach($locations as $loc):?>
+                                                    <?php if($stmtLoc->rowCount() > 0): foreach($locations as $loc):?>
                                                             <option value="<?php echo $loc["id"]?>"><?php echo $loc["name"]?></option>
                                                     <?php endforeach;endif?>
                                                 </select>
@@ -94,10 +93,9 @@
                                         </div>
                                         <div class="col-lg-3">
                                             <div class="form-group">
-                                                <select name="" class="form-select select2">
+                                                <select name="type_id" class="form-select select2">
                                                     <option value="">Select Type</option>
-                                                    <?php if($stmtTyp->rowCount() > 0):
-                                                        foreach($types as $type):?>
+                                                    <?php if($stmtTyp->rowCount() > 0): foreach($types as $type):?>
                                                             <option value="<?php echo $type["id"]?>"><?php echo $type["name"]?></option>
                                                     <?php endforeach;endif?>
                                                 </select>
@@ -150,7 +148,7 @@
                                 <div class="wishlist"><a href=""><i class="far fa-heart"></i></a></div>
                             </div>
                             <div class="text">
-                                <h3><a href="<?php echo BASE_URL?>property/<?php echo $property["slug"]?>"><?php echo $property["name"]?></a></h3>
+                                <h3><a href="<?php echo BASE_URL?>property/<?php echo $property["id"]?>/<?php echo $property["slug"]?>"><?php echo $property["name"]?></a></h3>
                                 <div class="detail">
                                     <div class="stat">
                                         <div class="i1"><?php echo $property["size"]?> sqft</div>

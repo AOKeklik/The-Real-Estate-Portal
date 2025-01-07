@@ -107,7 +107,7 @@
                 $stmt->bindValue(":password",$password);
                 $stmt->bindValue(":full_name",$full_name);
                 $stmt->bindValue(":company",$company);
-                $stmt->bindValue(":biography",$biography);
+                $stmt->bindValue(":biography",empty($biography) ? null : $biography);
                 $stmt->bindValue(":designation",$designation);
                 $stmt->bindValue(":phone",$phone);
                 $stmt->bindValue(":country",$country);
@@ -115,13 +115,13 @@
                 $stmt->bindValue(":state",$state);
                 $stmt->bindValue(":city",$city);
                 $stmt->bindValue(":zip_code",$zip_code);
-                $stmt->bindValue(":website",$website);
-                $stmt->bindValue(":facebook",$facebook);
-                $stmt->bindValue(":twitter",$twitter);
-                $stmt->bindValue(":linkedin",$linkedin);
-                $stmt->bindValue(":pinterest",$pinterest);
-                $stmt->bindValue(":instagram",$instagram);
-                $stmt->bindValue(":youtube",$youtube);
+                $stmt->bindValue(":website",empty($website) ? null : $website);
+                $stmt->bindValue(":facebook",empty($facebook) ? null : $facebook);
+                $stmt->bindValue(":twitter",empty($twitter) ? null : $twitter);
+                $stmt->bindValue(":linkedin",empty($linkedin) ? null : $linkedin);
+                $stmt->bindValue(":pinterest",empty($pinterest) ? null : $pinterest);
+                $stmt->bindValue(":instagram",empty($instagram) ? null : $instagram);
+                $stmt->bindValue(":youtube",empty($youtube) ? null : $youtube);
 
                 if(!$stmt->execute())
                     throw new PDOException("An error occurred while updating. Please try again later!");

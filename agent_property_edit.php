@@ -99,7 +99,7 @@
         $address = htmlspecialchars(trim($_POST["address"]));
         $built_year = htmlspecialchars(trim($_POST["built_year"]));
         $map = htmlspecialchars(trim($_POST["map"]));
-        $amenities = !empty($_POST["amenities"]) ? implode(",",$_POST["amenities"]) : null;
+        $amenities = empty($_POST["amenities"]) ? null : implode(",",$_POST["amenities"]);
         $is_featured = isset($_POST["is_featured"]) && $_POST["is_featured"] == "Yes" ? 1 : 0;
 
         if($name === "")
@@ -254,7 +254,7 @@
                     ":address"=>$address,
                     ":built_year"=>empty($built_year) ? null : $built_year,
                     ":map"=>$map,
-                    ":amenities"=>empty($amenities) ? null : $amenities,
+                    ":amenities"=> $amenities,
                     ":is_featured"=> $is_featured,
                     ":id"=>$id
                 ]))
@@ -408,12 +408,12 @@
                             <?php if(isset($errors["purpose"])) echo $errors["purpose"][0]?>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="" class="form-label">Bedrooms *</label>
+                            <label for="" class="form-label">Bedrooms</label>
                             <input type="text" name="bedroom" class="form-control" value="<?php echo $property["bedroom"]?>">
                             <?php if(isset($errors["bedroom"])) echo $errors["bedroom"][0]?>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="" class="form-label">Bathrooms *</label>
+                            <label for="" class="form-label">Bathrooms</label>
                             <input type="text" name="bathroom" class="form-control" value="<?php echo $property["bathroom"]?>">
                             <?php if(isset($errors["bathroom"])) echo $errors["bathroom"][0]?>
                         </div>

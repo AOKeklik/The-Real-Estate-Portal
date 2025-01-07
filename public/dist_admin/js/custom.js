@@ -2,7 +2,9 @@
     "use strict";
     $(".inputtags").tagsinput('items');
     $(document).ready(function() {
-        $('#example1').DataTable();
+        $('#example1').DataTable({
+            "order": [[0, "desc"]], 
+        });
     });
     $('.icp_demo').iconpicker();
 
