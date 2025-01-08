@@ -45,7 +45,7 @@
 
 
             if(!empty($errors))
-                throw new PDOException(json_encode(["error"=>$errors]));
+                throw new Exception(json_encode(["error"=>$errors]));
 
             $phpmailler = new PHPMailer(true);
 
@@ -68,10 +68,10 @@
             $phpmailler->Body .= "<p><strong>Message:</strong>$message</p>";
 
             if(!$phpmailler->send())
-            throw new PDOException(json_encode(["success"=>["message"=>"<div class='alert alert-danger'>Oops! Something went wrong. Please try again later.</div>"]]));
+            throw new Exception(json_encode(["success"=>["message"=>"<div class='alert alert-danger'>Oops! Something went wrong. Please try again later.</div>"]]));
                         
             echo json_encode(["success"=>["message"=>"<div class='alert alert-success'>Thank you! Your message has been sent successfully.</div>"]]);
-        }catch(PDOException $err){
+        }catch(Exception $err){
             echo $err->getMessage();
         }
     }

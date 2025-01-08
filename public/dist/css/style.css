@@ -2123,6 +2123,8 @@ a.links_gray {
 
 
 
+
+
 /* table */
 div:not(.summary):not(.right-item) > .table-responsive table {
     min-width: 900px;
@@ -2134,10 +2136,12 @@ div:not(.summary):not(.right-item) > .table-responsive table {
     white-space: nowrap;
 }
 .dt-length {display: flex;align-items: center;}
+
 /* modal */
 .modal iframe {
     width: 100%;
 }
+
 /* toggle */
 [data-toggle="toggle"] {display: none;}
 
@@ -2179,6 +2183,7 @@ div:not(.summary):not(.right-item) > .table-responsive table {
         transform: rotate(360deg);
     }
 }
+
 /* search */
 .highlight {
     background-color: orange;

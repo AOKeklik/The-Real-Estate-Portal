@@ -3,12 +3,17 @@
 
     try {
         $stmtLoc = $pdo->prepare("
-            select 
-                * 
-            from 
-                locations 
-            order by 
-                name asc
+            SELECT
+                locations.*,
+                COUNT(properties.id) as property_count
+            FROM
+                locations
+            INNER JOIN
+                properties on properties.location_id=locations.id
+            GROUP BY
+                locations.id
+            ORDER BY
+                locations.name ASC
         ");
         $stmtLoc->execute();
         $locations = $stmtLoc->fetchAll(PDO::FETCH_ASSOC);
@@ -371,8 +376,7 @@
                 </div>
             </div>
             <div class="row">
-                <?php if($stmtLoc->rowCount() > 0):
-                    foreach($locations as $loc):?>
+                <?php if($stmtLoc->rowCount() > 0): foreach($locations as $loc):?>
                         <div class="col-lg-3 col-md-4 col-sm-6">
                             <div class="item">
                                 <div class="photo">
@@ -382,7 +386,7 @@
                                 </div>
                                 <div class="text">
                                     <h2><a href="<?php echo BASE_URL?>location/<?php echo $loc["slug"]?>"><?php echo $loc["name"]?></a></h2>
-                                    <h4>(10 Properties)</h4>
+                                    <h4>(<?php echo $loc["property_count"]?> Properties)</h4>
                                 </div>
                             </div>
                         </div>

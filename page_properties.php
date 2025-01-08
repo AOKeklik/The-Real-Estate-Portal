@@ -400,36 +400,35 @@
 </div>
 <script>
     $(document).ready(function(){
-        const itemsPerPage = 4
+        const itemsPerPage = Number("<?php echo MAX_POSTS_PER_PAGE?>")
         let currentPage = 1
 
-        function loader () {
+        function hideLoaderAndShowBody () {
             setTimeout(() => {
                 $("#pagination-loader").hide()
                 $("#pagination-body").show()
             },1000)
         }
-        loader ()
-        
-        function displayItems (page=1){
+        hideLoaderAndShowBody ()
+
+        function displayItems (page=1) {
             const start = (page - 1) * itemsPerPage
             const end = start + itemsPerPage
-            
-            $("#pagination-data").children().hide().slice(start, end).show()
-            
-            const totalItems =  $("#pagination-data").children().length
+
+            $("#pagination-data").children().hide().slice(start,end).show()
+
+            const totalItems = $("#pagination-data").children().length
             const totalPages = Math.ceil(totalItems/itemsPerPage)
             let paginationLink = ""
 
-            if(totalPages > 1)
+            if(totalPages>1)
                 $("#pagination-control").show()
             else
                 $("#pagination-control").hide()
 
-
             paginationLink += `
                 <li class="page-item ${page === 1 ? "disabled" : ""}">
-                    <a class="page-link" href="" data-page="${page - 1}">
+                    <a class="page-link" href="" data-page="${page-1}">
                         <span aria-hiddien="true">&laquo;</span>
                     </a>
                 </li>
@@ -437,14 +436,14 @@
 
             for(let i=1;i<=totalPages;i++){
                 paginationLink +=`
-                    <li class="page-items ${i === page ? "active" : ""}">
+                    <li class="page-item ${i === page ? "disabled" : ""}">
                         <a class="page-link" href="" data-page="${i}">${i}</a>
                     </li>
                 `
             }
 
-            paginationLink +=`
-                <li class="page-items ${page === totalPages ? "disabled" : ""}">
+            paginationLink += `
+                <li class="page-item ${page === totalPages ? "disabled" : ""}">
                     <a class="page-link" href="" data-page="${page+1}">
                         <span aria-hidden="true">&raquo;</span>
                     </a>
@@ -453,19 +452,19 @@
 
             $("#pagination-control > ul").html(paginationLink)
         }
-
-        displayItems(currentPage)
+        displayItems (currentPage)
 
         $(document).on("click",".page-link",function(e){
             e.preventDefault()
 
-            const totalPages = $("#pagination-data").children().length
-            const next = Math.ceil(totalPages/itemsPerPage)
-            const newPage = $(this).data("page")
+            const totalItems = $("#pagination-data").children().length
+            const itemsPerPage = "<?php echo MAX_POSTS_PER_PAGE?>"
 
+            const totalPages = Math.ceil(totalItems/itemsPerPage)
+            const nextPage = $(this).data("page")
 
-            if(newPage >= 1 && newPage <= next) {
-                currentPage = newPage
+            if(nextPage>=1 && nextPage<=totalPages){
+                currentPage = nextPage
                 displayItems(currentPage)
             }
         })

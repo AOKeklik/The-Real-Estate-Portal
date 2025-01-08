@@ -13,6 +13,7 @@
     define("BASE_URL", "http://localhost/The-Real-Estate-Portal/");
     define("ADMIN_URL", BASE_URL."admin/");
     define("PUBLIC_URL", BASE_URL."public/");
+    define("MAX_POSTS_PER_PAGE", 6);
 
     define("DB_HOST", "127.0.0.1");
     define("DB_PORT", "3306");
