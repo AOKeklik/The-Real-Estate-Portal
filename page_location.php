@@ -37,6 +37,8 @@
                 properties.*,
                 locations.name as location_name,
                 types.name as type_name,
+                agents.id as agent_id,
+                agents.slug as agent_slug,
                 agents.full_name as agent_name,
                 agents.photo as agent_photo
             FROM
@@ -124,7 +126,9 @@
                                     <?php else:?>
                                             <img class="agent-photo" src="<?php echo PUBLIC_URL?>uploads/agent/<?php echo $property["agent_photo"]?>" alt="">
                                     <?php endif?>
-                                    <a href=""><?php echo $property["agent_name"]?></a>
+                                    <a href="<?php echo BASE_URL?>/agent/<?php echo $property["agent_id"]?>/<?php echo $property["agent_slug"]?>">
+                                        <?php echo $property["agent_name"]?>
+                                    </a>
                                 </div>
                             </div>
                         </div>

@@ -1,7 +1,7 @@
 <?php
     include "./layout_top.php";
 
-    if($_SERVER["REQUEST_METHOD"] === "GET"){
+    try{
         $search= isset($_GET["search"]) ? htmlspecialchars(trim($_GET["search"])) : "";
         $location_id= isset($_GET["location_id"]) ? htmlspecialchars(trim($_GET["location_id"])) : "";
         $type_id= isset($_GET["type_id"]) ? htmlspecialchars(trim($_GET["type_id"])) : "";
@@ -11,115 +11,94 @@
         $bathroom= isset($_GET["bathroom"]) ? htmlspecialchars(trim($_GET["bathroom"])) : "";
         $price= isset($_GET["price"]) ? htmlspecialchars(trim($_GET["price"])) : "";
 
-        try{
-            $sql="
-                select 
-                    properties.*,
-                    types.name as type_name,
-                    locations.name as location_name,
-                    agents.full_name as agent_name,
-                    agents.photo
-                from
-                    properties
-                left join
-                    types on types.id=properties.type_id
-                left join 
-                    locations on locations.id=properties.location_id
-                left join
-                    agents on agents.id=properties.agent_id
-            ";
-            $params = [];
-            $condition = [];
+        $sql="
+            SELECT
+                properties.*,
+                types.name as type_name,
+                locations.name as location_name,
+                agents.full_name as agent_name,
+                agents.photo
+            FROM
+                properties
+            INNER JOIN
+                orders ON orders.agent_id=properties.agent_id
+            LEFT JOIN
+                locations on locations.id=properties.location_id
+            LEFT JOIN
+                types on types.id=properties.type_id
+            LEFT JOIN
+                agents on agents.id=properties.agent_id
+        ";
+        $params = [];
+        $condition = [];
 
-            if(!empty($amenity_id)){
-                $sql.=" inner join amenities on find_in_set(?,properties.amenities)";
-                $params[]=$amenity_id;
-            }
-
-            if(!empty($location_id)) {
-                $condition[] = " location_id=?";
-                $params [] = $location_id;
-            }
-
-            if(!empty($type_id)){
-                $condition[] = " type_id=?";
-                $params [] = $type_id;
-            }
-            
-            if(!empty($purpose)){
-                $condition[] = " purpose=?";
-                $params [] = $purpose;
-            }
-
-            if(!empty($search)){
-                $condition[]= " properties.name like ?";
-                $params [] = "%".$search."%";
-            }
-
-            if(!empty($amenities)){
-                $condition[]= " properties.name like ?";
-                $params [] = "%".$search."%";
-            }
-
-            if(!empty($bedroom)){
-                $condition[] = " bedroom=?";
-                $params [] = $bedroom;
-            }
-
-            if(!empty($bathroom)){
-                $condition[] = " bathroom=?";
-                $params [] = $bathroom;
-            }
-
-            if(!empty($price)){
-                list($min,$max) = explode("-",$price);
-                $condition[] = " properties.price>=? and properties.price<=?";
-                $params [] = $min;
-                $params [] = $max;
-            }
-
-            if(!empty($condition))
-                $sql.= " where ".implode(" and", $condition);
-
-            if(!empty($amenity_id))
-                $sql.=" group by properties.id";
-
-            if(!empty($price))
-                $sql.= " order by properties.price asc";
-            else
-                $sql.= " order by properties.name asc";
-
-            $stmtPro =  $pdo->prepare($sql);
-            $stmtPro->execute($params);
-            $properties=$stmtPro->fetchAll(pdo::FETCH_ASSOC);
-        }catch(PDOException $err){
-            $error_message=$err->getMessage();
+        if(!empty($amenity_id)){
+            $sql.=" inner join amenities on find_in_set(?,properties.amenities)";
+            $params[]=$amenity_id;
         }
-    } else{
-        try{
-            $stmtPro=$pdo->prepare("
-                select 
-                    properties.*,
-                    types.name as type_name,
-                    locations.name as location_name,
-                    agents.full_name as agent_name,
-                    agents.photo
-                from
-                    properties
-                left join
-                    types on types.id=properties.type_id
-                left join 
-                    locations on locations.id=properties.location_id
-                left join
-                    agents on agents.id=properties.agent_id
-                order by 
-                    properties.name asc
-            ");
-            $stmtPro->execute();
-            $properties=$stmtPro->fetchAll(pdo::FETCH_ASSOC);
-        }catch(PDOException $err){
-            $error_message=$err->getMessage();
+
+        if(!empty($location_id)) {
+            $condition[] = " location_id=?";
+            $params [] = $location_id;
         }
+
+        if(!empty($type_id)){
+            $condition[] = " type_id=?";
+            $params [] = $type_id;
+        }
+        
+        if(!empty($purpose)){
+            $condition[] = " purpose=?";
+            $params [] = $purpose;
+        }
+
+        if(!empty($search)){
+            $condition[]= "properties.name like ?";
+            $params [] = "%".$search."%";
+        }
+
+        if(!empty($amenities)){
+            $condition[]= "properties.name like ?";
+            $params [] = "%".$search."%";
+        }
+
+        if(!empty($bedroom)){
+            $condition[] = "bedroom=?";
+            $params [] = $bedroom;
+        }
+
+        if(!empty($bathroom)){
+            $condition[] = "bathroom=?";
+            $params [] = $bathroom;
+        }
+
+        if(!empty($price)){
+            list($min,$max) = explode("-",$price);
+            $condition[] = "properties.price>=? and properties.price<=?";
+            $params [] = $min;
+            $params [] = $max;
+        }
+
+        $condition[] = "now() BETWEEN orders.purchase_date AND orders.expire_date";
+        $condition[] = "orders.currently_active=1";
+
+        if(!empty($condition)) {
+            $sql.= " WHERE " . implode(" AND ", $condition);
+        }
+
+        if(!empty($amenity_id))
+            $sql.=" group by properties.id";
+
+        if(!empty($price))
+            $sql.= " order by properties.price asc";
+        else
+            $sql.= " order by properties.name asc";
+
+        $stmtPro =  $pdo->prepare($sql);
+        $stmtPro->execute($params);
+        $properties=$stmtPro->fetchAll(pdo::FETCH_ASSOC);
+    }catch(PDOException $err){
+        $error_message=$err->getMessage();
     }
 
     try{
@@ -386,11 +365,14 @@
                                 <?php endforeach;endif?>
                             </div>
                             
-                            <nav aria-label="Page navigation" id="pagination-control">
-                                <ul class="pagination justify-content-end">
-                                    <!-- Pagination links will be generated here -->
-                                </ul>
-                            </nav>
+                            <div id="pagination-control">
+                                <nav aria-label="Page navigation" class="d-flex justify-content-between align-items-center">
+                                    <span></span>
+                                    <ul class="pagination m-0">
+                                        <!-- Pagination links will be generated here -->
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -450,7 +432,8 @@
                 </li>
             `
 
-            $("#pagination-control > ul").html(paginationLink)
+            $("#pagination-control span").html(`Total Items ${totalItems}`)
+            $("#pagination-control ul").html(paginationLink)
         }
         displayItems (currentPage)
 
@@ -469,22 +452,22 @@
             }
         })
     })
-    $(document).ready(function(){
-        function getQueryParam(param){
-            const urlParams = new URLSearchParams(window.location.search)
-            return urlParams.get(param)
-        }
+    // $(document).ready(function(){
+    //     function getQueryParam(param){
+    //         const urlParams = new URLSearchParams(window.location.search)
+    //         return urlParams.get(param)
+    //     }
 
-        const searchQuer = getQueryParam("search")
+    //     const searchQuer = getQueryParam("search")
 
-        if(searchQuer){
-            $("#pagination-data").each(function(i,el){
-                const content = $(el).html()
-                const regex = new RegExp(`(${searchQuer})`,"gi")
-                const highlighted = content.replace(regex,"<span class='highlight'>$1</span>")
-                $(this).html(highlighted)
-            })
-        }
-    })
+    //     if(searchQuer){
+    //         $("#pagination-data").each(function(i,el){
+    //             const content = $(el).html()
+    //             const regex = new RegExp(`(${searchQuer})`,"gi")
+    //             const highlighted = content.replace(regex,"<span class='highlight'>$1</span>")
+    //             $(this).html(highlighted)
+    //         })
+    //     }
+    // })
 </script>
 <?php include "./layout_footer.php"?>

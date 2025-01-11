@@ -21,10 +21,10 @@
                         <li class="nav-item <?php if(preg_match("/(property|properties)/i", $current_page)) echo "active"?>">
                             <a href="<?php echo BASE_URL?>properties" class="nav-link">Properties</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="agents.html" class="nav-link">Agents</a>
+                        <li class="nav-item <?php if($current_page == "page_type.php" || $current_page == "page_types.php") echo "active"?>">
+                            <a href="<?php echo BASE_URL?>agents" class="nav-link">Agents</a>
                         </li>
-                        <li class="nav-item <?php if($current_page == "page_location.php") echo "active"?>">
+                        <li class="nav-item <?php if($current_page == "page_location.php" || $current_page == "page_locations.php") echo "active"?>">
                             <a href="<?php echo BASE_URL?>locations" class="nav-link">Locations</a>
                         </li>
                         <li class="nav-item <?php if($current_page == "page_pricing.php") echo "active"?>">

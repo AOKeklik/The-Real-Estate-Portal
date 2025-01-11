@@ -367,8 +367,8 @@
 </div>
 <script>
     $(document).ready(function () {
-        $("input[type=file]").change(function (e) {
-            $("img").attr("src",URL.createObjectURL(e.target.files[0]))
+        $("form input[type=file]").change(function (e) {
+            $("form img").attr("src",URL.createObjectURL(e.target.files[0]))
         })
     })
 </script>

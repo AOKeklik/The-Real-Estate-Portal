@@ -11,8 +11,8 @@
         exit();
     }
 
-    $slug = $_GET["slug"];
     $id = $_GET["id"];
+    $slug = $_GET["slug"];
 
 
     try{
@@ -34,13 +34,11 @@
             left join
                 amenities on find_in_set(amenities.id, properties.amenities)
             where
-                properties.slug=?
-            and
-                properties.id=?
+                properties.id=? and properties.slug=?
             limit
                 1
         ");
-        $stmtProperty->execute([$slug,$id]);
+        $stmtProperty->execute([$id,$slug]);
 
         if($stmtProperty->rowCount() == 0)
             throw new PDOException("");
@@ -60,9 +58,9 @@
             inner join
                 property_photos on property_photos.property_id=properties.id
             where
-                properties.slug=?
+                properties.id=? and properties.slug=?
         ");
-        $stmtPhotos->execute([$slug]);
+        $stmtPhotos->execute([$id,$slug]);
         
         $photos = $stmtPhotos->fetchAll(pdo::FETCH_ASSOC);
     }catch(PDOException $err){
@@ -78,9 +76,9 @@
             inner join
                 property_videos on property_videos.property_id=properties.id
             where
-                properties.slug=?
+                properties.id=? and properties.slug=?
         ");
-        $stmtVideos->execute([$slug]);        
+        $stmtVideos->execute([$id,$slug]);        
         $videos = $stmtVideos->fetchAll(pdo::FETCH_ASSOC);
     }catch(PDOException $err){
         $error_message=$err->getMessage();
@@ -280,7 +278,11 @@
                     <h2>Agent</h2>
                     <div class="agent-right d-flex justify-content-start">
                         <div class="left">
-                            <img src="<?php echo PUBLIC_URL?>uploads/agent/<?php echo $property["photo"]?>" alt="">
+                            <?php if(is_null($property["photo"])):?>
+                                <img src="<?php echo PUBLIC_URL?>uploads/user.png" alt="">
+                            <?php else:?>
+                                    <img src="<?php echo PUBLIC_URL?>uploads/agent/<?php echo $property["photo"]?>" alt="">
+                            <?php endif?>
                         </div>
                         <div class="right">
                             <h3><a href=""><?php echo $property["full_name"]?></a></h3>

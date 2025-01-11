@@ -29,10 +29,12 @@ RewriteRule     ^admin/amenity-delete/([0-9]+)$             ./admin/amenity_dele
 
 RewriteRule     ^pricing$                                   page_pricing.php                                        [NC,L]
 RewriteRule     ^locations$                                 page_locations.php                                      [NC,L]
-RewriteRule     ^location/([a-z-]+)$                       page_location.php?slug=$1                               [NC,L]
+RewriteRule     ^location/([a-z-]+)$                        page_location.php?slug=$1                               [NC,L]
 RewriteRule     ^select-user$                               auth_select_user.php                                    [NC,L]
 RewriteRule     ^properties$                                page_properties.php                                     [NC,L]
-RewriteRule     ^property/([0-9]+)/([a-z-]+)$               page_property.php?id=$1&slug=$2                         [NC,L]
+RewriteRule     ^property/([0-9]+)/([0-9a-z-]+)$               page_property.php?id=$1&slug=$2                         [NC,L]
+RewriteRule     ^agents$                                    page_agents.php                                         [NC,L]
+RewriteRule     ^agent/([0-9]+)/([a-z-]+)$                  page_agent.php?id=$1&slug=$2                            [NC,L]
 RewriteRule     ^404$                                       page_404.php                                            [NC,L]
 
 # -- customer ---                               

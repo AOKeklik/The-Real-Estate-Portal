@@ -9,6 +9,9 @@
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\Exception;
     use PHPMailer\PHPMailer\SMTP;
+
+    use Cocur\Slugify\Slugify;
+
     require "vendor/autoload.php";
 
     $errors = [];
@@ -85,11 +88,17 @@
                 $hashed_token = password_hash($token,PASSWORD_DEFAULT);
                 $link = BASE_URL."auth_agent_register_verify.php?token=$hashed_token&email=$email";
 
+                $slugify = new Slugify();
+                $slug = $slugify->slugify($full_name);
+
                 $sql = "
-                    insert into agents (full_name,email,password,designation,company,phone,country,address,state,city,zip_code,token) 
-                    values (:full_name,:email,:password,:designation,:company,:phone,:country,:address,:state,:city,:zip_code,:token)
+                    insert into agents 
+                        (slug,full_name,email,password,designation,company,phone,country,address,state,city,zip_code,token) 
+                    values 
+                        (:slug,:full_name,:email,:password,:designation,:company,:phone,:country,:address,:state,:city,:zip_code,:token)
                 ";
                 $stmt = $pdo->prepare($sql);
+                $stmt->bindValue(":slug",$slug);
                 $stmt->bindValue(":full_name",$full_name);
                 $stmt->bindValue(":email",$email);
                 $stmt->bindValue(":password",$password);

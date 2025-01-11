@@ -10,6 +10,10 @@
                 locations
             INNER JOIN
                 properties on properties.location_id=locations.id
+            INNER JOIN
+                orders on orders.agent_id=properties.agent_id
+            WHERE
+                now() between orders.purchase_date AND orders.expire_date AND orders.currently_active=1
             GROUP BY
                 locations.id
             ORDER BY

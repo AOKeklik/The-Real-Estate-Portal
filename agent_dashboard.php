@@ -5,6 +5,29 @@
         header("Location: ".BASE_URL."agent-login");
         exit();
     }
+
+    try{
+        $stmtAgent=$pdo->prepare("
+            SELECT
+                COUNT(properties.id) as total_properties,
+                COUNT(orders.id) as total_orders,
+                agents.*
+            FROM
+                agents
+            LEFT JOIN
+                orders ON orders.agent_id=agents.id
+            LEFT JOIN
+                properties ON properties.agent_id=agents.id    
+            WHERE
+                agents.id=?
+            GROUP BY
+                agents.id
+        ");
+        $stmtAgent->execute([$_SESSION["agent"]["id"]]);
+        $agent=$stmtAgent->fetch(pdo::FETCH_ASSOC);
+    }catch(PDOException $err){
+        $error_message=$err->getMessage();
+    }
 ?>
 
 <div class="page-top" style="background-image: url('https://placehold.co/1300x260')">
@@ -25,26 +48,26 @@
                 <?php include "./layout_nav_agent.php"?>
             </div>
             <div class="col-lg-9 col-md-12">
-                <h3>Hello, Peter Johnson</h3>
+                <h3>Hello, <?php echo $agent["full_name"]?></h3>
                 <p>See all the statistics at a glance:</p>
 
                 <div class="row box-items">
                     <div class="col-md-4">
                         <div class="box1">
-                            <h4>12</h4>
-                            <p>Active Properties</p>
+                            <h4><?php echo $agent["total_properties"]?></h4>
+                            <p>Properties</p>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="box2">
-                            <h4>3</h4>
-                            <p>Pending Properties</p>
+                            <h4><?php echo $agent["total_orders"]?></h4>
+                            <p>Orders</p>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="box3">
-                            <h4>5</h4>
-                            <p>Featured Properties</p>
+                            <h4>??</h4>
+                            <p>Messages</p>
                         </div>
                     </div>
                 </div>

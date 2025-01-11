@@ -2,7 +2,7 @@
     include "./layout_top.php";
 
     try {
-        $stmtLoc = $pdo->prepare("
+        $stmtLocations = $pdo->prepare("
             SELECT
                 locations.*,
                 COUNT(properties.id) as property_count
@@ -10,19 +10,25 @@
                 locations
             INNER JOIN
                 properties on properties.location_id=locations.id
+            INNER JOIN
+                orders on orders.agent_id=properties.agent_id
+            WHERE
+                now() between orders.purchase_date AND orders.expire_date 
+            AND 
+                orders.currently_active=?
             GROUP BY
                 locations.id
             ORDER BY
                 locations.name ASC
         ");
-        $stmtLoc->execute();
-        $locations = $stmtLoc->fetchAll(PDO::FETCH_ASSOC);
+        $stmtLocations->execute([1]);
+        $locations = $stmtLocations->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $err) {   
         $error_message = $err->getMessage();
     }
 
     try {
-        $stmtTyp = $pdo->prepare("
+        $stmtTypes = $pdo->prepare("
             select 
                 * 
             from 
@@ -30,36 +36,69 @@
             order by 
                 name asc
         ");
-        $stmtTyp->execute();
-        $types = $stmtTyp->fetchAll(PDO::FETCH_ASSOC);
+        $stmtTypes->execute();
+        $types = $stmtTypes->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $err) {
         $error_message = $err->getMessage();
     }
 
     try{
-        $stmtPro = $pdo->prepare("
-            select
+        $stmtProperties = $pdo->prepare("
+            SELECT
                 properties.*,
                 locations.name as location_name,
                 types.name as type_name,
                 agents.full_name,
                 agents.photo,
                 agents.company
-            from
+            FROM
                 properties
-            left join
+            INNER JOIN
+                orders ON orders.agent_id=properties.agent_id
+            LEFT JOIN
                 locations on locations.id=properties.location_id
-            left join
+            LEFT JOIN
                 types on types.id=properties.type_id
-            left join
+            LEFT JOIN
                 agents on agents.id=properties.agent_id
-            order by
+            WHERE
+                now() BETWEEN orders.purchase_date AND orders.expire_date
+            AND
+                orders.currently_active=?
+            AND
+                properties.is_featured=?
+            ORDER BY
                 rand()
-            limit 
+            LIMIT 
                 6
         ");
-        $stmtPro->execute();
-        $properties=$stmtPro->fetchAll(PDO::FETCH_ASSOC);
+        $stmtProperties->execute([1,1]);
+        $properties=$stmtProperties->fetchAll(PDO::FETCH_ASSOC);
+    }catch(PDOException $err){
+        $error_message=$err->getMessage();
+    }
+
+    try{
+        $stmtAgents=$pdo->prepare("
+            SELECT
+                agents.*
+            FROM
+                agents
+            INNER JOIN
+                orders ON orders.agent_id=agents.id
+            WHERE
+                agents.status=1 
+            AND
+                now() BETWEEN orders.purchase_date AND orders.expire_date
+            AND
+                orders.currently_active=?
+            ORDER BY
+                rand()
+            LIMIT
+            4
+        ");
+        $stmtAgents->execute([1]);
+        $agents=$stmtAgents->fetchAll(pdo::FETCH_ASSOC);
     }catch(PDOException $err){
         $error_message=$err->getMessage();
     }
@@ -90,7 +129,7 @@
                                             <div class="form-group">
                                                 <select name="location_id" class="form-select select2">
                                                     <option value="">Select Location</option>
-                                                    <?php if($stmtLoc->rowCount() > 0): foreach($locations as $loc):?>
+                                                    <?php if($stmtLocations->rowCount() > 0): foreach($locations as $loc):?>
                                                             <option value="<?php echo $loc["id"]?>"><?php echo $loc["name"]?></option>
                                                     <?php endforeach;endif?>
                                                 </select>
@@ -100,7 +139,7 @@
                                             <div class="form-group">
                                                 <select name="type_id" class="form-select select2">
                                                     <option value="">Select Type</option>
-                                                    <?php if($stmtTyp->rowCount() > 0): foreach($types as $type):?>
+                                                    <?php if($stmtTypes->rowCount() > 0): foreach($types as $type):?>
                                                             <option value="<?php echo $type["id"]?>"><?php echo $type["name"]?></option>
                                                     <?php endforeach;endif?>
                                                 </select>
@@ -134,7 +173,7 @@
                 </div>
             </div>
             <div class="row">
-                <?php if($stmtPro->rowCount() > 0): foreach($properties as $property):?>
+                <?php if($stmtProperties->rowCount() > 0): foreach($properties as $property):?>
                     <div class="col-lg-4 col-md-6 col-sm-12">
                         <div class="item">
                             <div class="photo">
@@ -261,106 +300,31 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-3 col-md-3">
-                    <div class="item">
-                        <div class="photo">
-                            <a href=""><img src="https://placehold.co/500x500" alt=""></a>
-                        </div>
-                        <div class="text">
-                            <h2>
-                                <a href="agent.html">Michael Wyatt</a>
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="item">
-                        <div class="photo">
-                            <a href=""><img src="https://placehold.co/500x500" alt=""></a>
-                        </div>
-                        <div class="text">
-                            <h2>
-                                <a href="agent.html">Jason Schwartz</a>
-                            </h2>
+                <?php if($stmtAgents->rowCount() > 0): foreach($agents as $agent):?>
+                    <div class="col-lg-3 col-md-3">
+                        <div class="item">
+                            <div class="photo">
+                                <a href="<?php echo BASE_URL?>agent/<?php echo $agent["id"]?>/<?php echo $agent["slug"]?>">
+                                    <?php if(is_null($agent["photo"])):?>
+                                        <img src="<?php echo PUBLIC_URL?>uploads/user.png" alt="">
+                                    <?php else:?>
+                                        <img src="<?php echo PUBLIC_URL?>uploads/agent/<?php echo $agent["photo"]?>" alt="">
+                                    <?php endif?>
+                                </a>
+                            </div>
+                            <div class="text">
+                                <h2>
+                                    <a href="<?php echo BASE_URL?>agent/<?php echo $agent["id"]?>/<?php echo $agent["slug"]?>">
+                                        <?php echo $agent["full_name"]?>
+                                    </a>
+                                </h2>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="item">
-                        <div class="photo">
-                            <a href=""><img src="https://placehold.co/500x500" alt=""></a>
-                        </div>
-                        <div class="text">
-                            <h2>
-                                <a href="agent.html">Joshua Lash</a>
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="item">
-                        <div class="photo">
-                            <a href=""><img src="https://placehold.co/500x500" alt=""></a>
-                        </div>
-                        <div class="text">
-                            <h2>
-                                <a href="agent.html">Eric Williams</a>
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="item">
-                        <div class="photo">
-                            <a href=""><img src="https://placehold.co/500x500" alt=""></a>
-                        </div>
-                        <div class="text">
-                            <h2>
-                                <a href="agent.html">Jay Smith</a>
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="item">
-                        <div class="photo">
-                            <a href=""><img src="https://placehold.co/500x500" alt=""></a>
-                        </div>
-                        <div class="text">
-                            <h2>
-                                <a href="agent.html">Joseph Commons</a>
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="item">
-                        <div class="photo">
-                            <a href=""><img src="https://placehold.co/500x500" alt=""></a>
-                        </div>
-                        <div class="text">
-                            <h2>
-                                <a href="agent.html">Richard Renner</a>
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-3">
-                    <div class="item">
-                        <div class="photo">
-                            <a href=""><img src="https://placehold.co/500x500" alt=""></a>
-                        </div>
-                        <div class="text">
-                            <h2>
-                                <a href="agent.html">Ryan Dingle</a>
-                            </h2>
-                        </div>
-                    </div>
-                </div>
+                <?php endforeach;endif?>
             </div>
         </div>
     </div>
-
 
 
     <div class="location pb_40">
@@ -376,17 +340,17 @@
                 </div>
             </div>
             <div class="row">
-                <?php if($stmtLoc->rowCount() > 0): foreach($locations as $loc):?>
+                <?php if($stmtLocations->rowCount() > 0): foreach($locations as $location):?>
                         <div class="col-lg-3 col-md-4 col-sm-6">
                             <div class="item">
                                 <div class="photo">
-                                    <a href="<?php echo BASE_URL?>location/<?php echo $loc["slug"]?>">
-                                        <img src="<?php echo PUBLIC_URL?>uploads/location/<?php echo $loc["photo"]?>" alt="<?php echo $loc["name"]?>">
+                                    <a href="<?php echo BASE_URL?>location/<?php echo $location["slug"]?>">
+                                        <img src="<?php echo PUBLIC_URL?>uploads/location/<?php echo $location["photo"]?>" alt="<?php echo $location["name"]?>">
                                     </a>
                                 </div>
                                 <div class="text">
-                                    <h2><a href="<?php echo BASE_URL?>location/<?php echo $loc["slug"]?>"><?php echo $loc["name"]?></a></h2>
-                                    <h4>(<?php echo $loc["property_count"]?> Properties)</h4>
+                                    <h2><a href="<?php echo BASE_URL?>location/<?php echo $location["slug"]?>"><?php echo $location["name"]?></a></h2>
+                                    <h4>(<?php echo $location["property_count"]?> Properties)</h4>
                                 </div>
                             </div>
                         </div>
@@ -394,7 +358,6 @@
             </div>
         </div>
     </div>
-
 
 
     <div class="testimonial" style="background-image: url(https://placehold.co/1000x660)">
