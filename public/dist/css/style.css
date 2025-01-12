@@ -2127,7 +2127,7 @@ a.links_gray {
 
 /* table */
 div:not(.summary):not(.right-item) > .table-responsive table {
-    min-width: 900px;
+    /* min-width: 900px; */
 }
 .right-item td ul {
     margin: 0;
@@ -2174,6 +2174,33 @@ div:not(.summary):not(.right-item) > .table-responsive table {
     display: block;
     border: 2px solid #f3f3f3; 
     border-top: 2px solid #d92228; 
+}
+
+.wishlist > .wishlist-loader {display: none;}
+.wishlist > .wishlist-heart {display: block;}
+.wishlist > .wishlist-heart-full {display: none;}
+
+.wishlist.active > .wishlist-loader {display: none;}
+.wishlist.active > .wishlist-heart {display: none;}
+.wishlist.active > .wishlist-heart-full {display: block;}
+
+.wishlist.pending > .wishlist-loader {display: block;}
+.wishlist.pending > .wishlist-heart {display: none;}
+.wishlist.pending > .wishlist-heart-full {display: none;}
+
+.wishlist-loader {
+    position: relative;
+    display: none;
+    width: 30px;
+    height: 30px;
+    border: 2px solid #f3f3f3; 
+    border-top: 2px solid #d92228; 
+    border-radius: 50%; 
+    animation: spin 1s linear infinite; 
+}
+a > .wishlist-loader {
+    width: 20px;
+    height: 20px;
 }
 @keyframes spin {
     0% {

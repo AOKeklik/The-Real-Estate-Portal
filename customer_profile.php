@@ -8,7 +8,7 @@
 
     $errors = [];
 
-    if($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["form"]) {
+    if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["form"])) {
         
         $full_name = htmlspecialchars(trim($_POST["full_name"]));
         $password = htmlspecialchars(trim($_POST["password"]));
@@ -62,7 +62,7 @@
                 
                 if(!empty($_FILES["photo"]["name"])) {
                     if(!is_dir("./public/uploads/customer"))
-                        mkdir("./public/uploads/customer",0777,true);
+                        mkdir("./public/uploads/customer",0577,true);
     
                     if(is_file("./public/uploads/customer/".$_SESSION["customer"]["photo"]))
                         unlink("./public/uploads/customer/".$_SESSION["customer"]["photo"]);
@@ -101,7 +101,6 @@
     }
 
 ?>
-
 <div class="page-top" style="background-image: url('https://placehold.co/1300x260')">
     <div class="bg"></div>
     <div class="container">
@@ -188,5 +187,4 @@
         })
     })
 </script>
-
 <?php include "./layout_footer.php"?>

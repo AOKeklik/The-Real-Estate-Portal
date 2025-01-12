@@ -102,9 +102,26 @@
     }catch(PDOException $err){
         $error_message=$err->getMessage();
     }
+
+    try{
+        $stmtWishlist=$pdo->prepare("
+            SELECT
+                *
+            FROM
+                wishlists
+            WHERE
+                customer_id=?
+            ORDER BY
+                id ASC
+        ");
+        $stmtWishlist->execute([$_SESSION["customer"]["id"]]);
+        $wishlists=$stmtWishlist->fetchAll(pdo::FETCH_ASSOC);
+    }catch(PDOException $err){
+        $error_message=$err->getMessage();
+    }
 ?>
 
-    <div class="slider" style="background-image: url(https://placehold.co/1200x540)">
+    <div class="slider" style="background-image: url()">
         <div class="bg"></div>
         <div class="container">
             <div class="row">
@@ -161,7 +178,6 @@
         </div>
     </div>
 
-
     <div class="property">
         <div class="container">
             <div class="row">
@@ -189,7 +205,17 @@
                                     <?php endif?>
                                 </div>
                                 <div class="price"><?php echo $property["price"]?> PLN</div>
-                                <div class="wishlist"><a href=""><i class="far fa-heart"></i></a></div>
+                                <?php if(isset($_SESSION["customer"])):?>
+                                    <div 
+                                        data-property-id="<?php echo $property["id"]?>" 
+                                        data-customer-id="<?php echo $_SESSION["customer"]["id"]?>" 
+                                        class="wishlist <?php if(in_array($property["id"], array_column($wishlists,"property_id"))) echo "active"?>"
+                                    >
+                                        <div class="wishlist-loader"></div>
+                                        <a href="" class="wishlist-heart"><i class="far fa-heart"></i></a>
+                                        <a href="" class="wishlist-heart-full"><i class="fa fa-heart"></i></a>
+                                    </div>
+                                <?php endif?>
                             </div>
                             <div class="text">
                                 <h3><a href="<?php echo BASE_URL?>property/<?php echo $property["id"]?>/<?php echo $property["slug"]?>"><?php echo $property["name"]?></a></h3>
@@ -230,7 +256,7 @@
     </div>
 
 
-    <div class="why-choose" style="background-image: url(https://placehold.co/1000x660)">
+    <div class="why-choose" style="background-image: url()">
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
@@ -360,7 +386,7 @@
     </div>
 
 
-    <div class="testimonial" style="background-image: url(https://placehold.co/1000x660)">
+    <div class="testimonial" style="background-image: url()">
         <div class="bg"></div>
         <div class="container">
             <div class="row">
@@ -373,7 +399,7 @@
                     <div class="testimonial-carousel owl-carousel">
                         <div class="item">
                             <div class="photo">
-                                <img src="url(https://placehold.co/500x500)" alt="" />
+                                <img src="https://placehold.co/500x500" alt="" />
                             </div>
                             <div class="text">
                                 <h4>Robert Krol</h4>
@@ -387,7 +413,7 @@
                         </div>
                         <div class="item">
                             <div class="photo">
-                                <img src="url(https://placehold.co/500x500)" alt="" />
+                                <img src="https://placehold.co/500x500" alt="" />
                             </div>
                             <div class="text">
                                 <h4>Sal Harvey</h4>
@@ -491,4 +517,84 @@
         </div>
     </div>
 
+    <script>
+        $(document).ready(function(){
+            function handlerClickWishlistButton () {
+                $(".wishlist").click( async function(e){
+                    e.preventDefault()
+                        
+                    $(this).addClass("pending")
+                    $(this).closest(".item").css("pointer-events","none")
+                    
+                    await new Promise((resolve) => setTimeout(resolve,1000))
+
+                    const formData = new FormData()
+
+                    formData.append("property_id",btoa($(this).data("property-id")))
+                    formData.append("customer_id",btoa($(this).data("customer-id")))
+
+                    if($(this).hasClass("active"))
+                        removeItemFromTheWishlist (formData, $(this))
+                    else
+                        addItemToTheWishlist (formData, $(this)) 
+                })
+            }
+
+            handlerClickWishlistButton()
+
+            function addItemToTheWishlist(formData, el){
+                $.ajax({
+                    url:"<?php echo BASE_URL?>customer_wishlist_add.php",
+                    type:"POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(responsive){
+                        const res = JSON.parse(responsive)
+
+                        iziToast.show({
+                            title: res.error?.message ?? res.success.message,
+                            position: "topRight",
+                            color: res.error ? "red" : "green"
+                        })
+
+                        if(res.success) {
+                            el.addClass("active")
+                        }
+                        
+                        el.closest(".item").css("pointer-events","")
+                        el.removeClass("pending")
+                        // console.log(res)
+                    }
+                }) 
+            }
+
+            function removeItemFromTheWishlist(formData, el){
+                $.ajax({
+                    url:"<?php echo BASE_URL?>customer_wishlist_remove.php",
+                    type:"POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(responsive){
+                        const res = JSON.parse(responsive)
+
+                        iziToast.show({
+                            title: res.error?.message ?? res.success.message,
+                            position: "topRight",
+                            color: res.error ? "red" : "green"
+                        })
+
+                        if(res.success){
+                            el.removeClass("active")
+                        }
+                        
+                        el.closest(".item").css("pointer-events","")
+                        el.removeClass("pending")
+                        // console.log(res)
+                    }
+                })                
+            }
+        })
+    </script>
 <?php include "./layout_footer.php"?>

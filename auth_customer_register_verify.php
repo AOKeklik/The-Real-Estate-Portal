@@ -6,24 +6,34 @@
         exit;
     }   
 
-    if(!isset($_REQUEST["token"]) || !isset($_REQUEST["email"])) {
+    if(!isset($_GET["token"]) || !isset($_GET["email"])) {
         $_SESSION["error"] = "Invalid or missing email/token. Please try again!";
         header("Location: ".BASE_URL."customer-login");
         exit;
     }
 
-    $token = htmlspecialchars(trim($_REQUEST["token"]));
-    $email = htmlspecialchars(trim($_REQUEST["email"]));
+    $token = htmlspecialchars(trim($_GET["token"]));
+    $email = htmlspecialchars(trim($_GET["email"]));
 
     try {
-        $sql = "select id,token from customers where email=:email and status=:status limit 1";
-        $stmt = $pdo->prepare($sql);
+        $stmt = $pdo->prepare("
+            select 
+                *
+            from 
+                customers 
+            where 
+                email=:email 
+            and 
+                status=:status 
+            limit 
+                1
+            ");
         $stmt->bindValue(":email", $email);
         $stmt->bindValue(":status", 0);
         $stmt->execute();
         $customer = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        if($stmt->rowCount() == 0 || !password_verify($token,$customer["token"])) {
+        if($stmt->rowCount() == 0 || !password_verify($customer["token"],$token)) {
             $_SESSION["error"] = "Invalid or missing email/token. Please try again!";
             header("Location: ".BASE_URL."customer-login");
             exit;

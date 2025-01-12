@@ -44,6 +44,7 @@ RewriteRule     ^customer-register$                         auth_customer_regist
 RewriteRule     ^customer-forget$                           auth_customer_forget.php                                [NC,L]
 RewriteRule     ^customer-dashboard$                        customer_dashboard.php                                  [NC,L]
 RewriteRule     ^customer-profile$                          customer_profile.php                                    [NC,L]
+RewriteRule     ^customer-wishlist$                         customer_wishlist.php                                   [NC,L]
 
 # -- agent ---                              
 

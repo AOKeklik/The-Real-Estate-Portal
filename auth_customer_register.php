@@ -37,7 +37,14 @@
 
         if(empty($errors)) {
             try {
-                $sql = $pdo->prepare("select * from customers where email=?");
+                $stmt = $pdo->prepare("
+                    select 
+                        * 
+                    from 
+                        customers 
+                    where 
+                        email=?
+                ");
                 $stmt->execute([$email]);
 
                 if($stmt->rowCount() > 0)

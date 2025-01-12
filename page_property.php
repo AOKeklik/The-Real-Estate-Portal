@@ -121,6 +121,23 @@
     }catch(PDOException $err){
         $error_message=$err->getMessage();
     }
+
+    try{
+        $stmtWishlist=$pdo->prepare("
+            SELECT
+                *
+            FROM
+                wishlists
+            WHERE
+                customer_id=?
+            ORDER BY
+                id ASC
+        ");
+        $stmtWishlist->execute([$_SESSION["customer"]["id"]]);
+        $wishlists=$stmtWishlist->fetchAll(pdo::FETCH_ASSOC);
+    }catch(PDOException $err){
+        $error_message=$err->getMessage();
+    }
 ?>
 <div class="page-top" style="background-image: url('')">
     <div class="bg"></div>
@@ -233,7 +250,17 @@
                                                     <?php endif?>
                                                 </div>
                                                 <div class="price"><?php echo $relatedProperty["price"]?> PLN</div>
-                                                <div class="wishlist"><a href=""><i class="far fa-heart"></i></a></div>
+                                                <?php if(isset($_SESSION["customer"])):?>
+                                                    <div 
+                                                        data-property-id="<?php echo $relatedProperty["id"]?>" 
+                                                        data-customer-id="<?php echo $_SESSION["customer"]["id"]?>" 
+                                                        class="wishlist <?php if(in_array($relatedProperty["id"], array_column($wishlists,"property_id"))) echo "active"?>"
+                                                    >
+                                                        <div class="wishlist-loader"></div>
+                                                        <a href="" class="wishlist-heart"><i class="far fa-heart"></i></a>
+                                                        <a href="" class="wishlist-heart-full"><i class="fa fa-heart"></i></a>
+                                                    </div>
+                                                <?php endif?>
                                             </div>
                                             <div class="text">
                                                 <h3><a href="property.html"><?php echo $relatedProperty["name"]?></a></h3>
@@ -531,6 +558,86 @@
                 }
             })
         })
+    })
+</script>
+<script>
+    $(document).ready(function(){
+        function handlerClickWishlistButton () {
+            $(".wishlist").click( async function(e){
+                e.preventDefault()
+                    
+                $(this).addClass("pending")
+                $(this).closest(".item").css("pointer-events","none")
+                
+                await new Promise((resolve) => setTimeout(resolve,1000))
+
+                const formData = new FormData()
+
+                formData.append("property_id",btoa($(this).data("property-id")))
+                formData.append("customer_id",btoa($(this).data("customer-id")))
+
+                if($(this).hasClass("active"))
+                    removeItemFromTheWishlist (formData, $(this))
+                else
+                    addItemToTheWishlist (formData, $(this)) 
+            })
+        }
+
+        handlerClickWishlistButton()
+
+        function addItemToTheWishlist(formData, el){
+            $.ajax({
+                url:"<?php echo BASE_URL?>customer_wishlist_add.php",
+                type:"POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(responsive){
+                    const res = JSON.parse(responsive)
+
+                    iziToast.show({
+                        title: res.error?.message ?? res.success.message,
+                        position: "topRight",
+                        color: res.error ? "red" : "green"
+                    })
+
+                    if(res.success) {
+                        el.addClass("active")
+                    }
+                    
+                    el.closest(".item").css("pointer-events","")
+                    el.removeClass("pending")
+                    // console.log(res)
+                }
+            }) 
+        }
+
+        function removeItemFromTheWishlist(formData, el){
+            $.ajax({
+                url:"<?php echo BASE_URL?>customer_wishlist_remove.php",
+                type:"POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(responsive){
+                    const res = JSON.parse(responsive)
+
+                    iziToast.show({
+                        title: res.error?.message ?? res.success.message,
+                        position: "topRight",
+                        color: res.error ? "red" : "green"
+                    })
+
+                    if(res.success){
+                        el.removeClass("active")
+                    }
+                    
+                    el.closest(".item").css("pointer-events","")
+                    el.removeClass("pending")
+                    // console.log(res)
+                }
+            })                
+        }
     })
 </script>
 <?php include "./layout_footer.php"?>
