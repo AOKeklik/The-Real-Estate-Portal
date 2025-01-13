@@ -44,6 +44,9 @@ RewriteRule     ^customer-register$                         auth_customer_regist
 RewriteRule     ^customer-forget$                           auth_customer_forget.php                                [NC,L]
 RewriteRule     ^customer-dashboard$                        customer_dashboard.php                                  [NC,L]
 RewriteRule     ^customer-profile$                          customer_profile.php                                    [NC,L]
+RewriteRule     ^customer-messages$                         customer_messages.php                                   [NC,L]
+RewriteRule     ^customer-message/([0-9]+)$                 customer_message.php?message_id=$1                      [NC,L]
+RewriteRule     ^customer-message-add$                      customer_message_add.php                                [NC,L]
 RewriteRule     ^customer-wishlist$                         customer_wishlist.php                                   [NC,L]
 
 # -- agent ---                              
@@ -52,6 +55,8 @@ RewriteRule     ^agent-login$                               auth_agent_login.php
 RewriteRule     ^agent-register$                            auth_agent_register.php                                 [NC,L]
 RewriteRule     ^agent-forget$                              auth_agent_forget.php                                   [NC,L]
 RewriteRule     ^agent-dashboard$                           agent_dashboard.php                                     [NC,L]
+RewriteRule     ^agent-messages$                            agent_messages.php                                      [NC,L]
+RewriteRule     ^agent-message/([0-9]+)$                    agent_message.php?message_id=$1                         [NC,L]
 RewriteRule     ^agent-profile$                             agent_profile.php                                       [NC,L]
 RewriteRule     ^agent-payment$                             agent_payment.php                                       [NC,L]
 RewriteRule     ^agent-payment-paypal-success/(.+)$         agent_payment_paypal_success.php?transaction_id=$1      [NC,L]

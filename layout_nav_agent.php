@@ -3,6 +3,9 @@
         <li class="list-group-item <?php if($current_page=="agent_dashboard.php") echo "active"?>">
             <a href="<?php echo BASE_URL?>agent-dashboard">Dashboard</a>
         </li>
+        <li class="list-group-item <?php if($current_page == "agent_messages.php" || $current_page == "agent_message.php") echo "active"?>">
+            <a href="<?php echo BASE_URL?>agent-messages">Messages</a>
+        </li>
         <li class="list-group-item <?php if($current_page == "agent_payment.php") echo "active"?>">
             <a href="<?php echo BASE_URL?>agent-payment">Make Payment</a>
         </li>

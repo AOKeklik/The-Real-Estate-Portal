@@ -103,21 +103,23 @@
         $error_message=$err->getMessage();
     }
 
-    try{
-        $stmtWishlist=$pdo->prepare("
-            SELECT
-                *
-            FROM
-                wishlists
-            WHERE
-                customer_id=?
-            ORDER BY
-                id ASC
-        ");
-        $stmtWishlist->execute([$_SESSION["customer"]["id"]]);
-        $wishlists=$stmtWishlist->fetchAll(pdo::FETCH_ASSOC);
-    }catch(PDOException $err){
-        $error_message=$err->getMessage();
+    if(isset($_SESSION["customer"])){
+        try{
+            $stmtWishlist=$pdo->prepare("
+                SELECT
+                    *
+                FROM
+                    wishlists
+                WHERE
+                    customer_id=?
+                ORDER BY
+                    id ASC
+            ");
+            $stmtWishlist->execute([$_SESSION["customer"]["id"]]);
+            $wishlists=$stmtWishlist->fetchAll(pdo::FETCH_ASSOC);
+        }catch(PDOException $err){
+            $error_message=$err->getMessage();
+        }
     }
 ?>
 
@@ -598,3 +600,4 @@
         })
     </script>
 <?php include "./layout_footer.php"?>
+
