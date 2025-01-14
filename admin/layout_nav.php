@@ -19,7 +19,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
                 <li><a class="dropdown-item" href="<?php echo ADMIN_URL?>profile"><i class="far fa-user"></i> Edit Profile</a></li>
-                <li><a class="dropdown-item" href="<?php echo ADMIN_URL?>auth_logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                <li><a class="dropdown-item" href="<?php echo ADMIN_URL?>logout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
             </ul>
         </li>
     </ul>

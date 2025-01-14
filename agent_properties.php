@@ -12,8 +12,7 @@
                 properties.id, 
                 properties.name,  
                 properties.is_featured as featured, 
-                properties.featured_photo as photo, 
-                properties.status, 
+                properties.featured_photo as photo,
                 properties.location_id as location,            
                 agents.full_name as agent, 
                 types.name as type, 
@@ -71,7 +70,6 @@
                                 <th>Name</th>
                                 <th>Type</th>
                                 <th>Location</th>
-                                <th>Status</th>
                                 <th>Active?</th>
                                 <th class="w-100">Options</th>
                                 <th class="w-60">Action</th>
@@ -96,13 +94,6 @@
                                     <td><?php echo $property["type"]?></td>
                                     <td><?php echo $property["location"]?></td>
                                     <td><?php echo $property["purpose"]?></td>
-                                    <td>
-                                        <?php if($property["status"] == 1):?>
-                                            <span class="badge bg-success">Yes</span>
-                                        <?php else:?>
-                                            <span class="badge bg-danger">No</span>
-                                        <?php endif?>
-                                    </td>
                                     <td>
                                         <a 
                                             href="<?php echo BASE_URL?>agent-property-photos/<?php echo $property["id"]?>" 

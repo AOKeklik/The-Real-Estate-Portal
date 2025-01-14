@@ -6,10 +6,7 @@
         exit();
     }
 
-    if(
-        $_SERVER["REQUEST_METHOD"] === "POST" && 
-        isset($_POST["property_id"])
-    ) {
+    if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["property_id"])) {
         try {
             $property_id = htmlspecialchars(trim($_POST["property_id"]));
 

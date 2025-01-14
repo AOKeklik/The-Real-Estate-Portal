@@ -6,6 +6,7 @@
             "location" => "Location - Admin Panel",
             "type" => "Types - Admin Panel",
             "amenit" => "Amenity - Admin Panel",
+            "propert" => "Property - Admin Panel",
         ];
 
         foreach($patterns as $key=>$val) {
@@ -19,6 +20,7 @@
     function setForntendButtonLink ($pagename) {
         $patterns = [
             "location" => BASE_URL."locations",
+            "propert" => BASE_URL."properties",
         ];
 
         foreach($patterns as $key=>$val) {

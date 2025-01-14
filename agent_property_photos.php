@@ -13,6 +13,27 @@
 
     $property_id =$_GET["id"];
 
+    try {
+        $stmt=$pdo->prepare("
+            select
+                *
+            from
+                properties
+            where
+                id=?
+            limit
+                1
+        ");
+        $stmt->execute([$property_id]);
+        if($stmt->rowCount() == 0)
+            throw new PDOException("Property not found.");
+        
+    }catch(PDOException $err){
+        $_SESSION["error"]=$err->getMessage();
+        header("Location: ".BASE_URL."agent-properties");
+        exit();
+    }
+
     try{
         $stmt=$pdo->prepare("
             select 
