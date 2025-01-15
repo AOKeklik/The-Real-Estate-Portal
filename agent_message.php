@@ -43,8 +43,15 @@
         ");
         $stmtMainMessage->execute([$message_id]);
         $mainMessage=$stmtMainMessage->fetch(pdo::FETCH_ASSOC);
+
+        if($stmtMainMessage->rowCount() == 0)
+            throw new PDOException("The specified message could not be found.");
+
+
     }catch(PDOException $err){
-        $error_message=$err->getMessage();
+        $_SESSION["error"] = $err->getMessage();
+        header("Location: ".BASE_URL."agent-messages");
+        exit();
     }
 
     try{

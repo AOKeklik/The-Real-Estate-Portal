@@ -9,17 +9,22 @@
     try{
         $stmt=$pdo->prepare("
             SELECT
-                orders.*,
-                packages.name as package_name
+                messages.*,
+                customers.full_name AS customer_name,
+                customers.email AS customer_email,
+                agents.full_name AS agent_name,
+                agents.email AS agent_email
             FROM
-                orders
+                messages
             LEFT JOIN
-                packages on packages.id=orders.package_id
+                customers ON customers.id=messages.customer_id
+            LEFT JOIN
+                agents ON agents.id=messages.agent_id
             ORDER BY
-                orders.currently_active DESC
+                messages.id DESC
         ");
         $stmt->execute();
-        $orders=$stmt->fetchAll(pdo::FETCH_ASSOC);
+        $messages=$stmt->fetchAll(pdo::FETCH_ASSOC);
     }catch(PDOException $err){
         $error_message=$err->getMessage();
     }
@@ -27,7 +32,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header justify-content-between">
-            <h1>Orders</h1>
+            <h1>Messages</h1>
             <div class="ml-auto">
                 <a href="" class="btn btn-primary"><i class="fas fa-plus"></i> Add New</a>
             </div>
@@ -42,35 +47,30 @@
                                     <thead>
                                         <tr>
                                             <th>SL</th>
-                                            <th>Transaction Id</th>
-                                            <th>Package Name</th>
-                                            <th>Price</th>
-                                            <th>Purchase Date</th>
-                                            <th>Expire Date</th>
-                                            <th>Payment Method</th>
-                                            <th>Status</th>
+                                            <th>Subject</th>
+                                            <th>Customer</th>
+                                            <th>Agent</th>
+                                            <th>Posted On</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if($stmt->rowCount() > 0): foreach($orders as $order):?>
+                                        <?php if($stmt->rowCount() > 0): foreach($messages as $message):?>
                                             <tr>
-                                                <td><?php echo $order["id"]?></td>
-                                                <td><?php echo $order["transaction_id"]?></td>
-                                                <td><?php echo $order["package_name"]?></td>
-                                                <td><?php echo $order["paid_amount"]?></td>
-                                                <td><?php echo $order["purchase_date"]?></td>
-                                                <td><?php echo $order["expire_date"]?></td>
-                                                <td><?php echo $order["payment_method"]?></td>
-                                                <td>
-                                                    <?php if($order["currently_active"] == 1):?>
-                                                        <span class="badge badge-danger">Yes</span>
-                                                    <?php else:?>
-                                                        <span class="badge badge-light">No</span>
-                                                    <?php endif?>
-                                                </td>
+                                                <th><?php echo $message["id"]?></th>
+                                                <th><?php echo $message["subject"]?></th>
+                                                <th>
+                                                    <?php echo $message["customer_name"]?><br>
+                                                    <?php echo $message["customer_email"]?>
+                                                </th>
+                                                <th>
+                                                    <?php echo $message["agent_name"]?><br>
+                                                    <?php echo $message["agent_email"]?>
+                                                </th>
+                                                <th><?php echo date("d M, Y - H:i:s", strtotime($message["posted_on"]))?></th>
                                                 <td class="pt_10 pb_10">
-                                                    <a href="" data-order-id="<?php echo $order["id"]?>" class="btn btn-danger"><i class="fas fa-trash"></i></a>
+                                                    <a href="<?php echo ADMIN_URL?>message/<?php echo $message["id"]?>" class="btn btn-warning"><i class="fas fa-eye"></i></a>
+                                                    <a href="" data-message-id="<?php echo $message["id"]?>" class="btn btn-danger"><i class="fas fa-trash"></i></a>
                                                 </td>
                                             </tr>
                                         <?php endforeach;endif?>
@@ -86,27 +86,26 @@
 </div>
 <script>
     $(document).ready(function(){
-        $(document).on("click",".btn.btn-danger",function(e){
+        $(document).on("click", ".btn.btn-danger",function(e){
             e.preventDefault()
 
-            if(!confirm('Are you sure?')) return
+            if(!confirm("Are you sure?")) return
 
             const el = $(this)
-            const orderId = el.data("order-id")
             const parent = el.closest("tr")
+            const messageId = el.data("message-id")
             const formData = new FormData()
 
-            formData.append("order_id",btoa(orderId))
+            formData.append("message_id",btoa(messageId))
             parent.css("pointer-events","none")
 
             $.ajax({
                 type: "POST",
-                url: "<?php echo ADMIN_URL?>order_delete.php",
+                url: "<?php echo ADMIN_URL?>page_message_delete.php",
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function(response){
-                    console.log(response)
                     const res = JSON.parse(response)
 
                     iziToast.show({
@@ -115,7 +114,7 @@
                         color: res.error ? "red" : "green",
                     })
 
-                    if(res.error) {
+                    if(res.error){
                         parent.css("pointer-events","")
                     }
 
@@ -123,7 +122,6 @@
                         parent.slideUp()
                     }
                 }
-                
             })
         })
     })

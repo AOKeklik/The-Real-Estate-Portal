@@ -2983,3 +2983,44 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
 
     /* map */
     .modal iframe{width: 100%;}
+
+    .message-heading {
+        font-size: 20px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        margin-top: 30px;
+    }
+    .message-item {
+        margin-bottom: 40px;
+        padding: 15px;
+        border: 1px solid #7b7b7b;
+    }
+    .message-item-main {
+        background: #e1e5f7;
+    }
+    .message-top .photo {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .message-top .photo img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+    }
+    .message-top .text {
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 10px;
+    }
+    .message-top .text h6 {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    .message-top .text p {
+        margin-bottom: 0;
+        color: #838383;
+    }
+    .message-bottom {
+        margin-top: 20px;
+    }

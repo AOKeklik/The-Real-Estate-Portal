@@ -10,6 +10,9 @@ RewriteRule     ^admin/setting$                             ./admin/setting.php 
 RewriteRule     ^admin/properties$                          ./admin/properties.php                                  [NC,L]
 RewriteRule     ^admin/orders$                              ./admin/orders.php                                      [NC,L]
 
+RewriteRule     ^admin/messages$                            ./admin/page_messages.php                               [NC,L]
+RewriteRule     ^admin/message/([0-9]+)$                    ./admin/page_message.php?message_id=$1                  [NC,L]
+
 RewriteRule     ^admin/packages$                            ./admin/packages.php                                    [NC,L]
 RewriteRule     ^admin/package-add$                         ./admin/package_add.php                                 [NC,L]
 RewriteRule     ^admin/package-edit/([0-9]+)$               ./admin/package_edit.php?id=$1                          [NC,L]
