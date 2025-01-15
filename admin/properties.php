@@ -231,7 +231,9 @@
                         parent.css("pointer-events","")
                     }
 
-                    parent.slideUp()
+                    if(res.success){
+                        parent.slideUp()
+                    }
                 }
             })
         })

@@ -18,6 +18,9 @@
             <li class="<?php if($current_page == "properties.php") echo "active"?>">
                 <a class="nav-link" href="<?php echo ADMIN_URL?>properties"><i class="fas fa-building"></i> Properties</a>
             </li>
+            <li class="<?php if($current_page == "orders.php") echo "active"?>">
+                <a class="nav-link" href="<?php echo ADMIN_URL?>orders"><i class="fas fa-shopping-cart"></i> <span>Orders</span></a>
+            </li>
 
             <li class="nav-item dropdown <?php if($current_page=="packages.php" || $current_page=="package_add.php") echo "active"?>">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-cubes"></i><span>Packages</span></a>

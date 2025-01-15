@@ -1,11 +1,13 @@
 (function($){
     "use strict";
     $(".inputtags").tagsinput('items');
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('#example1').DataTable({
-            "order": [[0, "desc"]], 
-        });
-    });
+            order: [],
+            paging: true,
+            searching: true,
+        })
+    })
     $('.icp_demo').iconpicker();
 
     $('#datepicker').datepicker({

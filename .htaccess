@@ -7,6 +7,8 @@ RewriteRule     ^admin/logout$                              ./admin/auth_logout.
 RewriteRule     ^admin/profile$                             ./admin/profile.php                                     [NC,L]
 RewriteRule     ^admin/dashboard$                           ./admin/dashboard.php                                   [NC,L]
 RewriteRule     ^admin/setting$                             ./admin/setting.php                                     [NC,L]
+RewriteRule     ^admin/properties$                          ./admin/properties.php                                  [NC,L]
+RewriteRule     ^admin/orders$                              ./admin/orders.php                                      [NC,L]
 
 RewriteRule     ^admin/packages$                            ./admin/packages.php                                    [NC,L]
 RewriteRule     ^admin/package-add$                         ./admin/package_add.php                                 [NC,L]
@@ -25,8 +27,6 @@ RewriteRule     ^admin/amenities$                           ./admin/amenities.ph
 RewriteRule     ^admin/amenity-add$                         ./admin/amenity_add.php                                 [NC,L]
 RewriteRule     ^admin/amenity-edit/([0-9]+)$               ./admin/amenity_edit.php?id=$1                          [NC,L]
 RewriteRule     ^admin/amenity-delete/([0-9]+)$             ./admin/amenity_delete.php?id=$1                        [NC,L]
-
-RewriteRule     ^admin/properties$                          ./admin/properties.fa-php                               [NC,L]
 
 # -- frontend ---                       
 
