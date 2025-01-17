@@ -75,7 +75,7 @@
             formData.append("id",$(this).data("id"))
 
             $.ajax({
-                url:"<?php echo ADMIN_URL?>amenity_delete.php",
+                url:"<?php echo ADMIN_URL?>page_amenity_delete_ajax.php",
                 type:"POST",
                 contentType: false,
                 processData: false,

@@ -82,7 +82,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "<?php echo ADMIN_URL?>location_delete.php",
+                url: "<?php echo ADMIN_URL?>page_location_delete_ajax.php",
                 contentType: false,
                 processData: false,
                 data: formData,

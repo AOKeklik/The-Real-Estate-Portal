@@ -73,7 +73,7 @@
             formData.append("id",$(this).data("id"))
 
             $.ajax({
-                url: "<?php echo ADMIN_URL?>type_delete.php",
+                url: "<?php echo ADMIN_URL?>page_type_delete_ajax.php",
                 type: "POST",
                 contentType: false,
                 processData: false,

@@ -3024,3 +3024,27 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
     .message-bottom {
         margin-top: 20px;
     }
+
+
+
+    .modal ul.agent-ul {
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+    .modal ul.agent-ul li {
+        list-style-type: none;
+        margin-right: 5px;
+        display: inline-block;
+    }
+    .modal ul.agent-ul li a {
+        text-decoration: none;
+    }
+    .modal ul.agent-ul li a i {
+        width: 26px;
+        height: 26px;
+        text-align: center;
+        line-height: 26px;
+        display: block;
+        background: #d92228;
+        color: #fff;
+    }

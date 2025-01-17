@@ -71,7 +71,7 @@
         <div class="section-header justify-content-between">
             <h1>Subject: <?php echo $message["subject"]?></h1>
             <div class="ml-auto">
-                <a href="<?php echo ADMIN_URL?>messages" class="btn btn-primary"><i class="fas fa-plus"></i> Back to Previous</a>
+                <a href="<?php echo ADMIN_URL?>messages" class="btn btn-primary"><i class="fas fa-eye"></i> Back to Previous</a>
             </div>
         </div>
         <div class="section-body">

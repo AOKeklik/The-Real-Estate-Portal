@@ -43,7 +43,9 @@
                 header("Location: ".BASE_URL."customer-dashboard");
                 exit;
             }catch(PDOException $err) {
-                $error_message = $err->getMessage();
+                $_SESSION["error"]=$err->getMessage();
+                header("Location: ".BASE_URL."customer-login");
+                exit;
             }
         }
     }

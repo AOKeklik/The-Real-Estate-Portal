@@ -9,53 +9,65 @@
 
         <ul class="sidebar-menu">
 
-            <li class="<?php if($current_page == "dashboard.php") echo "active"?>">
+            <li class="<?php if($current_page == "page_dashboard.php") echo "active"?>">
                 <a class="nav-link" href="<?php echo ADMIN_URL?>dashboard"><i class="fas fa-home"></i> <span>Dashboard</span></a>
             </li>
-            <li class="<?php if($current_page == "setting.php") echo "active"?>">
+            <li class="<?php if($current_page == "page_setting.php") echo "active"?>">
                 <a class="nav-link" href="<?php echo ADMIN_URL?>setting"><i class="fas fa-cog"></i><span>Setting</span></a>
             </li>
-            <li class="<?php if($current_page == "properties.php") echo "active"?>">
+            <li class="<?php if($current_page == "page_properties.php") echo "active"?>">
                 <a class="nav-link" href="<?php echo ADMIN_URL?>properties"><i class="fas fa-building"></i> Properties</a>
             </li>
-            <li class="<?php if($current_page == "orders.php") echo "active"?>">
+            <li class="<?php if($current_page == "page_orders.php") echo "active"?>">
                 <a class="nav-link" href="<?php echo ADMIN_URL?>orders"><i class="fas fa-shopping-cart"></i> <span>Orders</span></a>
             </li>
-            <li class="<?php if($current_page === "messages.php") echo "active"?>">
+            <li class="<?php if($current_page === "page_messages.php") echo "active"?>">
                 <a class="nav-link" href="<?php ADMIN_URL?>messages"><i class="fas fa-envelope"></i> <span>Messages</span></a>
             </li>
 
-            <li class="nav-item dropdown <?php if($current_page=="packages.php" || $current_page=="package_add.php") echo "active"?>">
+            <li class="nav-item dropdown <?php if(preg_match("/(customer|agent)/i", $current_page)) echo "active"?>">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-user"></i><span> Users</span></a>
+                <ul class="dropdown-menu">
+                    <li class="<?php if($current_page == "page_agents.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>agents"><i class="fas fa-angle-right"></i> <span> Agents</span></a>
+                    </li>
+                    <li class="<?php if($current_page == "page_customers.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>customers"><i class="fas fa-angle-right"></i> <span> Customers</span></a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown <?php if($current_page=="page_packages.php" || $current_page=="page_package_add.php") echo "active"?>">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-cubes"></i><span>Packages</span></a>
                 <ul class="dropdown-menu">
-                    <li class="<?php if($current_page == "packages.php") echo "active"?>">
+                    <li class="<?php if($current_page == "page_packages.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>packages"><i class="fas fa-angle-right"></i> Packages</a>
                     </li>
-                    <li class="<?php if($current_page == "package_add.php") echo "active"?>">
+                    <li class="<?php if($current_page == "page_package_add.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>package-add"><i class="fas fa-angle-right"></i> Add Package</a>
                     </li>
                 </ul>
             </li>
 
-            <li class="nav-item dropdown <?php if($current_page == "locations.php" || $current_page == "location_add.php") echo "active"?>">
+            <li class="nav-item dropdown <?php if($current_page == "page_locations.php" || $current_page == "page_location_add.php") echo "active"?>">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-map-marker"></i><span>Locations</span></a>
                 <ul class="dropdown-menu">
-                    <li class="<?php if($current_page == "locations.php") echo "active"?>">
+                    <li class="<?php if($current_page == "page_locations.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>locations"><i class="fas fa-angle-right"></i> Locations</a>
                     </li>
-                    <li class="<?php if($current_page == "location_add.php") echo "active"?>">
+                    <li class="<?php if($current_page == "page_location_add.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>location-add"><i class="fas fa-angle-right"></i> Add Location</a>
                     </li>
                 </ul>
             </li>
 
-            <li class="nav-item dropdown <?php if($current_page == "types.php" || $current_page == "type_add.php") echo "active"?>">
+            <li class="nav-item dropdown <?php if($current_page == "page_types.php" || $current_page == "page_type_add.php") echo "active"?>">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-folder"></i><span> Types</span></a>
                 <ul class="dropdown-menu">
-                    <li class="<?php if($current_page == "types.php") echo "active"?>">
+                    <li class="<?php if($current_page == "page_types.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>types"><i class="fas fa-angle-right"></i> Types</a>
                     </li>
-                    <li class="<?php if($current_page == "type_add.php") echo "active"?>">
+                    <li class="<?php if($current_page == "page_type_add.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>type-add"><i class="fas fa-angle-right"></i> Add Type</a>
                     </li>
                 </ul>
@@ -64,10 +76,10 @@
             <li class="nav-item dropdown <?php if(strpos($current_page, "amenit") !== false) echo "active"?>">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-th-large"></i><span> Amenities</span></a>
                 <ul class="dropdown-menu">
-                    <li class="<?php if($current_page == "amenities.php") echo "active"?>">
+                    <li class="<?php if($current_page == "page_amenities.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>amenities"><i class="fas fa-angle-right"></i> Amenities</a>
                     </li>
-                    <li class="<?php if($current_page == "amenity_add.php") echo "active"?>">
+                    <li class="<?php if($current_page == "page_amenity_add.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>amenity-add"><i class="fas fa-angle-right"></i> Add Amenity</a>
                     </li>
                 </ul>

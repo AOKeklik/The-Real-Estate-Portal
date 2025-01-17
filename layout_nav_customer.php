@@ -4,7 +4,7 @@
             <a href="<?php echo BASE_URL?>customer-dashboard">Dashboard</a>
         </li>
         <li class="list-group-item <?php if($current_page == "customer_wishlist.php") echo "active"?>">
-            <a href="<?php BASE_URL?>customer-wishlist">Wishlist</a>
+            <a href="<?php echo BASE_URL?>customer-wishlist">Wishlist</a>
         </li>
         <li class="list-group-item <?php if($current_page == "customer_messages.php" || $current_page == "customer_message.php") echo "active"?>">
             <a href="<?php echo BASE_URL?>customer-messages">Messages</a>

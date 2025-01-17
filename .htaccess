@@ -4,32 +4,35 @@ RewriteEngine On
 
 RewriteRule     ^admin/login$                               ./admin/auth_login.php                                  [NC,L]
 RewriteRule     ^admin/logout$                              ./admin/auth_logout.php                                 [NC,L]
-RewriteRule     ^admin/profile$                             ./admin/profile.php                                     [NC,L]
-RewriteRule     ^admin/dashboard$                           ./admin/dashboard.php                                   [NC,L]
-RewriteRule     ^admin/setting$                             ./admin/setting.php                                     [NC,L]
-RewriteRule     ^admin/properties$                          ./admin/properties.php                                  [NC,L]
-RewriteRule     ^admin/orders$                              ./admin/orders.php                                      [NC,L]
+RewriteRule     ^admin/profile$                             ./admin/page_profile.php                                [NC,L]
+RewriteRule     ^admin/dashboard$                           ./admin/page_dashboard.php                              [NC,L]
+RewriteRule     ^admin/setting$                             ./admin/page_setting.php                                [NC,L]
+RewriteRule     ^admin/properties$                          ./admin/page_properties.php                             [NC,L]
+RewriteRule     ^admin/orders$                              ./admin/page_orders.php                                 [NC,L]
+
+RewriteRule     ^admin/customers$                           ./admin/page_customers.php                              [NC,L]
+RewriteRule     ^admin/agents$                              ./admin/page_agents.php                                 [NC,L]
 
 RewriteRule     ^admin/messages$                            ./admin/page_messages.php                               [NC,L]
 RewriteRule     ^admin/message/([0-9]+)$                    ./admin/page_message.php?message_id=$1                  [NC,L]
 
-RewriteRule     ^admin/packages$                            ./admin/packages.php                                    [NC,L]
-RewriteRule     ^admin/package-add$                         ./admin/package_add.php                                 [NC,L]
-RewriteRule     ^admin/package-edit/([0-9]+)$               ./admin/package_edit.php?id=$1                          [NC,L]
-RewriteRule     ^admin/package-delete/([0-9]+)$             ./admin/package_delete.php?id=$1                        [NC,L]
+RewriteRule     ^admin/packages$                            ./admin/page_packages.php                               [NC,L]
+RewriteRule     ^admin/package-add$                         ./admin/page_package_add.php                            [NC,L]
+RewriteRule     ^admin/package-edit/([0-9]+)$               ./admin/page_package_edit.php?id=$1                     [NC,L]
+RewriteRule     ^admin/package-delete/([0-9]+)$             ./admin/page_package_delete.php?id=$1                   [NC,L]
 
-RewriteRule     ^admin/locations$                           ./admin/locations.php                                   [NC,L]
-RewriteRule     ^admin/location-add$                        ./admin/location_add.php                                [NC,L]
-RewriteRule     ^admin/location-edit/([0-9]+)$              ./admin/location_edit.php?id=$1                         [NC,L]
+RewriteRule     ^admin/locations$                           ./admin/page_locations.php                              [NC,L]
+RewriteRule     ^admin/location-add$                        ./admin/page_location_add.php                           [NC,L]
+RewriteRule     ^admin/location-edit/([0-9]+)$              ./admin/page_location_edit.php?id=$1                    [NC,L]
 
-RewriteRule     ^admin/types$                               ./admin/types.php                                       [NC,L]
-RewriteRule     ^admin/type-add$                            ./admin/type_add.php                                    [NC,L]
-RewriteRule     ^admin/type-edit/([0-9]+)$                  ./admin/type_edit.php?id=$1                             [NC,L]
+RewriteRule     ^admin/types$                               ./admin/page_types.php                                  [NC,L]
+RewriteRule     ^admin/type-add$                            ./admin/page_type_add.php                               [NC,L]
+RewriteRule     ^admin/type-edit/([0-9]+)$                  ./admin/page_type_edit.php?id=$1                        [NC,L]
 
-RewriteRule     ^admin/amenities$                           ./admin/amenities.php                                   [NC,L]
-RewriteRule     ^admin/amenity-add$                         ./admin/amenity_add.php                                 [NC,L]
-RewriteRule     ^admin/amenity-edit/([0-9]+)$               ./admin/amenity_edit.php?id=$1                          [NC,L]
-RewriteRule     ^admin/amenity-delete/([0-9]+)$             ./admin/amenity_delete.php?id=$1                        [NC,L]
+RewriteRule     ^admin/amenities$                           ./admin/page_amenities.php                              [NC,L]
+RewriteRule     ^admin/amenity-add$                         ./admin/page_amenity_add.php                            [NC,L]
+RewriteRule     ^admin/amenity-edit/([0-9]+)$               ./admin/page_amenity_edit.php?id=$1                     [NC,L]
+RewriteRule     ^admin/amenity-delete/([0-9]+)$             ./admin/page_amenity_delete.php?id=$1                   [NC,L]
 
 # -- frontend ---                       
 
@@ -38,7 +41,7 @@ RewriteRule     ^locations$                                 page_locations.php  
 RewriteRule     ^location/([a-z-]+)$                        page_location.php?slug=$1                               [NC,L]
 RewriteRule     ^select-user$                               auth_select_user.php                                    [NC,L]
 RewriteRule     ^properties$                                page_properties.php                                     [NC,L]
-RewriteRule     ^property/([0-9]+)/([0-9a-z-]+)$               page_property.php?id=$1&slug=$2                         [NC,L]
+RewriteRule     ^property/([0-9]+)/([0-9a-z-]+)$            page_property.php?id=$1&slug=$2                         [NC,L]
 RewriteRule     ^agents$                                    page_agents.php                                         [NC,L]
 RewriteRule     ^agent/([0-9]+)/([a-z-]+)$                  page_agent.php?id=$1&slug=$2                            [NC,L]
 RewriteRule     ^404$                                       page_404.php                                            [NC,L]

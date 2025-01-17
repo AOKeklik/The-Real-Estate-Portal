@@ -29,7 +29,7 @@
         <div class="section-header justify-content-between">
             <h1>Orders</h1>
             <div class="ml-auto">
-                <a href="" class="btn btn-primary"><i class="fas fa-plus"></i> Add New</a>
+                <a href="<?php echo ADMIN_URL?>dashboard" class="btn btn-primary"><i class="fas fa-eye"></i> Dashboard</a>
             </div>
         </div>
         <div class="section-body">
@@ -101,7 +101,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "<?php echo ADMIN_URL?>order_delete.php",
+                url: "<?php echo ADMIN_URL?>page_order_delete_ajax.php",
                 data: formData,
                 processData: false,
                 contentType: false,

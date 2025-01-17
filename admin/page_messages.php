@@ -34,7 +34,7 @@
         <div class="section-header justify-content-between">
             <h1>Messages</h1>
             <div class="ml-auto">
-                <a href="" class="btn btn-primary"><i class="fas fa-plus"></i> Add New</a>
+                <a href="<?php echo ADMIN_URL?>dashboard" class="btn btn-primary"><i class="fas fa-eye"></i> Dashboard</a>
             </div>
         </div>
         <div class="section-body">

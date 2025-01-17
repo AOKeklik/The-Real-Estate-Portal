@@ -46,9 +46,9 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header justify-content-between">
-            <h1>Table</h1>
+            <h1>Properties</h1>
             <div class="ml-auto">
-                <a href="" class="btn btn-primary"><i class="fas fa-plus"></i> Add New</a>
+                <a href="<?php echo ADMIN_URL?>dashboard" class="btn btn-primary"><i class="fas fa-plus"></i> Dashboard</a>
             </div>
         </div>
         <div class="section-body">
@@ -212,7 +212,7 @@
             parent.css("pointer-events","none")
 
             $.ajax({
-                url: "<?php echo ADMIN_URL?>property_delete.php",
+                url: "<?php echo ADMIN_URL?>page_property_delete_ajax.php",
                 type: "POST",
                 processData: false,
                 contentType: false,
