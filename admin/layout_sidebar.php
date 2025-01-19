@@ -25,22 +25,6 @@
                 <a class="nav-link" href="<?php ADMIN_URL?>messages"><i class="fas fa-envelope"></i> <span>Messages</span></a>
             </li>
 
-            <li class="nav-item dropdown <?php if(preg_match("/why_choose/i",$current_page)) echo "active"?>">
-                <a href="#" class="nav-link has-dropdown"><i class="fas fa-check-circle"></i><span> Why Choose</span></a>
-                <ul class="dropdown-menu">
-                    <li class="<?php if($current_page == "page_why_choose.php") echo "active"?>">
-                        <a class="nav-link" href="<?php echo ADMIN_URL?>why-choose">
-                            <i class="fas fa-angle-right"></i> Why Choose
-                        </a>
-                    </li>
-                    <li class="<?php if($current_page == "page_why_choose_add.php") echo "active"?>">
-                        <a class="nav-link" href="<?php echo ADMIN_URL?>why-choose-add">
-                            <i class="fas fa-angle-right"></i> Add
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
             <li class="nav-item dropdown <?php if(preg_match("/(customer|agent)/i", $current_page)) echo "active"?>">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-user"></i><span> Users</span></a>
                 <ul class="dropdown-menu">
@@ -97,6 +81,34 @@
                     </li>
                     <li class="<?php if($current_page == "page_amenity_add.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>amenity-add"><i class="fas fa-angle-right"></i> Add Amenity</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown <?php if(preg_match("/why_choose/i",$current_page)) echo "active"?>">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-check-circle"></i><span> Why Choose</span></a>
+                <ul class="dropdown-menu">
+                    <li class="<?php if($current_page == "page_why_choose.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>why-choose">
+                            <i class="fas fa-angle-right"></i> Why Choose
+                        </a>
+                    </li>
+                    <li class="<?php if($current_page == "page_why_choose_add.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>why-choose-add">
+                            <i class="fas fa-angle-right"></i> Add
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown <?php if(preg_match("/testimonial/i",$current_page)) echo "active"?>">
+                <a href="#" class="nav-link has-dropdown"><i class="fa fa-quote-left"></i><span> Testimonials</span></a>
+                <ul class="dropdown-menu">
+                    <li class="<?php if($current_page == "pate_testimonials.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>testimonials"><i class="fas fa-angle-right"></i> Testimonials</a>
+                    </li>
+                    <li class="<?php if($current_page == "php_testimonial_add.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>testimonial-add"><i class="fas fa-angle-right"></i> Testimonial Add</a>
                     </li>
                 </ul>
             </li>

@@ -136,6 +136,23 @@
     }catch(PDOException $err){  
         $error_message=$err->getMessage();
     }
+
+    try{
+        $stmtTestimonials=$pdo->prepare("
+            SELECT
+                *
+            FROM
+                testimonials
+            WHERE
+                status=?
+            ORDER BY
+                id ASC
+        ");
+        $stmtTestimonials->execute([1]);
+        $testimonials =$stmtTestimonials->fetchAll(pdo::FETCH_ASSOC);
+    }catch(PDOException $err){  
+        $error_message=$err->getMessage();
+    }
 ?>
 
     <div class="slider" style="background-image: url()">
@@ -303,45 +320,46 @@
         </div>
     </div>
 
-
-    <div class="agent">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="heading">
-                        <h2>Agents</h2>
-                        <p>
-                            Meet our expert property agents from the following list
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <?php if($stmtAgents->rowCount() > 0): foreach($agents as $agent):?>
-                    <div class="col-lg-3 col-md-3">
-                        <div class="item">
-                            <div class="photo">
-                                <a href="<?php echo BASE_URL?>agent/<?php echo $agent["id"]?>/<?php echo $agent["slug"]?>">
-                                    <?php if(is_null($agent["photo"])):?>
-                                        <img src="<?php echo PUBLIC_URL?>uploads/user.png" alt="">
-                                    <?php else:?>
-                                        <img src="<?php echo PUBLIC_URL?>uploads/agent/<?php echo $agent["photo"]?>" alt="">
-                                    <?php endif?>
-                                </a>
-                            </div>
-                            <div class="text">
-                                <h2>
-                                    <a href="<?php echo BASE_URL?>agent/<?php echo $agent["id"]?>/<?php echo $agent["slug"]?>">
-                                        <?php echo $agent["full_name"]?>
-                                    </a>
-                                </h2>
-                            </div>
+    <?php if($stmtAgents->rowCount() > 0):?>
+        <div class="agent">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="heading">
+                            <h2>Agents</h2>
+                            <p>
+                                Meet our expert property agents from the following list
+                            </p>
                         </div>
                     </div>
-                <?php endforeach;endif?>
+                </div>
+                <div class="row">
+                    <?php foreach($agents as $agent):?>
+                        <div class="col-lg-3 col-md-3">
+                            <div class="item">
+                                <div class="photo">
+                                    <a href="<?php echo BASE_URL?>agent/<?php echo $agent["id"]?>/<?php echo $agent["slug"]?>">
+                                        <?php if(is_null($agent["photo"])):?>
+                                            <img src="<?php echo PUBLIC_URL?>uploads/user.png" alt="">
+                                        <?php else:?>
+                                            <img src="<?php echo PUBLIC_URL?>uploads/agent/<?php echo $agent["photo"]?>" alt="">
+                                        <?php endif?>
+                                    </a>
+                                </div>
+                                <div class="text">
+                                    <h2>
+                                        <a href="<?php echo BASE_URL?>agent/<?php echo $agent["id"]?>/<?php echo $agent["slug"]?>">
+                                            <?php echo $agent["full_name"]?>
+                                        </a>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach?>
+                </div>
             </div>
         </div>
-    </div>
+    <?php endif?>
 
 
     <div class="location pb_40">
@@ -376,51 +394,38 @@
         </div>
     </div>
 
-
-    <div class="testimonial" style="background-image: url()">
-        <div class="bg"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2 class="main-header">Our Happy Clients</h2>
+    <?php if($stmtTestimonials->rowCount() > 0):?>
+        <div class="testimonial" style="background-image: url()">
+            <div class="bg"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2 class="main-header">Our Happy Clients</h2>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-12">
-                    <div class="testimonial-carousel owl-carousel">
-                        <div class="item">
-                            <div class="photo">
-                                <img src="https://placehold.co/500x500" alt="" />
-                            </div>
-                            <div class="text">
-                                <h4>Robert Krol</h4>
-                                <p>CEO, ABC Company</p>
-                            </div>
-                            <div class="description">
-                                <p>
-                                    I recently worked with Patrick Johnson on purchasing my dream home and I couldn't have asked for a better experience. Patrick Johnson was knowledgeable, professional, and truly cared about finding me the perfect property. They were always available to answer my questions and made the entire process stress-free. I highly recommend Patrick Johnson to anyone looking to buy or sell a property!
-                                </p>
-                            </div>
-                        </div>
-                        <div class="item">
-                            <div class="photo">
-                                <img src="https://placehold.co/500x500" alt="" />
-                            </div>
-                            <div class="text">
-                                <h4>Sal Harvey</h4>
-                                <p>Director, DEF Company</p>
-                            </div>
-                            <div class="description">
-                                <p>
-                                    I had the pleasure of working with Smith Brent during my recent home search and I can't speak highly enough of their services. Smith Brent listened to my needs and helped me find the perfect home that met all of my requirements. They were always there for me, from the initial search to closing, and made the process seamless and enjoyable. I would recommend Smith Brent to anyone looking for an experienced and dedicated real estate agent.
-                                </p>
-                            </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="testimonial-carousel owl-carousel">
+                            <?php foreach($testimonials as $testimonial):?>
+                                <div class="item">
+                                    <div class="photo">
+                                        <img src="<?php echo PUBLIC_URL?>uploads/testimonial/<?php echo $testimonial["photo"]?>" alt="" />
+                                    </div>
+                                    <div class="text">
+                                        <h4><?php echo $testimonial["full_name"]?></h4>
+                                        <p><?php echo $testimonial["designation"]?></p>
+                                    </div>
+                                    <div class="description">
+                                        <p><?php echo $testimonial["comment"]?></p>
+                                    </div>
+                                </div>
+                            <?php endforeach?>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    <?php endif?>
 
     <div class="blog">
         <div class="container">

@@ -3055,7 +3055,7 @@ body:not(.sidebar-mini) .sidebar-style-2 .sidebar-menu li.active ul.dropdown-men
 .pending .button-loader + * {display: none;}
 
 .active .button-loader {display: none;}
-.active .button-loader + * {display: block;}
+.active .button-loader + * {display: inline-block;}
 
 .button-loader {
     position: relative;
