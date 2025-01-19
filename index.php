@@ -121,6 +121,21 @@
             $error_message=$err->getMessage();
         }
     }
+
+    try{
+        $stmtWhyChooseItems=$pdo->prepare("
+            SELECT
+                *
+            FROM
+                why_choose_items
+            ORDER BY
+                id ASC
+        ");
+        $stmtWhyChooseItems->execute();
+        $whyChooseItems =$stmtWhyChooseItems->fetchAll(pdo::FETCH_ASSOC);
+    }catch(PDOException $err){  
+        $error_message=$err->getMessage();
+    }
 ?>
 
     <div class="slider" style="background-image: url()">
@@ -271,45 +286,19 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4">
-                    <div class="inner">
-                        <div class="icon">
-                            <i class="fas fa-briefcase"></i>
-                        </div>
-                        <div class="text">
-                            <h2>Years of Experience</h2>
-                            <p>
-                                With decades of combined experience in the industry, our agents have the expertise and knowledge to provide you with a seamless home-buying experience.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="inner">
-                        <div class="icon">
-                            <i class="fas fa-search"></i>
-                        </div>
-                        <div class="text">
-                            <h2>Competitive Prices</h2>
-                            <p>
-                                We understand that buying a home is a significant investment, which is why we strive to offer competitive prices to our clients.
-                            </p>
+                <?php if($stmtWhyChooseItems->rowCount() > 0): foreach($whyChooseItems as $whyChooseItem):?>
+                    <div class="col-md-4">
+                        <div class="inner">
+                            <div class="icon">
+                                <i class="<?php echo $whyChooseItem["icon"]?>"></i>
+                            </div>
+                            <div class="text">
+                                <h2><?php echo $whyChooseItem["heading"]?></h2>
+                                <p><?php echo $whyChooseItem["text"]?></p>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="inner">
-                        <div class="icon">
-                            <i class="fas fa-share-alt"></i>
-                        </div>
-                        <div class="text">
-                            <h2>Responsive Communication</h2>
-                            <p>
-                                Our responsive agents are here to answer your questions and address your concerns, ensuring a smooth and stress-free home-buying experience.
-                            </p>
-                        </div>
-                    </div>
-                </div>
+                <?php endforeach;endif?>
             </div>
         </div>
     </div>

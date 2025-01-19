@@ -16,13 +16,29 @@
                 <a class="nav-link" href="<?php echo ADMIN_URL?>setting"><i class="fas fa-cog"></i><span>Setting</span></a>
             </li>
             <li class="<?php if($current_page == "page_properties.php") echo "active"?>">
-                <a class="nav-link" href="<?php echo ADMIN_URL?>properties"><i class="fas fa-building"></i> Properties</a>
+                <a class="nav-link" href="<?php echo ADMIN_URL?>properties"><i class="fas fa-building"></i> <span>Properties</span></a>
             </li>
             <li class="<?php if($current_page == "page_orders.php") echo "active"?>">
                 <a class="nav-link" href="<?php echo ADMIN_URL?>orders"><i class="fas fa-shopping-cart"></i> <span>Orders</span></a>
             </li>
             <li class="<?php if($current_page === "page_messages.php") echo "active"?>">
                 <a class="nav-link" href="<?php ADMIN_URL?>messages"><i class="fas fa-envelope"></i> <span>Messages</span></a>
+            </li>
+
+            <li class="nav-item dropdown <?php if(preg_match("/why_choose/i",$current_page)) echo "active"?>">
+                <a href="#" class="nav-link has-dropdown"><i class="fas fa-check-circle"></i><span> Why Choose</span></a>
+                <ul class="dropdown-menu">
+                    <li class="<?php if($current_page == "page_why_choose.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>why-choose">
+                            <i class="fas fa-angle-right"></i> Why Choose
+                        </a>
+                    </li>
+                    <li class="<?php if($current_page == "page_why_choose_add.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>why-choose-add">
+                            <i class="fas fa-angle-right"></i> Add
+                        </a>
+                    </li>
+                </ul>
             </li>
 
             <li class="nav-item dropdown <?php if(preg_match("/(customer|agent)/i", $current_page)) echo "active"?>">

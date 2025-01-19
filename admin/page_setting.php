@@ -26,8 +26,11 @@
 
 <div class="main-content">
     <section class="section">
-        <div class="section-header">
+        <div class="section-header justify-content-between">
             <h1>Setting</h1>
+            <div class="ml-auto">
+                <a href="<?php echo ADMIN_URL?>dashboard" class="btn btn-primary"><i class="fas fa-eye"></i> Dashboard</a>
+            </div>
         </div>
         <div class="section-body">
             <div class="row">

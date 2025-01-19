@@ -6,11 +6,6 @@
 
     include "./layout_config.php";
 
-    if(!isset($_SESSION["agent"])){
-        header("Location: ".BASE_URL."agent-login");
-        exit();
-    }
-
     if(
         $_SERVER["REQUEST_METHOD"] === "POST" &&
         isset($_POST["name"]) &&

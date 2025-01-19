@@ -122,21 +122,23 @@
         $error_message=$err->getMessage();
     }
 
-    try{
-        $stmtWishlist=$pdo->prepare("
-            SELECT
-                *
-            FROM
-                wishlists
-            WHERE
-                customer_id=?
-            ORDER BY
-                id ASC
-        ");
-        $stmtWishlist->execute([$_SESSION["customer"]["id"]]);
-        $wishlists=$stmtWishlist->fetchAll(pdo::FETCH_ASSOC);
-    }catch(PDOException $err){
-        $error_message=$err->getMessage();
+    if(isset($_SESSION["customer"])){
+        try{
+            $stmtWishlist=$pdo->prepare("
+                SELECT
+                    *
+                FROM
+                    wishlists
+                WHERE
+                    customer_id=?
+                ORDER BY
+                    id ASC
+            ");
+            $stmtWishlist->execute([$_SESSION["customer"]["id"]]);
+            $wishlists=$stmtWishlist->fetchAll(pdo::FETCH_ASSOC);
+        }catch(PDOException $err){
+            $error_message=$err->getMessage();
+        }
     }
 ?>
 <div class="page-top" style="background-image: url('')">
@@ -517,13 +519,13 @@
             formData.append("message",message)
 
             $.ajax({
-                url: "<?php echo BASE_URL ?>page_property_mail.php",
+                url: "<?php echo BASE_URL ?>page_property_mail_store_ajax.php",
                 type: "POST",
                 contentType: false,
                 processData:false,
                 data: formData,
                 success: function(responsive){
-
+                    console.log(responsive)
                     if(responsive.includes("table")) {
                         $("#enquery-form").parent().append("<div class='alert alert-danger'>Oops! Something went wrong. Please try again later.</div>")
                         $("#enquery-form form").slideUp()
@@ -559,8 +561,8 @@
             })
         })
     })
-</script>
-<script>
+
+    /* wishlist */
     $(document).ready(function(){
         function handlerClickWishlistButton () {
             $(".wishlist").click( async function(e){

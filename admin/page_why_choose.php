@@ -1,0 +1,120 @@
+<?php   
+    include "./layout_top.php";
+
+    if(!isset($_SESSION["admin"])){
+        header("Location: ".ADMIN_URL."login");
+        exit();
+    }
+
+    try{
+        $stmt=$pdo->prepare("
+            SELECT
+                *
+            FROM
+                why_choose_items
+            ORDER BY
+                id DESC
+        ");
+        $stmt->execute();
+        $why_choose_items=$stmt->fetchAll(pdo::FETCH_ASSOC);
+    }catch(PDOException $err){
+        $error_message=$err->getMessage();
+    }
+?>
+<div class="main-content">
+    <section class="section">
+        <div class="section-header justify-content-between">
+        <h1>Why Choose</h1>
+            <div class="ml-auto">
+                <a href="<?php echo ADMIN_URL?>why-choose-add" class="btn btn-primary"><i class="fas fa-plus"></i> Add New</a>
+            </div>
+        </div>
+        <div class="section-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="example1">
+                                    <thead>
+                                    <tr>
+                                        <th>SL</th>
+                                        <th>Icon</th>
+                                        <th>Heading</th>
+                                        <th>Text</th>
+                                        <th>Action</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if($stmt->rowCount() > 0): foreach($why_choose_items as $item):?>
+                                            <tr class="active">
+                                                <td><?php echo $item["id"]?></td>
+                                                <td><i class="<?php echo $item["icon"]?> fs-4"></i></td>
+                                                <td><?php echo $item["heading"]?></td>
+                                                <td><?php echo substr($item["text"],0,30)?>...</td>
+                                                <td class="pt_10 pb_10">
+                                                    <a href="<?php echo ADMIN_URL?>why-choose-edit/<?php echo $item["id"]?>" class="btn btn-primary">Detail</a>
+                                                    <a href="" data-why-choose-id="<?php echo $item["id"]?>" class="btn btn-danger">
+                                                        <span class="button-loader"></span>
+                                                        <span>Delete</span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach;endif?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    $(document).ready(function(){
+        $(document).on("click",".btn.btn-danger",async function(e){
+            e.preventDefault()
+
+            if(!confirm('Are you sure?')) return
+
+            const el = $(this)
+            const parent = el.closest("tr")
+            const whyChooseId = el.data("why-choose-id")
+            const formData = new FormData()
+
+            parent.attr("class","pending")
+            formData.append("why_choose_id",btoa(whyChooseId))
+            await new Promise(resolve => setTimeout(resolve,1000))
+
+            $.ajax({
+                url: "<?php echo ADMIN_URL?>page_why_choose_delete_ajax.php",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(respense){
+                    console.log(respense)
+                    const res = JSON.parse(respense)
+
+                    iziToast.show({
+                        title: res.success?.message ?? res.error.message,
+                        position: "topRight",
+                        color: res.success ? "green" : "red"
+                    })
+
+                    if(res.success){
+                        parent.slideUp(500,function(){
+                            parent.attr("class","active")
+                        })
+                    }
+
+                    if(res.error){
+                        parent.attr("class","active")
+                    }
+                }
+            })
+        })
+    })
+</script>
+<?php include "./layout_footer.php"?>

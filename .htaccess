@@ -16,6 +16,10 @@ RewriteRule     ^admin/agents$                              ./admin/page_agents.
 RewriteRule     ^admin/messages$                            ./admin/page_messages.php                               [NC,L]
 RewriteRule     ^admin/message/([0-9]+)$                    ./admin/page_message.php?message_id=$1                  [NC,L]
 
+RewriteRule     ^admin/why-choose$                          ./admin/page_why_choose.php                             [NC,L]
+RewriteRule     ^admin/why-choose-add$                      ./admin/page_why_choose_add.php                         [NC,L]
+RewriteRule     ^admin/why-choose-edit/([0-9]+)$            ./admin/page_why_choose_edit.php?why_choose_id=$1       [NC,L]
+
 RewriteRule     ^admin/packages$                            ./admin/page_packages.php                               [NC,L]
 RewriteRule     ^admin/package-add$                         ./admin/page_package_add.php                            [NC,L]
 RewriteRule     ^admin/package-edit/([0-9]+)$               ./admin/page_package_edit.php?id=$1                     [NC,L]
