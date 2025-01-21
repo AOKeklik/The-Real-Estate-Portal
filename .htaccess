@@ -31,8 +31,8 @@ RewriteRule     ^admin/type-edit/([0-9]+)$                  ./admin/page_type_ed
 
 RewriteRule     ^admin/amenities$                           ./admin/page_amenities.php                              [NC,L]
 RewriteRule     ^admin/amenity-add$                         ./admin/page_amenity_add.php                            [NC,L]
-RewriteRule     ^admin/amenity-edit/([0-9]+)$               ./admin/page_amenity_edit.php?id=$1                     [NC,L]
-RewriteRule     ^admin/amenity-delete/([0-9]+)$             ./admin/page_amenity_delete.php?id=$1                   [NC,L]
+RewriteRule     ^admin/amenity-edit/([0-9]+)$               ./admin/page_amenity_edit.php?amenity_id=$1             [NC,L]
+RewriteRule     ^admin/amenity-delete/([0-9]+)$             ./admin/page_amenity_delete.php?amenity_id=$1           [NC,L]
 
 RewriteRule     ^admin/why-choose$                          ./admin/page_why_choose.php                             [NC,L]
 RewriteRule     ^admin/why-choose-add$                      ./admin/page_why_choose_add.php                         [NC,L]
@@ -41,6 +41,10 @@ RewriteRule     ^admin/why-choose-edit/([0-9]+)$            ./admin/page_why_cho
 RewriteRule     ^admin/testimonials$                        ./admin/page_testimonials.php                           [NC,L]
 RewriteRule     ^admin/testimonial-add$                     ./admin/page_testimonial_add.php                        [NC,L]
 RewriteRule     ^admin/testimonial-edit/([0-9]+)$           ./admin/page_testimonial_edit.php?testimonial_id=$1     [NC,L]
+
+RewriteRule     ^admin/posts$                               ./admin/page_posts.php                                  [NC,L]
+RewriteRule     ^admin/post-add$                            ./admin/page_post_add.php                               [NC,L]
+RewriteRule     ^admin/post-edit/([0-9]+)$                  ./admin/page_post_edit.php?post_id=$1                   [NC,L]
 
 # -- frontend ---                       
 
@@ -51,7 +55,9 @@ RewriteRule     ^select-user$                               auth_select_user.php
 RewriteRule     ^properties$                                page_properties.php                                     [NC,L]
 RewriteRule     ^property/([0-9]+)/([0-9a-z-]+)$            page_property.php?id=$1&slug=$2                         [NC,L]
 RewriteRule     ^agents$                                    page_agents.php                                         [NC,L]
-RewriteRule     ^agent/([0-9]+)/([a-z-]+)$                  page_agent.php?id=$1&slug=$2                            [NC,L]
+RewriteRule     ^agent/([0-9]+)/([0-9a-z-]+)$               page_agent.php?agent_id=$1&slug=$2                      [NC,L]
+RewriteRule     ^post/([0-9]+)/([0-9a-z-]+)$                page_post.php?post_id=$1&post_slug=$2                   [NC,L]
+RewriteRule     ^posts$                                     page_posts.php                                          [NC,L]
 RewriteRule     ^404$                                       page_404.php                                            [NC,L]
 
 # -- customer ---                               

@@ -411,6 +411,7 @@
 </div>
 
 <script>
+    /* pagination */
     $(document).ready(function(){
         const itemsPerPage = Number("<?php echo MAX_POSTS_PER_PAGE?>")
         let currentPage = 1
@@ -499,8 +500,8 @@
     //         })
     //     }
     // })
-</script>
-<script>
+
+    /* wishlist */
     $(document).ready(function(){
         function handlerClickWishlistButton () {
             $(".wishlist").click( async function(e){

@@ -146,11 +146,30 @@
             WHERE
                 status=?
             ORDER BY
-                id ASC
+                rand()
         ");
         $stmtTestimonials->execute([1]);
         $testimonials =$stmtTestimonials->fetchAll(pdo::FETCH_ASSOC);
     }catch(PDOException $err){  
+        $error_message=$err->getMessage();
+    }
+
+    try{
+        $stmtPosts=$pdo->prepare("
+            SELECT
+                *
+            FROM
+                posts
+            WHERE
+                status=?
+            ORDER BY
+                rand()
+            LIMIT
+                3
+        ");
+        $stmtPosts->execute([1]);
+        $posts=$stmtPosts->fetchAll(pdo::FETCH_ASSOC);
+    }catch(PDOException $err){
         $error_message=$err->getMessage();
     }
 ?>
@@ -427,91 +446,46 @@
         </div>
     <?php endif?>
 
-    <div class="blog">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="heading">
-                        <h2>Latest News</h2>
-                        <p>
-                            Check our latest news from the following section
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 col-md-6">
-                    <div class="item">
-                        <div class="photo">
-                            <img src="https://placehold.co/1000x600" alt="" />
-                        </div>
-                        <div class="text">
-                            <h2>
-                                <a href="post.html">5 Tips for Finding Your Dream Home</a>
-                            </h2>
-                            <div class="short-des">
-                                <p>
-                                    Lorem ipsum dolor sit amet, nibh saperet
-                                    te pri, at nam diceret disputationi. Quo
-                                    an consul impedit, usu possim evertitur
-                                    dissentiet ei.
-                                </p>
-                            </div>
-                            <div class="button">
-                                <a href="post.html" class="btn btn-primary">Read More</a>
-                            </div>
+    <?php if($stmtPosts->rowCount() > 0):?>
+        <div class="blog">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="heading">
+                            <h2>Latest News</h2>
+                            <p>
+                                Check our latest news from the following section
+                            </p>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="item">
-                        <div class="photo">
-                            <img src="https://placehold.co/1000x600" alt="" />
-                        </div>
-                        <div class="text">
-                            <h2>
-                                <a href="post.html">Pros & Cons of Renting vs. Buying</a>
-                            </h2>
-                            <div class="short-des">
-                                <p>
-                                    Nec in rebum primis causae. Affert
-                                    iisque ex pri, vis utinam vivendo
-                                    definitionem ad, nostrum omnes que per
-                                    et. Omnium antiopam.
-                                </p>
-                            </div>
-                            <div class="button">
-                                <a href="post.html" class="btn btn-primary">Read More</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6">
-                    <div class="item">
-                        <div class="photo">
-                            <img src="https://placehold.co/1000x600" alt="" />
-                        </div>
-                        <div class="text">
-                            <h2>
-                                <a href="post.html">Maximizing Your Investment in 2023</a>
-                            </h2>
-                            <div class="short-des">
-                                <p>
-                                    Id pri placerat voluptatum, vero dicunt
-                                    dissentiunt eum et, adhuc iisque vis no.
-                                    Eu suavitate conten tiones definitionem
-                                    mel, ex vide.
-                                </p>
-                            </div>
-                            <div class="button">
-                                <a href="post.html" class="btn btn-primary">Read More</a>
+                <div class="row">
+                    <?php foreach($posts as $post):?>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="item">
+                                <div class="photo">
+                                    <?php if(is_null($post["photo"])):?>
+                                        <img src="https://placehold.co/1000x600" alt="" />
+                                    <?php else:?>
+                                        <img src="<?php echo PUBLIC_URL?>uploads/post/<?php echo $post["photo"]?>" alt="" />
+                                    <?php endif?>
+                                </div>
+                                <div class="text">
+                                    <h2>
+                                        <a href="<?php BASE_URL?>post/<?php echo $post["id"]?>/<?php echo $post["slug"]?>"><?php echo $post["title"]?></a>
+                                    </h2>
+                                    <div class="short-des"><?php echo html_entity_decode($post["excerpt"])?></div>
+                                    <div class="button">
+                                        <a href="<?php BASE_URL?>post/<?php echo $post["id"]?>/<?php echo $post["slug"]?>" class="btn btn-primary">Read More</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    <?php endforeach?>
                 </div>
             </div>
         </div>
-    </div>
+    <?php endif?>
 
     <script>
         $(document).ready(function(){

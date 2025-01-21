@@ -33,8 +33,8 @@
                         <li class="nav-item">
                             <a href="faq.html" class="nav-link">FAQ</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="blog.html" class="nav-link">Blog</a>
+                        <li class="nav-item <?php if(preg_match("/post/i",$current_page)) echo "active"?>">
+                            <a href="<?php echo BASE_URL?>posts" class="nav-link">Blog</a>
                         </li>
                         <li class="nav-item">
                             <a href="contact.html" class="nav-link">Contact</a>

@@ -110,7 +110,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "<?php echo ADMIN_URL?>page_customer_update_status_ajax.php",
+                url: "<?php echo ADMIN_URL?>page_customer_edit_status_ajax.php",
                 data: formData,
                 contentType: false,
                 processData: false,

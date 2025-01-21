@@ -113,6 +113,19 @@
                 </ul>
             </li>
 
+            <li class="nav-item dropdown <?php if(preg_match("/post/i",$current_page)) echo "active"?>">
+                <a href="#" class="nav-link has-dropdown"><i class="fa fa-edit"></i><span> Posts</span></a>
+                <ul class="dropdown-menu">
+                    <li class="<?php if($current_page == "page_posts.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>posts"><i class="fas fa-angle-right"></i> Posts</a>
+                    </li>
+                    <li class="<?php if($current_page == "page_post_add.php") echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>post-add"><i class="fas fa-angle-right"></i> Add Post</a>
+                    </li>
+                </ul>
+            </li>
+
+
             <!-- <li class="nav-item dropdown active">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-hand-point-right"></i><span>Dropdown Items</span></a>
                 <ul class="dropdown-menu">

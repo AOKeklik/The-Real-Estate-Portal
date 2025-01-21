@@ -6,16 +6,16 @@
         exit();
     }
 
-    if(!isset($_GET["id"])){
+    if(!isset($_GET["amenity_id"])){
         header("Location: ".ADMIN_URL."amenities");
         exit();
     }
 
-    $id = $_GET["id"];
+    $amenity_id = $_GET["amenity_id"];
 
     try{
         $stmt = $pdo->prepare("select * from amenities where id=? limit 1");
-        $stmt->execute([$id]);
+        $stmt->execute([$amenity_id]);
         $amenity = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if($stmt->rowCount() == 0)
@@ -42,14 +42,14 @@
         if(empty($errors)){
             try{
                 $stmt = $pdo->prepare("select * from amenities where lower(name)=lower(?) and id!=? limit 1");
-                $stmt->execute([$name,$id]);
+                $stmt->execute([$name,$amenity_id]);
 
                 if($stmt->rowCount() > 0)
                     throw new PDOException("The amenity value must be unique!");
 
                 $stmt = $pdo->prepare("update amenities set name=?,icon=? where id=?");
 
-                if(!$stmt->execute([$id,$icon,$name]))
+                if(!$stmt->execute([$amenity_id,$icon,$name]))
                     throw new PDOException("An error occurred while updating. Please try again later!");
 
                 unset($_POST["name"]);

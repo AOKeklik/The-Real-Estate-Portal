@@ -1,7 +1,7 @@
 <?php
     include "./layout_top.php";
 
-    if(!isset($_GET["id"])){
+    if(!isset($_GET["agent_id"])){
         header("Location: ".BASE_URL."404");
         exit();
     }
@@ -11,7 +11,7 @@
         exit();
     }
 
-    $id =$_GET["id"];
+    $agent_id =$_GET["agent_id"];
     $slug =$_GET["slug"];
 
     try{
@@ -35,7 +35,7 @@
             LIMIT
                 1            
         ");
-        $stmtAgent->execute([1,$id,$slug,1]);
+        $stmtAgent->execute([1,$agent_id,$slug,1]);
         $agent=$stmtAgent->fetch(pdo::FETCH_ASSOC);
 
         if($stmtAgent->rowCount() == 0){
@@ -75,7 +75,7 @@
             ORDER BY
                 rand()
         ");
-        $stmtProperties->execute([1,$id]);
+        $stmtProperties->execute([1,$agent_id]);
         $properties=$stmtProperties->fetchAll(pdo::FETCH_ASSOC);
     }catch(PDOException $err){
         $error_message=$err->getMessage();

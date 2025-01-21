@@ -74,7 +74,7 @@
                                                             data-offstyle="danger"
                                                         >
                                                     </div>
-                                                    <a href="<?php ADMIN_URL?>testimonial-edit/<?php echo $testimonial["id"]?>" class="btn btn-primary">Detail</a>
+                                                    <a href="<?php ADMIN_URL?>testimonial-edit/<?php echo $testimonial["id"]?>" class="btn btn-primary">Edit</a>
                                                     <a data-testimonial-id="<?php echo $testimonial["id"]?>" href="" class="btn btn-danger">
                                                         <span class="button-loader"></span>
                                                         <span>Delete</span>
@@ -158,7 +158,7 @@
             formData.append("status",btoa(status))
 
             $.ajax({
-                url: "<?php echo ADMIN_URL?>page_testimonial_update_status_ajax.php",
+                url: "<?php echo ADMIN_URL?>page_testimonial_edit_status_ajax.php",
                 type: "POST",
                 data: formData,
                 contentType: false,
