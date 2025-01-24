@@ -21,8 +21,8 @@
             <li class="<?php if($current_page == "page_orders.php") echo "active"?>">
                 <a class="nav-link" href="<?php echo ADMIN_URL?>orders"><i class="fas fa-shopping-cart"></i> <span>Orders</span></a>
             </li>
-            <li class="<?php if($current_page === "page_messages.php") echo "active"?>">
-                <a class="nav-link" href="<?php ADMIN_URL?>messages"><i class="fas fa-envelope"></i> <span>Messages</span></a>
+            <li class="<?php if(preg_match("/message/i",$current_page)) echo "active"?>">
+                <a class="nav-link" href="<?php echo ADMIN_URL?>messages"><i class="fas fa-envelope"></i> <span>Messages</span></a>
             </li>
 
             <li class="nav-item dropdown <?php if(preg_match("/(customer|agent)/i", $current_page)) echo "active"?>">
@@ -104,7 +104,7 @@
             <li class="nav-item dropdown <?php if(preg_match("/testimonial/i",$current_page)) echo "active"?>">
                 <a href="#" class="nav-link has-dropdown"><i class="fa fa-quote-left"></i><span> Testimonials</span></a>
                 <ul class="dropdown-menu">
-                    <li class="<?php if($current_page == "pate_testimonials.php") echo "active"?>">
+                    <li class="<?php if($current_page == "page_testimonials.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>testimonials"><i class="fas fa-angle-right"></i> Testimonials</a>
                     </li>
                     <li class="<?php if($current_page == "php_testimonial_add.php") echo "active"?>">
