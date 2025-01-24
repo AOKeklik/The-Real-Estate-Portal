@@ -42,6 +42,7 @@
                                         <th>Icon</th>
                                         <th>Heading</th>
                                         <th>Text</th>
+                                        <th>Status</th>
                                         <th>Action</th>
                                     </tr>
                                     </thead>
@@ -52,9 +53,25 @@
                                                 <td><i class="<?php echo $item["icon"]?> fs-4"></i></td>
                                                 <td><?php echo $item["heading"]?></td>
                                                 <td><?php echo substr($item["text"],0,30)?>...</td>
+                                                <td>
+                                                    <span class="badge badge-success" style="<?php if($item["status"] == 0) echo "display:none"?>">Yes</span>
+                                                    <span class="badge badge-danger" style="<?php if($item["status"] == 1) echo "display:none"?>">No</span>
+                                                </td>
                                                 <td class="pt_10 pb_10">
-                                                    <a href="<?php echo ADMIN_URL?>why-choose-edit/<?php echo $item["id"]?>" class="btn btn-primary">Detail</a>
-                                                    <a href="" data-why-choose-id="<?php echo $item["id"]?>" class="btn btn-danger">
+                                                    <div class="wrapper-loader-btn" style="display: inline-block;">
+                                                        <span class="button-loader"></span>
+                                                        <input 
+                                                            name="status" 
+                                                            <?php if($item["status"] == 1) echo "checked"?> 
+                                                            data-why-choose-id="<?php echo $item["id"]?>"
+                                                            type="checkbox" 
+                                                            data-toggle="toggle" 
+                                                            data-onstyle="success" 
+                                                            data-offstyle="danger"
+                                                        >
+                                                    </div>  
+                                                    <a href="<?php echo ADMIN_URL?>why-choose-edit/<?php echo $item["id"]?>" class="btn btn-primary">Edit</a>
+                                                    <a href="" data-why-choose-id="<?php echo $item["id"]?>" class="btn btn-danger btn-delete">
                                                         <span class="button-loader"></span>
                                                         <span>Delete</span>
                                                     </a>
@@ -72,18 +89,76 @@
     </section>
 </div>
 <script>
+    /* update */
     $(document).ready(function(){
-        $(document).on("click",".btn.btn-danger",async function(e){
+        $("input[name=status]").change(async function(e){
+            e.preventDefault()
+
+            const el = $(this)
+
+            const yes =el.closest("tr").find(".badge.badge-success")
+            const no =el.closest("tr").find(".badge.badge-danger")
+
+            const parent = el.closest(".wrapper-loader-btn")
+            const whyChooseId = el.data("why-choose-id")
+            const status = el.prop("checked") ? 1 : 0
+            const formData = new FormData()
+
+            parent.removeClass("active")
+            parent.addClass("pending")
+
+            await new Promise(resolve => setTimeout(resolve,1000))
+            formData.append("why_choose_id",btoa(whyChooseId))
+            formData.append("status",btoa(status))
+
+            $.ajax({
+                url: "<?php echo ADMIN_URL?>page_why_choose_edit_status_ajax.php",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(respense){
+                    const res = JSON.parse(respense)
+
+                    iziToast.show({
+                        title: res.success?.message ?? res.error.message,
+                        position: "topRight",
+                        color: res.success ? "green" : "red"
+                    })
+
+                    if(res.success){
+                        if(status === 1){
+                            yes.show()
+                            no.hide()
+                        }else{
+                            yes.hide()
+                            no.show()
+                        }
+                    }
+
+                    parent.removeClass("pending")
+                    parent.addClass("active")
+                }
+            })
+        })
+    })
+
+    /* delete */
+    $(document).ready(function(){
+        $(".btn-delete").click(async function(e){
             e.preventDefault()
 
             if(!confirm('Are you sure?')) return
 
             const el = $(this)
             const parent = el.closest("tr")
+            const div = el.cl
             const whyChooseId = el.data("why-choose-id")
             const formData = new FormData()
 
-            parent.attr("class","pending")
+            el.addClass("pending")
+            el.removeClass("active")
+
             formData.append("why_choose_id",btoa(whyChooseId))
             await new Promise(resolve => setTimeout(resolve,1000))
 
@@ -104,13 +179,12 @@
                     })
 
                     if(res.success){
-                        parent.slideUp(500,function(){
-                            parent.attr("class","active")
-                        })
+                        parent.slideUp()
                     }
 
                     if(res.error){
-                        parent.attr("class","active")
+                        el.addClass("active")
+                        el.removeClass("pending")
                     }
                 }
             })

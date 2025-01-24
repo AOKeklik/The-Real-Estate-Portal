@@ -30,8 +30,8 @@
                         <li class="nav-item <?php if($current_page == "page_pricing.php") echo "active"?>">
                             <a href="<?php echo BASE_URL?>pricing" class="nav-link">Pricing</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="faq.html" class="nav-link">FAQ</a>
+                        <li class="nav-item <?php if($current_page == "page_faqs.php") echo "active"?>">
+                            <a href="<?php echo BASE_URL?>faqs" class="nav-link">FAQ</a>
                         </li>
                         <li class="nav-item <?php if(preg_match("/post/i",$current_page)) echo "active"?>">
                             <a href="<?php echo BASE_URL?>posts" class="nav-link">Blog</a>

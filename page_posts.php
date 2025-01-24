@@ -14,11 +14,6 @@
         ");
         $stmt->execute([1]);
 
-        if($stmt->rowCount() == 0){
-            header("Location: ".BASE_URL."404");
-            exit();
-        }
-
         $posts=$stmt->fetchAll(pdo::FETCH_ASSOC);
     }catch(PDOException $err){
         $error_message=$err->getMessage();
@@ -37,42 +32,46 @@
 
 <div class="blog">
     <div class="container" id="pagination">
-        <div id="pagination-loader"></div>
+        <?php if($stmt->rowCount() > 0):?>
+            <div id="pagination-loader"></div>
 
-        <div id="pagination-body">
-            <div class="row" id="pagination-data">
-                <?php if($stmt->rowCount() > 0): foreach($posts as $post):?>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="item">
-                            <div class="photo">
-                            <?php if(is_null($post["photo"])):?>
-                                <img class="w_50" src="https://placehold.co/600x400" alt="">
-                            <?php else:?>
-                                <img class="w_50" src="<?php echo PUBLIC_URL?>uploads/post/<?php echo $post["photo"]?>" alt="">
-                            <?php endif?>
-                            </div>
-                            <div class="text">
-                                <h2>
-                                    <a href="<?php echo BASE_URL?>post/<?php echo $post["id"]?>/<?php echo $post["slug"]?>"><?php echo $post["title"]?></a>
-                                </h2>
-                                <div class="short-des">
-                                    <p><?php echo $post["excerpt"]?></p>
+            <div id="pagination-body">
+                <div class="row" id="pagination-data">
+                    <?php foreach($posts as $post):?>
+                        <div class="col-lg-4 col-md-6">
+                            <div class="item">
+                                <div class="photo">
+                                <?php if(is_null($post["photo"])):?>
+                                    <img class="w_50" src="https://placehold.co/600x400" alt="">
+                                <?php else:?>
+                                    <img class="w_50" src="<?php echo PUBLIC_URL?>uploads/post/<?php echo $post["photo"]?>" alt="">
+                                <?php endif?>
                                 </div>
-                                <div class="button">
-                                    <a href="<?php echo BASE_URL?>post/<?php echo $post["id"]?>/<?php echo $post["slug"]?>" class="btn btn-primary">Read More</a>
+                                <div class="text">
+                                    <h2>
+                                        <a href="<?php echo BASE_URL?>post/<?php echo $post["id"]?>/<?php echo $post["slug"]?>"><?php echo $post["title"]?></a>
+                                    </h2>
+                                    <div class="short-des">
+                                        <p><?php echo $post["excerpt"]?></p>
+                                    </div>
+                                    <div class="button">
+                                        <a href="<?php echo BASE_URL?>post/<?php echo $post["id"]?>/<?php echo $post["slug"]?>" class="btn btn-primary">Read More</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                <?php endforeach;endif?>
-            </div>
+                    <?php endforeach?>
+                </div>
 
-            <nav aria-label="Page navigation" id="pagination-control">
-                <ul class="pagination justify-content-end">
-                    <!-- Pagination links will be generated here -->
-                </ul>
-            </nav>
-        </div>
+                <nav aria-label="Page navigation" id="pagination-control">
+                    <ul class="pagination justify-content-end">
+                        <!-- Pagination links will be generated here -->
+                    </ul>
+                </nav>
+            </div>
+        <?php else:?>
+            <p class="alert alert-warning text-center">No Posts are available to display.</p>
+        <?php endif?>
     </div>
 </div>
 <script>

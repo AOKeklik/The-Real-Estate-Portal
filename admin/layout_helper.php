@@ -7,6 +7,7 @@
             "type" => "Types - Admin Panel",
             "amenit" => "Amenity - Admin Panel",
             "propert" => "Property - Admin Panel",
+            "post" => "Blog - Admin Panel",
         ];
 
         foreach($patterns as $key=>$val) {
@@ -21,6 +22,7 @@
         $patterns = [
             "location" => BASE_URL."locations",
             "propert" => BASE_URL."properties",
+            "posts" => BASE_URL."posts",
         ];
 
         foreach($patterns as $key=>$val) {

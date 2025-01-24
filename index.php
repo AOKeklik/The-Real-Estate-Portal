@@ -128,10 +128,12 @@
                 *
             FROM
                 why_choose_items
+            WHERE
+                status=?
             ORDER BY
                 id ASC
         ");
-        $stmtWhyChooseItems->execute();
+        $stmtWhyChooseItems->execute([1]);
         $whyChooseItems =$stmtWhyChooseItems->fetchAll(pdo::FETCH_ASSOC);
     }catch(PDOException $err){  
         $error_message=$err->getMessage();
@@ -308,36 +310,37 @@
         </div>
     </div>
 
-
-    <div class="why-choose" style="background-image: url()">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="heading">
-                        <h2>Why Choose Us</h2>
-                        <p>
-                            Describing why we are best in the property business
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <?php if($stmtWhyChooseItems->rowCount() > 0): foreach($whyChooseItems as $whyChooseItem):?>
-                    <div class="col-md-4">
-                        <div class="inner">
-                            <div class="icon">
-                                <i class="<?php echo $whyChooseItem["icon"]?>"></i>
-                            </div>
-                            <div class="text">
-                                <h2><?php echo $whyChooseItem["heading"]?></h2>
-                                <p><?php echo $whyChooseItem["text"]?></p>
-                            </div>
+    <?php if($stmtWhyChooseItems->rowCount() > 0):?>
+        <div class="why-choose" style="background-image: url()">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="heading">
+                            <h2>Why Choose Us</h2>
+                            <p>
+                                Describing why we are best in the property business
+                            </p>
                         </div>
                     </div>
-                <?php endforeach;endif?>
+                </div>
+                <div class="row">
+                    <?php foreach($whyChooseItems as $whyChooseItem):?>
+                        <div class="col-md-4">
+                            <div class="inner">
+                                <div class="icon">
+                                    <i class="<?php echo $whyChooseItem["icon"]?>"></i>
+                                </div>
+                                <div class="text">
+                                    <h2><?php echo $whyChooseItem["heading"]?></h2>
+                                    <p><?php echo $whyChooseItem["text"]?></p>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach?>
+                </div>
             </div>
         </div>
-    </div>
+    <?php endif?>
 
     <?php if($stmtAgents->rowCount() > 0):?>
         <div class="agent">

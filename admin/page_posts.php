@@ -156,9 +156,10 @@
     /* update */
     $(document).ready(function(){
         $("input[name=status]").change( async function(e){
+            const badgeSuccess = $(this).closest("tr").find(".badge.badge-success")
+            const badgeDanger = $(this).closest("tr").find(".badge.badge-danger")
+            
             const parent = $(this).closest("#wrapper-loader-btn")
-            const badgeSuccess = $(".badge.badge-success")
-            const badgeDanger = $(".badge.badge-danger")
             const status = $(this).prop("checked") ? 1 : 0
             const postId = $(this).data("post-id")
             const formData = new FormData()

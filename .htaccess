@@ -46,6 +46,10 @@ RewriteRule     ^admin/posts$                               ./admin/page_posts.p
 RewriteRule     ^admin/post-add$                            ./admin/page_post_add.php                               [NC,L]
 RewriteRule     ^admin/post-edit/([0-9]+)$                  ./admin/page_post_edit.php?post_id=$1                   [NC,L]
 
+RewriteRule     ^admin/faqs$                                ./admin/page_faqs.php                                   [NC,L]
+RewriteRule     ^admin/faq-add$                             ./admin/page_faq_add.php                                [NC,L]
+RewriteRule     ^admin/faq-edit/([0-9]+)$                   ./admin/page_faq_edit.php?faq_id=$1                     [NC,L]
+
 # -- frontend ---                       
 
 RewriteRule     ^pricing$                                   page_pricing.php                                        [NC,L]
@@ -58,6 +62,7 @@ RewriteRule     ^agents$                                    page_agents.php     
 RewriteRule     ^agent/([0-9]+)/([0-9a-z-]+)$               page_agent.php?agent_id=$1&slug=$2                      [NC,L]
 RewriteRule     ^post/([0-9]+)/([0-9a-z-]+)$                page_post.php?post_id=$1&post_slug=$2                   [NC,L]
 RewriteRule     ^posts$                                     page_posts.php                                          [NC,L]
+RewriteRule     ^faqs$                                      page_faqs.php                                           [NC,L]
 RewriteRule     ^404$                                       page_404.php                                            [NC,L]
 
 # -- customer ---                               
