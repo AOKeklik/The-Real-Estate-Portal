@@ -12,6 +12,8 @@ RewriteRule     ^admin/orders$                              ./admin/page_orders.
 
 RewriteRule     ^admin/customers$                           ./admin/page_customers.php                              [NC,L]
 RewriteRule     ^admin/agents$                              ./admin/page_agents.php                                 [NC,L]
+RewriteRule     ^admin/subscribers$                         ./admin/page_subscribers.php                            [NC,L]
+RewriteRule     ^admin/subscriber-add-message$              ./admin/page_subscriber_add_message.php                 [NC,L]
 
 RewriteRule     ^admin/messages$                            ./admin/page_messages.php                               [NC,L]
 RewriteRule     ^admin/message/([0-9]+)$                    ./admin/page_message.php?message_id=$1                  [NC,L]

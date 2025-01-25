@@ -25,7 +25,7 @@
                 <a class="nav-link" href="<?php echo ADMIN_URL?>messages"><i class="fas fa-envelope"></i> <span>Messages</span></a>
             </li>
 
-            <li class="nav-item dropdown <?php if(preg_match("/(customer|agent)/i", $current_page)) echo "active"?>">
+            <li class="nav-item dropdown <?php if(preg_match("/(customer|agent|subscriber)/i", $current_page)) echo "active"?>">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-user"></i><span> Users</span></a>
                 <ul class="dropdown-menu">
                     <li class="<?php if($current_page == "page_agents.php") echo "active"?>">
@@ -33,6 +33,9 @@
                     </li>
                     <li class="<?php if($current_page == "page_customers.php") echo "active"?>">
                         <a class="nav-link" href="<?php echo ADMIN_URL?>customers"><i class="fas fa-angle-right"></i> <span> Customers</span></a>
+                    </li>
+                    <li class="<?php if(preg_match("/subscriber/i",$current_page)) echo "active"?>">
+                        <a class="nav-link" href="<?php echo ADMIN_URL?>subscribers"><i class="fas fa-angle-right"></i> <span> Subscribers</span></a>
                     </li>
                 </ul>
             </li>

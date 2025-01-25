@@ -76,10 +76,14 @@
                         </p>
                         <form action="" method="post">
                             <div class="form-group">
-                                <input type="text" name="" class="form-control">
+                                <input type="text" name="email" class="form-control">
+                                <small class='form-text text-danger input-error input-email'></small>
                             </div>
                             <div class="form-group">
-                                <input type="submit" class="btn btn-primary" value="Subscribe Now">
+                                <button type="button" class="btn btn-primary bg-website" name="newsletter-form" style="width: 100%;margin-top:.5rem">
+                                    <span class="button-loader" style="margin-left: 45%;"></span>
+                                    <span>Subscribe Now</span>
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -115,6 +119,61 @@
     </div>
 
     <script src="<?php echo PUBLIC_URL?>dist/js/custom.js"></script>
+
+    <script>
+        /* newsletter */
+        $(document).ready(function(){
+            $("form button[name=newsletter-form]").click(async function(e) {
+                e.preventDefault()
+
+                const el = $(this)
+                const form = el.closest("form")
+                const email = form.find("input[name=email]")
+                const formData = new FormData()
+
+                form.find(".input-error").each(function(){
+                    $(this).html("")
+                })
+                el.addClass("pending")
+                el.removeClass("active")
+                
+                await new Promise(resolve=>setTimeout(resolve,1000))
+                formData.append("email",btoa(email.val()))
+
+                $.ajax({
+                    type: "POST",
+                    url: "<?php echo BASE_URL?>page_newsletter_submit_ajax.php",
+                    data: formData,
+                    processData: false,
+                    contentType:false,
+                    success:function(response){
+                        // console.log(response)
+                        const res = JSON.parse(response)
+
+                        if(res.success || res.error?.message) {
+                            email.val("")
+
+                            iziToast.show({
+                                title: res.success?.message ?? res.error?.message,
+                                position: "topRight",
+                                color: res.success ? "green" : "red"
+                            })
+                        }
+
+                        if(res.error) {
+                            $.each(res.error, function (key,val) {
+                                el.find(".input-error.input-"+key).text(val[0])
+                            })    
+                        }
+
+                        el.removeClass("pending")
+                        el.addClass("active")
+                    }
+                })
+            })
+        })
+    </script>
+
         <!-- exception success -->
         <?php if(isset($success_message)):?>
             <script>

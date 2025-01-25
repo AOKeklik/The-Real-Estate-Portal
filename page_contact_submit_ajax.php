@@ -49,9 +49,9 @@
     
             $phpmailer->isHTML(true);
             $phpmailer->Subject = "Contact Form Message";
-            $phpmailer->Body = "<p><strong>Name:</strong> $name</p>";
-            $phpmailer->Body .= "<p><strong>Email:</strong> $email</p>";
-            $phpmailer->Body .= "<p><strong>Message:</strong> ".nl2br($message)."</p>";
+            $phpmailer->Body = "<p><strong>Name:</strong> $name <br>";
+            $phpmailer->Body .= "<strong>Email:</strong> $email <br>";
+            $phpmailer->Body .= "<strong>Message:</strong> ".nl2br($message)."</p>";
     
             if(!$phpmailer->send())
                 throw new Exception("The mail could not be sent, please try again.");
