@@ -63,6 +63,7 @@ RewriteRule     ^agent/([0-9]+)/([0-9a-z-]+)$               page_agent.php?agent
 RewriteRule     ^post/([0-9]+)/([0-9a-z-]+)$                page_post.php?post_id=$1&post_slug=$2                   [NC,L]
 RewriteRule     ^posts$                                     page_posts.php                                          [NC,L]
 RewriteRule     ^faqs$                                      page_faqs.php                                           [NC,L]
+RewriteRule     ^contact$                                   page_contact.php                                        [NC,L]
 RewriteRule     ^404$                                       page_404.php                                            [NC,L]
 
 # -- customer ---                               

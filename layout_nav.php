@@ -36,8 +36,8 @@
                         <li class="nav-item <?php if(preg_match("/post/i",$current_page)) echo "active"?>">
                             <a href="<?php echo BASE_URL?>posts" class="nav-link">Blog</a>
                         </li>
-                        <li class="nav-item">
-                            <a href="contact.html" class="nav-link">Contact</a>
+                        <li class="nav-item <?php if(preg_match("/contact/i",$current_page)) echo "active"?>">
+                            <a href="<?php echo BASE_URL?>contact" class="nav-link">Contact</a>
                         </li>
                         <li class="nav-item">
                             <?php if(isset($_SESSION["customer"])):?>

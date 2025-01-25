@@ -2219,3 +2219,30 @@ a > .wishlist-loader {
     display: inline-block;
     border-radius: .2rem;
 }
+
+/* loader btn */
+.pending {pointer-events: none;user-select: none;}
+.pending .button-loader {display: block !important;}
+.pending .button-loader + * {display: none !important;}
+
+.active .button-loader {display: none;}
+.active .button-loader + * {display: inline-block;}
+
+.button-loader {
+    position: relative;
+    display: none;
+    width: 25px;
+    height: 25px;
+    border: 2px solid #f3f3f3; 
+    border-top: 2px solid #d92228; 
+    border-radius: 50%; 
+    animation: spin 1s linear infinite; 
+}
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

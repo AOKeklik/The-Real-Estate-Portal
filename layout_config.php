@@ -10,6 +10,8 @@
     $dotenv = Dotenv::createImmutable(__DIR__);
     $dotenv->load();
 
+    define("APP_NAME", "The-Real-Estate-Portal");
+    
     define("BASE_URL", "http://localhost/The-Real-Estate-Portal/");
     define("ADMIN_URL", BASE_URL."admin/");
     define("PUBLIC_URL", BASE_URL."public/");
@@ -23,10 +25,11 @@
 
     define("SMTP_HOST", "sandbox.smtp.mailtrap.io");
     define("SMTP_PORT", "2525");
-    define("SMTP_USERNAME", "a227fb6c1991fc");
-    define("SMTP_PASSWORD", "0183d80c52a3ba");
+    define("SMTP_USERNAME", "5db0d93b160051");
+    define("SMTP_PASSWORD", "b050cf2c78f0f4");
     define("SMTP_SECURE", "tsl");
     define("SMTP_FROM", "contact@mail.com");
+    define("MAIL_FROM_NAME", APP_NAME);
         
 
     try {  
