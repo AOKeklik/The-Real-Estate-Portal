@@ -4,6 +4,8 @@ RewriteEngine On
 
 RewriteRule     ^admin/login$                               ./admin/auth_login.php                                  [NC,L]
 RewriteRule     ^admin/logout$                              ./admin/auth_logout.php                                 [NC,L]
+RewriteRule     ^admin/forget$                              ./admin/auth_forget.php                                 [NC,L]
+
 RewriteRule     ^admin/profile$                             ./admin/page_profile.php                                [NC,L]
 RewriteRule     ^admin/dashboard$                           ./admin/page_dashboard.php                              [NC,L]
 RewriteRule     ^admin/setting$                             ./admin/page_setting.php                                [NC,L]
@@ -52,6 +54,9 @@ RewriteRule     ^admin/faqs$                                ./admin/page_faqs.ph
 RewriteRule     ^admin/faq-add$                             ./admin/page_faq_add.php                                [NC,L]
 RewriteRule     ^admin/faq-edit/([0-9]+)$                   ./admin/page_faq_edit.php?faq_id=$1                     [NC,L]
 
+RewriteRule     ^admin/privacy-edit$                        ./admin/page_privacy_edit.php                           [NC,L]                             
+RewriteRule     ^admin/terms-edit$                          ./admin/page_terms_edit.php                             [NC,L]                             
+
 # -- frontend ---                       
 
 RewriteRule     ^pricing$                                   page_pricing.php                                        [NC,L]
@@ -66,6 +71,8 @@ RewriteRule     ^post/([0-9]+)/([0-9a-z-]+)$                page_post.php?post_i
 RewriteRule     ^posts$                                     page_posts.php                                          [NC,L]
 RewriteRule     ^faqs$                                      page_faqs.php                                           [NC,L]
 RewriteRule     ^contact$                                   page_contact.php                                        [NC,L]
+RewriteRule     ^privacy-policy$                            page_privacy_policy.php                                 [NC,L]
+RewriteRule     ^terms-of-use$                              page_terms_of_use.php                                   [NC,L]
 RewriteRule     ^404$                                       page_404.php                                            [NC,L]
 
 # -- customer ---                               

@@ -77,7 +77,7 @@
                             </div>
                             <div class="form-group">
                                 <div>
-                                    <a href="">Forget Password?</a>
+                                    <a href="<?php echo ADMIN_URL?>forget">Forget Password?</a>
                                 </div>
                             </div>
                         </form>

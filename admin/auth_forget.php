@@ -1,6 +1,10 @@
 <?php 
-    include "./layout/top.php";
+    include "./layout_top.php";
 
+    if(isset($_SESSION["admin"])) {
+        header("Location: ".ADMIN_URL."dashboard");
+        exit;
+    }
 ?>
 <section class="section">
     <div class="container container-login">
@@ -33,4 +37,4 @@
     </div>
 </section>
 
-<?php include "../admin/layout/footer.php"?>
+<?php include "./layout_footer.php"?>
