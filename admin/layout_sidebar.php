@@ -24,6 +24,12 @@
             <li class="<?php if(preg_match("/message/i",$current_page)) echo "active"?>">
                 <a class="nav-link" href="<?php echo ADMIN_URL?>messages"><i class="fas fa-envelope"></i> <span>Messages</span></a>
             </li>
+            <li class="<?php if(preg_match("/privacy/i",$current_page)) echo "active"?>">
+                <a class="nav-link" href="<?php echo ADMIN_URL?>privacy-edit"><i class="fas fa-lock"></i> <span> Privacy</span></a>
+            </li>
+            <li class="<?php if(preg_match("/term/i",$current_page)) echo "active"?>">
+                <a class="nav-link" href="<?php echo ADMIN_URL?>terms-edit"><i class="fas fa-lock"></i> <span> Terms</span></a>
+            </li>
 
             <li class="nav-item dropdown <?php if(preg_match("/(customer|agent|subscriber)/i", $current_page)) echo "active"?>">
                 <a href="#" class="nav-link has-dropdown"><i class="fas fa-user"></i><span> Users</span></a>

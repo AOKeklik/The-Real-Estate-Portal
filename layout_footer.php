@@ -1,3 +1,39 @@
+<?php
+    try{
+        $stmtPrivacy=$pdo->prepare("
+            SELECT
+                *
+            FROM
+                privacy
+            WHERE
+                status=?
+            LIMIT
+                1
+        "); 
+        $stmtPrivacy->execute([1]);
+        $privacy=$stmtPrivacy->fetch(pdo::FETCH_ASSOC);
+    }catch(PDOException $err){
+        $error_message=$err->getMessage();
+    }
+
+    try{
+        $stmtTerms=$pdo->prepare("
+            SELECT
+                *
+            FROM
+                terms
+            WHERE
+                status=?
+            LIMIT
+                1
+        "); 
+        $stmtTerms->execute([1]);
+        $terms=$stmtTerms->fetch(pdo::FETCH_ASSOC);
+    }catch(PDOException $err){
+        $error_message=$err->getMessage();
+    }
+?>
+    
     <div class="footer">
         <div class="container">
             <div class="row">
@@ -100,16 +136,20 @@
                         Copyright 2023, ArefinDev. All Rights Reserved.
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6">
-                    <div class="right">
-                        <ul>
-                            <li><a href="terms.html">Terms of Use</a></li>
-                            <li>
-                                <a href="privacy.html">Privacy Policy</a>
-                            </li>
-                        </ul>
+                <?php if($terms || $privacy):?>
+                    <div class="col-lg-6 col-md-6">
+                        <div class="right">
+                            <ul>
+                                <?php if($terms):?>
+                                    <li><a href="<?php echo BASE_URL?>terms-of-use">Terms of Use</a></li>
+                                <?php endif?>
+                                <?php if($privacy):?>
+                                    <li><a href="<?php echo BASE_URL?>privacy-policy">Privacy Policy</a></li>
+                                <?php endif?>
+                            </ul>
+                        </div>
                     </div>
-                </div>
+                <?php endif?>
             </div>
         </div>
     </div>

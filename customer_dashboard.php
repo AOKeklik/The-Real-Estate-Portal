@@ -5,7 +5,10 @@
         header("Location: ".BASE_URL."customer-login");
         exit();
     }
-    
+
+    include "./middleware_sessionMiddleware.php";
+    use Middleware\SessionMiddleware;
+    SessionMiddleware::checkSession();     
 ?>
 
 <div class="page-top" style="background-image: url('https://placehold.co/1300x260')">

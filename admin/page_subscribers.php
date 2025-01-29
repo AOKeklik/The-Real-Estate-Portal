@@ -24,7 +24,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header justify-content-between">
-            <h1>Subscribers</h1>
+            <h1><?php echo setPageTitle($current_page)?></h1>
             <div class="ml-auto">
                 <a href="<?php echo ADMIN_URL?>subscriber-add-message" class="btn btn-primary"><i class="fas fa-plus"></i> Send Message</a>
             </div>

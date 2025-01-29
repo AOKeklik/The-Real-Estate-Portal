@@ -5,6 +5,10 @@
         header("Location: ".ADMIN_URL."login");
         exit();
     }
+
+    include "./middleware_SessionMiddleware.php";
+    use Middleware\SessionMiddleware;
+    SessionMiddleware::checkSession(); 
 ?>    
 
 <div class="main-content">

@@ -6,6 +6,10 @@
         exit();
     }
 
+    include "./middleware_sessionMiddleware.php";
+    use Middleware\SessionMiddleware;
+    SessionMiddleware::checkSession(); 
+
     try{
         $stmtAgent=$pdo->prepare("
             SELECT
