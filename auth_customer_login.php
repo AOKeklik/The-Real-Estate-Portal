@@ -1,5 +1,6 @@
-<?php include "./layout_top.php"?>
-<?php
+<?php 
+    include "./layout_top.php";
+
     if (isset($_SESSION["customer"])) {
         header("Location: ".BASE_URL."customer-dashboard");
         exit;

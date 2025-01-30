@@ -19,7 +19,7 @@
     $message_id=$_GET["message_id"];
 
     try{
-        $stmtMainMessage = $pdo->prepare("
+        $stmt = $pdo->prepare("
             SELECT
                 messages.*,
                 customers.id AS customer_id,
@@ -41,9 +41,32 @@
             LIMIT 
                 1
         ");
-        $stmtMainMessage->execute([$message_id]);
-        $mainMessage=$stmtMainMessage->fetch(pdo::FETCH_ASSOC);
+        $stmt->execute([$message_id]);
+
+        if($stmt->rowCount() == 0){
+            $_SESSION["error"]="No related message found.";
+            header("Location: ".BASE_URL."customer-messages");
+            exit();
+        }   
+
+        $mainMessage=$stmt->fetch(pdo::FETCH_ASSOC);
     }catch(PDOException $err){
+        $error_message=$err->getMessage();
+    }
+
+    try{
+        $stmt=$pdo->prepare("
+            UPDATE
+                messages
+            SET
+                is_customer_read=?
+            WHERE 
+                id=?
+            AND
+                customer_id=?                
+        ");
+        $stmt->execute([1, $message_id, $_SESSION["customer"]["id"]]);
+    }catch (PDOException $err){
         $error_message=$err->getMessage();
     }
 

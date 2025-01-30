@@ -4,14 +4,41 @@
     if(!isset($_SESSION["customer"])) {
         header("Location: ".BASE_URL."customer-login");
         exit();
+    } 
+    
+    try{
+        $stmt=$pdo->prepare("
+            SELECT
+                count(id) AS count
+            FROM
+                wishlists
+            WHERE
+                customer_id=?
+        ");
+        $stmt->execute([$_SESSION["customer"]["id"]]);
+        $wishlist=$stmt->fetch(pdo::FETCH_ASSOC);
+    }catch (PDOException $err){
+        $error_message=$err->getMessage();
     }
 
-    include "./middleware_sessionMiddleware.php";
-    use Middleware\SessionMiddleware;
-    SessionMiddleware::checkSession();     
+    try{
+        $stmt=$pdo->prepare("
+            SELECT
+                count(CASE WHEN is_customer_read = 1 THEN 1 END) AS read_messages,
+                count(CASE WHEN is_customer_read = 0 THEN 1 END) AS unread_messages
+            FROM
+                messages
+            WHERE 
+                customer_id=?
+        ");
+        $stmt->execute([$_SESSION["customer"]["id"]]);
+        $message=$stmt->fetch(pdo::FETCH_ASSOC);
+    }catch (PDOException $err){
+        $error_message=$err->getMessage();
+    }
 ?>
 
-<div class="page-top" style="background-image: url('https://placehold.co/1300x260')">
+<div class="page-top" style="background-image: url('')">
         <div class="bg"></div>
         <div class="container">
             <div class="row">
@@ -29,70 +56,28 @@
                     <?php include "./layout_nav_customer.php"?>
                 </div>
                 <div class="col-lg-9 col-md-12">
-                    <h3>Hello, Peter Johnson</h3>
+                    <h3>Hello, <?php echo $_SESSION["customer"]["full_name"]?></h3>
                     <p>See all the statistics at a glance:</p>
 
                     <div class="row box-items">
                         <div class="col-md-4">
                             <div class="box1">
-                                <h4>12</h4>
-                                <p>Active Properties</p>
+                                <h4><?php echo $wishlist["count"]?></h4>
+                                <p>Wishlist Items</p>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="box2">
-                                <h4>3</h4>
-                                <p>Pending Properties</p>
+                                <h4><?php echo $message["unread_messages"]?></h4>
+                                <p>Unread Messages</p>
                             </div>
                         </div>
                         <div class="col-md-4">
                             <div class="box3">
-                                <h4>5</h4>
-                                <p>Featured Properties</p>
+                                <h4><?php echo $message["read_messages"]?></h4>
+                                <p>Read Messages</p>
                             </div>
                         </div>
-                    </div>
-
-                    <h3 class="mt-5">Recent Properties</h3>
-                    <div class="table-responsive">
-                        <table class="table table-bordered">
-                            <tbody>
-                                <tr>
-                                    <th>SL</th>
-                                    <th>Name</th>
-                                    <th>Category</th>
-                                    <th>Location</th>
-                                    <th>Status</th>
-                                    <th>Action</th>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>1375 Stanley Avenue</td>
-                                    <td>Villa</td>
-                                    <td>New York</td>
-                                    <td>
-                                        <span class="badge bg-success">Active</span>
-                                    </td>
-                                    <td>
-                                        <a href="" class="btn btn-warning btn-sm text-white"><i class="fas fa-edit"></i></a>
-                                        <a href="" class="btn btn-danger btn-sm" onClick="return confirm('Are you sure?');"><i class="fas fa-trash-alt"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>2</td>
-                                    <td>3780 Ash Avenue</td>
-                                    <td>Condo</td>
-                                    <td>Boston</td>
-                                    <td>
-                                        <span class="badge bg-danger">Pending</span>
-                                    </td>
-                                    <td>
-                                        <a href="" class="btn btn-warning btn-sm text-white"><i class="fas fa-edit"></i></a>
-                                        <a href="" class="btn btn-danger btn-sm" onClick="return confirm('Are you sure?');"><i class="fas fa-trash-alt"></i></a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
             </div>

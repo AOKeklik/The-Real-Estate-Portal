@@ -6,10 +6,6 @@
         exit();
     }
 
-    include "./middleware_sessionMiddleware.php";
-    use Middleware\SessionMiddleware;
-    SessionMiddleware::checkSession(); 
-
     try{
         $stmtAgent=$pdo->prepare("
             SELECT
@@ -30,6 +26,22 @@
         $stmtAgent->execute([$_SESSION["agent"]["id"]]);
         $agent=$stmtAgent->fetch(pdo::FETCH_ASSOC);
     }catch(PDOException $err){
+        $error_message=$err->getMessage();
+    }
+
+    try{
+        $stmt=$pdo->prepare("
+            SELECT
+                count(CASE WHEN is_agent_read = 1 THEN 1 END) AS read_messages,
+                count(CASE WHEN is_agent_read = 0 THEN 1 END) AS unread_messages
+            FROM
+                messages
+            WHERE 
+                agent_id=?
+        ");
+        $stmt->execute([$_SESSION["agent"]["id"]]);
+        $message=$stmt->fetch(pdo::FETCH_ASSOC);
+    }catch (PDOException $err){
         $error_message=$err->getMessage();
     }
 ?>
@@ -70,52 +82,16 @@
                     </div>
                     <div class="col-md-4">
                         <div class="box3">
-                            <h4>??</h4>
-                            <p>Messages</p>
+                            <h4><?php echo $message["unread_messages"]?></h4>
+                            <p>Unread Messages</p>
                         </div>
                     </div>
-                </div>
-
-                <h3 class="mt-5">Recent Properties</h3>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <tbody>
-                            <tr>
-                                <th>SL</th>
-                                <th>Name</th>
-                                <th>Category</th>
-                                <th>Location</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                            <tr>
-                                <td>1</td>
-                                <td>1375 Stanley Avenue</td>
-                                <td>Villa</td>
-                                <td>New York</td>
-                                <td>
-                                    <span class="badge bg-success">Active</span>
-                                </td>
-                                <td>
-                                    <a href="" class="btn btn-warning btn-sm text-white"><i class="fas fa-edit"></i></a>
-                                    <a href="" class="btn btn-danger btn-sm" onClick="return confirm('Are you sure?');"><i class="fas fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>3780 Ash Avenue</td>
-                                <td>Condo</td>
-                                <td>Boston</td>
-                                <td>
-                                    <span class="badge bg-danger">Pending</span>
-                                </td>
-                                <td>
-                                    <a href="" class="btn btn-warning btn-sm text-white"><i class="fas fa-edit"></i></a>
-                                    <a href="" class="btn btn-danger btn-sm" onClick="return confirm('Are you sure?');"><i class="fas fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="col-md-4">
+                        <div class="box3 bg-warning">
+                            <h4><?php echo $message["read_messages"]?></h4>
+                            <p>Read Messages</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

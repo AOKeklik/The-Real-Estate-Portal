@@ -1,10 +1,10 @@
 <?php
+    include "./layout_top.php";
 
     use PHPMailer\PHPMailer\Exception;
     use PHPMailer\PHPMailer\PHPMailer;
-
     include "./vendor/autoload.php";
-    include "./layout_top.php";
+    
 
     if(!isset($_SESSION["agent"])){
         header("Location: ".BASE_URL."agent-login");
@@ -42,16 +42,31 @@
                 1
         ");
         $stmtMainMessage->execute([$message_id]);
-        $mainMessage=$stmtMainMessage->fetch(pdo::FETCH_ASSOC);
 
         if($stmtMainMessage->rowCount() == 0)
             throw new PDOException("The specified message could not be found.");
 
-
+        $mainMessage=$stmtMainMessage->fetch(pdo::FETCH_ASSOC);
     }catch(PDOException $err){
         $_SESSION["error"] = $err->getMessage();
         header("Location: ".BASE_URL."agent-messages");
         exit();
+    }
+
+    try{
+        $stmt=$pdo->prepare("
+            UPDATE
+                messages
+            SET
+                is_agent_read=?
+            WHERE 
+                id=?
+            AND
+                agent_id=?                
+        ");
+        $stmt->execute([1, $message_id, $_SESSION["agent"]["id"]]);
+    }catch (PDOException $err){
+        $error_message=$err->getMessage();
     }
 
     try{
@@ -157,7 +172,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-3 col-md-12">
-                <?php include './layout_nav_customer.php'?>
+                <?php include './layout_nav_agent.php'?>
             </div>
             <div class="col-lg-9 col-md-12">
 
