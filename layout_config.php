@@ -6,7 +6,6 @@
 
     require_once 'vendor/autoload.php';
     use Dotenv\Dotenv;
-
     $dotenv = Dotenv::createImmutable(__DIR__);
     $dotenv->load();
 
@@ -41,3 +40,8 @@
 
     global $current_page;
     global $pdo;
+
+    include "./provider_setting.php";
+    include "./provider_location.php";
+    ProviderSetting::load($pdo);
+    ProviderLocation::load($pdo);

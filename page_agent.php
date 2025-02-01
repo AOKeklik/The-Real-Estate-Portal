@@ -81,16 +81,17 @@
         $error_message=$err->getMessage();
     }
 ?>
-<div class="page-top" style="background-image: url('uploads/banner.jpg')">
-    <div class="bg"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2><?php echo $agent["full_name"]?> Agent Detail</h2>
-            </div>
-        </div>
-    </div>
-</div>
+
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+<?php 
+    $page_title=$agent["full_name"]."Agent Detail";
+    include "./section_banner.php"
+?>
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
 
 <div class="agent-detail">
     <div class="container">

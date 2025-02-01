@@ -86,42 +86,45 @@
         $error_message=$err->getMessage();
     }
 ?>
-<div class="page-top" style="background-image: url('uploads/banner.jpg')">
-        <div class="bg"></div>
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <h2><?php echo $post["title"]?></h2>
+
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+ <?php 
+    $page_title=$post["title"];
+    include "./section_banner.php"
+?>
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+
+
+<div class="page-content">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8 col-md-12">
+                <div class="featured-photo">
+                    <?php if(is_null($post["photo"])):?>
+                        <img src="https://placehold.co/600x400" alt="" />
+                    <?php else:?>
+                        <img src="<?php echo PUBLIC_URL?>uploads/post/<?php echo $post["photo"]?>" alt="" />
+                    <?php endif?>
+                </div>
+                <div class="sub">
+                    <div class="item">
+                        <b><i class="fa fa-clock-o"></i></b>
+                        <?php echo date("d M, Y - H:i:s",strtotime($post["posted_on"]))?>
+                    </div>
+                    <div class="item">
+                        <b><i class="fa fa-eye"></i></b>
+                        <?php echo $views_count["views_count"]?>
+                    </div>
+                </div>
+                <div class="main-text">
+                    <?php echo html_entity_decode($post["description"])?>
                 </div>
             </div>
         </div>
     </div>
-    <div class="page-content">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-lg-8 col-md-12">
-                    <div class="featured-photo">
-                        <?php if(is_null($post["photo"])):?>
-                            <img src="https://placehold.co/600x400" alt="" />
-                        <?php else:?>
-                            <img src="<?php echo PUBLIC_URL?>uploads/post/<?php echo $post["photo"]?>" alt="" />
-                        <?php endif?>
-                    </div>
-                    <div class="sub">
-                        <div class="item">
-                            <b><i class="fa fa-clock-o"></i></b>
-                            <?php echo date("d M, Y - H:i:s",strtotime($post["posted_on"]))?>
-                        </div>
-                        <div class="item">
-                            <b><i class="fa fa-eye"></i></b>
-                            <?php echo $views_count["views_count"]?>
-                        </div>
-                    </div>
-                    <div class="main-text">
-                        <?php echo html_entity_decode($post["description"])?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 <?php include "./layout_footer.php"?>`

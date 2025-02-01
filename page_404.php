@@ -1,17 +1,18 @@
 <?php 
     include "./layout_top.php";
 ?>
-<div class="page-top" style="background-image: url('uploads/banner.jpg')">
-    <div class="bg"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>404 Not Found!</h2>
-            </div>
-        </div>
-    </div>
-</div>    
 
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+ <?php 
+    $page_title="404 Not Found!";
+    include "./section_banner.php"
+?>
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+ 
 <div class="property">
     <div class="container">
         <h3 class="text-center">
@@ -25,4 +26,5 @@
         </h3>
     </div>
 </div>
+
 <?php include "./layout_footer.php"?>

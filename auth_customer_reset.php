@@ -1,5 +1,5 @@
-<?php include "./layout_top.php"?>
 <?php 
+    include "./layout_top.php"; 
 
     if (isset($_SESSION["customer"])) {
         header("Location: ".BASE_URL."customer-dashboard");
@@ -74,16 +74,16 @@
 
 ?>
 
-<div class="page-top" style="background-image: url('https://placehold.co/1300x260')">
-    <div class="bg"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>Reset Password</h2>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+<?php 
+    $page_title="Reset Password";
+    include "./section_banner.php"
+?>
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
 
 <div class="page-content">
     <div class="container">

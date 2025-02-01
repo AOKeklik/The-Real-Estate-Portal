@@ -176,17 +176,23 @@
     }
 ?>
 
-    <div class="slider" style="background-image: url()">
+<!-- //////////////////////////////
+            HERO SECTION
+/////////////////////////////////// -->
+    <div class="slider" style="background-image: url(
+            <?php 
+                if(ProviderSetting::get("hero_photo")) echo PUBLIC_URL."uploads/setting/".ProviderSetting::get("hero_photo");
+                else echo "https://placehold.co/600x200?text=Hero";
+            ?>
+        )">
         <div class="bg"></div>
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
                     <div class="item">
                         <div class="text">
-                            <h2>Discover Your New Home</h2>
-                            <p>
-                                You can get your desired awesome properties, homes, condos etc. here by name, category or location.
-                            </p>
+                            <h2><?php echo ProviderSetting::get("hero_heading")?></h2>
+                            <p><?php echo ProviderSetting::get("hero_subheading")?></p>
                         </div>
                         <div class="search-section">
                             <form action="<?php echo BASE_URL?>properties" method="GET">
@@ -232,94 +238,108 @@
             </div>
         </div>
     </div>
+<!-- //////////////////////////////
+            HERO SECTION
+/////////////////////////////////// -->
 
-    <div class="property">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="heading">
-                        <h2>Featured Properties</h2>
-                        <p>Find out the awesome properties that you must love</p>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <?php if($stmtProperties->rowCount() > 0): foreach($properties as $property):?>
-                    <div class="col-lg-4 col-md-6 col-sm-12">
-                        <div class="item">
-                            <div class="photo">
-                                <img class="main" src="<?php echo PUBLIC_URL?>uploads/property/<?php echo $property["featured_photo"]?>" alt="">
-                                <div class="top">
-                                    <?php if(preg_match("/sale/i", $property["purpose"])):?>
-                                        <div class="status-sale">For Sale</div>
-                                    <?php else:?>
-                                        <div class="status-rent">For Rent</div>
-                                    <?php endif?>
-                                    <?php if($property["is_featured"] == 1):?>
-                                        <div class="featured">Featured</div>
-                                    <?php endif?>
-                                </div>
-                                <div class="price"><?php echo $property["price"]?> PLN</div>
-                                <?php if(isset($_SESSION["customer"])):?>
-                                    <div 
-                                        data-property-id="<?php echo $property["id"]?>" 
-                                        data-customer-id="<?php echo $_SESSION["customer"]["id"]?>" 
-                                        class="wishlist <?php if(in_array($property["id"], array_column($wishlists,"property_id"))) echo "active"?>"
-                                    >
-                                        <div class="wishlist-loader"></div>
-                                        <a href="" class="wishlist-heart"><i class="far fa-heart"></i></a>
-                                        <a href="" class="wishlist-heart-full"><i class="fa fa-heart"></i></a>
-                                    </div>
-                                <?php endif?>
-                            </div>
-                            <div class="text">
-                                <h3><a href="<?php echo BASE_URL?>property/<?php echo $property["id"]?>/<?php echo $property["slug"]?>"><?php echo $property["name"]?></a></h3>
-                                <div class="detail">
-                                    <div class="stat">
-                                        <div class="i1"><?php echo $property["size"]?> sqft</div>
-                                        <div class="i2"><?php echo $property["bedroom"]?> Bed</div>
-                                        <div class="i3"><?php echo $property["bathroom"]?> Bath</div>
-                                    </div>
-                                    <div class="address">
-                                        <i class="fas fa-map-marker-alt"></i> <?php echo $property["address"]?>
-                                    </div>
-                                    <div class="type-location">
-                                        <div class="i1">
-                                            <i class="fas fa-edit"></i> <?php echo $property["type_name"]?>
-                                        </div>
-                                        <div class="i2">
-                                            <i class="fas fa-location-arrow"></i> <?php echo $property["location_name"]?>
-                                        </div>
-                                    </div>
-                                    <div class="agent-section">
-                                        <?php if(is_null($property["photo"])):?>
-                                            <img class="agent-photo" src="<?php echo PUBLIC_URL?>uploads/user.png?>" alt="">
-                                        <?php else:?>
-                                            <img class="agent-photo" src="<?php echo PUBLIC_URL?>uploads/agent/<?php echo $property["photo"]?>" alt="">
-                                        <?php endif?>
-                                        <a href="">
-                                            <?php echo $property["full_name"]?>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach;endif?>
-            </div>
-        </div>
-    </div>
 
-    <?php if($stmtWhyChooseItems->rowCount() > 0):?>
-        <div class="why-choose" style="background-image: url()">
+<!-- //////////////////////////////
+            FEATURED SECTION
+/////////////////////////////////// -->
+    <?php if(ProviderSetting::get("featured_property_status")):?>
+        <div class="property">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="heading">
-                            <h2>Why Choose Us</h2>
-                            <p>
-                                Describing why we are best in the property business
-                            </p>
+                            <h2><?php echo ProviderSetting::get("featured_property_heading")?></h2>
+                            <p><?php echo ProviderSetting::get("featured_property_subheading")?></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <?php if($stmtProperties->rowCount() > 0): foreach($properties as $property):?>
+                        <div class="col-lg-4 col-md-6 col-sm-12">
+                            <div class="item">
+                                <div class="photo">
+                                    <img class="main" src="<?php echo PUBLIC_URL?>uploads/property/<?php echo $property["featured_photo"]?>" alt="">
+                                    <div class="top">
+                                        <?php if(preg_match("/sale/i", $property["purpose"])):?>
+                                            <div class="status-sale">For Sale</div>
+                                        <?php else:?>
+                                            <div class="status-rent">For Rent</div>
+                                        <?php endif?>
+                                        <?php if($property["is_featured"] == 1):?>
+                                            <div class="featured">Featured</div>
+                                        <?php endif?>
+                                    </div>
+                                    <div class="price"><?php echo $property["price"]?> PLN</div>
+                                    <?php if(isset($_SESSION["customer"])):?>
+                                        <div 
+                                            data-property-id="<?php echo $property["id"]?>" 
+                                            data-customer-id="<?php echo $_SESSION["customer"]["id"]?>" 
+                                            class="wishlist <?php if(in_array($property["id"], array_column($wishlists,"property_id"))) echo "active"?>"
+                                        >
+                                            <div class="wishlist-loader"></div>
+                                            <a href="" class="wishlist-heart"><i class="far fa-heart"></i></a>
+                                            <a href="" class="wishlist-heart-full"><i class="fa fa-heart"></i></a>
+                                        </div>
+                                    <?php endif?>
+                                </div>
+                                <div class="text">
+                                    <h3><a href="<?php echo BASE_URL?>property/<?php echo $property["id"]?>/<?php echo $property["slug"]?>"><?php echo $property["name"]?></a></h3>
+                                    <div class="detail">
+                                        <div class="stat">
+                                            <div class="i1"><?php echo $property["size"]?> sqft</div>
+                                            <div class="i2"><?php echo $property["bedroom"]?> Bed</div>
+                                            <div class="i3"><?php echo $property["bathroom"]?> Bath</div>
+                                        </div>
+                                        <div class="address">
+                                            <i class="fas fa-map-marker-alt"></i> <?php echo $property["address"]?>
+                                        </div>
+                                        <div class="type-location">
+                                            <div class="i1">
+                                                <i class="fas fa-edit"></i> <?php echo $property["type_name"]?>
+                                            </div>
+                                            <div class="i2">
+                                                <i class="fas fa-location-arrow"></i> <?php echo $property["location_name"]?>
+                                            </div>
+                                        </div>
+                                        <div class="agent-section">
+                                            <?php if(is_null($property["photo"])):?>
+                                                <img class="agent-photo" src="<?php echo PUBLIC_URL?>uploads/user.png?>" alt="">
+                                            <?php else:?>
+                                                <img class="agent-photo" src="<?php echo PUBLIC_URL?>uploads/agent/<?php echo $property["photo"]?>" alt="">
+                                            <?php endif?>
+                                            <a href="">
+                                                <?php echo $property["full_name"]?>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach;endif?>
+                </div>
+            </div>
+        </div>
+    <?php endif?>
+<!-- //////////////////////////////
+            FEATURED SECTION
+/////////////////////////////////// -->
+
+
+<!-- //////////////////////////////
+            WHY CHOOSE SECTION
+/////////////////////////////////// -->
+    <?php if(ProviderSetting::get("why_choose_status")): if($stmtWhyChooseItems->rowCount() > 0):?>
+        <div class="why-choose" style="background-image: url(<?php echo PUBLIC_URL?>uploads/setting/<?php echo ProviderSetting::get("why_choose_photo")?>)">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="heading">
+                            <h2><?php echo ProviderSetting::get("why_choose_heading")?></h2>
+                            <p><?php echo ProviderSetting::get("why_choose_subheading")?></p>
                         </div>
                     </div>
                 </div>
@@ -340,18 +360,22 @@
                 </div>
             </div>
         </div>
-    <?php endif?>
+    <?php endif;endif?>
+<!-- //////////////////////////////
+            WHY CHOOSE SECTION
+/////////////////////////////////// -->
 
-    <?php if($stmtAgents->rowCount() > 0):?>
+<!-- //////////////////////////////
+            AGENT SECTION
+/////////////////////////////////// -->
+    <?php if(ProviderSetting::get("agent_status")): if($stmtAgents->rowCount() > 0):?>
         <div class="agent">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="heading">
-                            <h2>Agents</h2>
-                            <p>
-                                Meet our expert property agents from the following list
-                            </p>
+                            <h2><?php echo ProviderSetting::get("agent_heading")?></h2>
+                            <p><?php echo ProviderSetting::get("agent_subheading")?></p>
                         </div>
                     </div>
                 </div>
@@ -381,48 +405,59 @@
                 </div>
             </div>
         </div>
-    <?php endif?>
+    <?php endif;endif?>
+<!-- //////////////////////////////
+            AGENT SECTION
+/////////////////////////////////// -->
 
-
-    <div class="location pb_40">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="heading">
-                        <h2>Locations</h2>
-                        <p>
-                            Check out all the properties of important locations
-                        </p>
+<!-- //////////////////////////////
+            LOCATION SECTION
+/////////////////////////////////// -->
+    <?php if(ProviderSetting::get("location_status")):?>
+        <div class="location pb_40">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="heading">
+                            <h2><?php echo ProviderSetting::get("location_heading")?></h2>
+                            <p><?php echo ProviderSetting::get("location_subheading")?></p>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <?php if($stmtLocations->rowCount() > 0): foreach($locations as $location):?>
-                        <div class="col-lg-3 col-md-4 col-sm-6">
-                            <div class="item">
-                                <div class="photo">
-                                    <a href="<?php echo BASE_URL?>location/<?php echo $location["slug"]?>">
-                                        <img src="<?php echo PUBLIC_URL?>uploads/location/<?php echo $location["photo"]?>" alt="<?php echo $location["name"]?>">
-                                    </a>
-                                </div>
-                                <div class="text">
-                                    <h2><a href="<?php echo BASE_URL?>location/<?php echo $location["slug"]?>"><?php echo $location["name"]?></a></h2>
-                                    <h4>(<?php echo $location["property_count"]?> Properties)</h4>
+                <div class="row">
+                    <?php if($stmtLocations->rowCount() > 0): foreach($locations as $location):?>
+                            <div class="col-lg-3 col-md-4 col-sm-6">
+                                <div class="item">
+                                    <div class="photo">
+                                        <a href="<?php echo BASE_URL?>location/<?php echo $location["slug"]?>">
+                                            <img src="<?php echo PUBLIC_URL?>uploads/location/<?php echo $location["photo"]?>" alt="<?php echo $location["name"]?>">
+                                        </a>
+                                    </div>
+                                    <div class="text">
+                                        <h2><a href="<?php echo BASE_URL?>location/<?php echo $location["slug"]?>"><?php echo $location["name"]?></a></h2>
+                                        <h4>(<?php echo $location["property_count"]?> Properties)</h4>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                <?php endforeach;endif?>
+                    <?php endforeach;endif?>
+                </div>
             </div>
         </div>
-    </div>
+    <?php endif?>
+<!-- //////////////////////////////
+            LOCATION SECTION
+/////////////////////////////////// -->
 
-    <?php if($stmtTestimonials->rowCount() > 0):?>
-        <div class="testimonial" style="background-image: url()">
+<!-- //////////////////////////////
+            TESTIMONIAL SECTION
+/////////////////////////////////// -->
+    <?php if(ProviderSetting::get("testimonial_status")): if($stmtTestimonials->rowCount() > 0):?>
+        <div class="testimonial" style="background-image: url(<?php echo PUBLIC_URL?>uploads/setting/<?php echo ProviderSetting::get("testimonial_photo")?>)">
             <div class="bg"></div>
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        <h2 class="main-header">Our Happy Clients</h2>
+                        <h2 class="main-header"><?php echo ProviderSetting::get("testimonial_heading")?></h2>
                     </div>
                 </div>
                 <div class="row">
@@ -447,18 +482,23 @@
                 </div>
             </div>
         </div>
-    <?php endif?>
+    <?php endif;endif?>
+<!-- //////////////////////////////
+            TESTIMONIAL SECTION
+/////////////////////////////////// -->
 
-    <?php if($stmtPosts->rowCount() > 0):?>
+
+<!-- //////////////////////////////
+            POST SECTION
+/////////////////////////////////// -->
+    <?php if(ProviderSetting::get("post_status")): if($stmtPosts->rowCount() > 0):?>
         <div class="blog">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
                         <div class="heading">
-                            <h2>Latest News</h2>
-                            <p>
-                                Check our latest news from the following section
-                            </p>
+                            <h2><?php echo ProviderSetting::get("post_heading")?></h2>
+                            <p><?php echo ProviderSetting::get("post_subheading")?></p>
                         </div>
                     </div>
                 </div>
@@ -488,7 +528,10 @@
                 </div>
             </div>
         </div>
-    <?php endif?>
+    <?php endif;endif?>
+<!-- //////////////////////////////
+            POST SECTION
+/////////////////////////////////// -->
 
     <script>
         $(document).ready(function(){
@@ -570,5 +613,6 @@
             }
         })
     </script>
+
 <?php include "./layout_footer.php"?>
 

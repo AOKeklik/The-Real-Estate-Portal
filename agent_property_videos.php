@@ -51,16 +51,17 @@
         $error_message=$err->getMessage();
     }
 ?>
-<div class="page-top" style="background-image: url('uploads/banner.jpg')">
-    <div class="bg"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>Videos</h2>
-            </div>
-        </div>
-    </div>
-</div>
+
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+ <?php 
+    $page_title="Videos";
+    include "./section_banner.php"
+?>
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
 
 <div class="page-content user-panel">
     <div class="container">
@@ -112,6 +113,7 @@
         </div>
     </div>
 </div>
+
 <script>
     $("input[name=code]").change(function(e){
         $("form img").attr("src",`http://img.youtube.com/vi/${$(e.target).val()}/0.jpg`)
@@ -202,4 +204,5 @@
         })
     })
 </script>
+
 <?php include "./layout_footer.php"?>

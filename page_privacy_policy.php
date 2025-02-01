@@ -24,16 +24,18 @@
         $error_message=$err->getMessage();
     }
 ?>
-<div class="page-top" style="background-image: url('')">
-    <div class="bg"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2><?php echo $privacy["title"]?></h2>
-            </div>
-        </div>
-    </div>
-</div>
+
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+ <?php 
+    $page_title=$privacy["title"];
+    include "./section_banner.php"
+?>
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+ 
 
 <div class="page-content">
     <div class="container">

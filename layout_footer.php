@@ -52,10 +52,9 @@
                     <div class="item">
                         <h2 class="heading">Locations</h2>
                         <ul class="useful-links">
-                            <li><a href="">New York</a></li>
-                            <li><a href="">Boston</a></li>
-                            <li><a href="">Orlanco</a></li>
-                            <li><a href="">Los Angeles</a></li>
+                            <?php foreach(ProviderLocation::getUsed() as $location):?>
+                                <li><a href="<?php echo BASE_URL?>location/<?php echo $location["slug"]?>"><?php echo $location["name"]?></a></li>
+                            <?php endforeach?>
                         </ul>
                     </div>
                 </div>
@@ -67,39 +66,55 @@
                             <div class="left">
                                 <i class="fas fa-map-marker-alt"></i>
                             </div>
-                            <div class="right">
-                                34 Antiger Lane, USA, 12937
-                            </div>
+                            <div class="right"><?php echo ProviderSetting::get("address")?></div>
                         </div>
                         <div class="list-item">
                             <div class="left">
                                 <i class="fas fa-phone"></i>
                             </div>
-                            <div class="right">contact@arefindev.com</div>
+                            <div class="right"><?php echo ProviderSetting::get("email")?></div>
                         </div>
                         <div class="list-item">
                             <div class="left">
                                 <i class="fas fa-envelope"></i>
                             </div>
-                            <div class="right">122-222-1212</div>
+                            <div class="right"><?php echo ProviderSetting::get("phone")?></div>
                         </div>
-                        <ul class="social">
-                            <li>
-                                <a href=""><i class="fab fa-facebook-f"></i></a>
-                            </li>
-                            <li>
-                                <a href=""><i class="fab fa-twitter"></i></a>
-                            </li>
-                            <li>
-                                <a href=""><i class="fab fa-pinterest-p"></i></a>
-                            </li>
-                            <li>
-                                <a href=""><i class="fab fa-linkedin-in"></i></a>
-                            </li>
-                            <li>
-                                <a href=""><i class="fab fa-instagram"></i></a>
-                            </li>
-                        </ul>
+                        <?php if(
+                                ProviderSetting::get("facebook") ||
+                                ProviderSetting::get("twitter") ||
+                                ProviderSetting::get("youtube") ||
+                                ProviderSetting::get("linkedin") ||
+                                ProviderSetting::get("instagram")
+                        ):?>
+                            <ul class="social">
+                                <?php if(ProviderSetting::get("facebook")):?>
+                                    <li>
+                                        <a target="_blank" href="<?php echo ProviderSetting::get("facebook")?>"><i class="fab fa-facebook-f"></i></a>
+                                    </li>
+                                <?php endif?>
+                                <?php if(ProviderSetting::get("twitter")):?>
+                                    <li>
+                                        <a target="_blank" href="<?php echo ProviderSetting::get("twitter")?>"><i class="fab fa-twitter"></i></a>
+                                    </li>
+                                <?php endif?>
+                                <?php if(ProviderSetting::get("youtube")):?>
+                                    <li>
+                                        <a target="_blank" href="<?php echo ProviderSetting::get("youtube")?>"><i class="fab fa-pinterest-p"></i></a>
+                                    </li>
+                                <?php endif?>
+                                <?php if(ProviderSetting::get("linkedin")):?>
+                                    <li>
+                                        <a target="_blank" href="<?php echo ProviderSetting::get("linkedin")?>"><i class="fab fa-linkedin-in"></i></a>
+                                    </li>
+                                <?php endif?>
+                                <?php if(ProviderSetting::get("instagram")):?>
+                                    <li>
+                                        <a target="_blank" href="<?php echo ProviderSetting::get("instagram")?>"><i class="fab fa-instagram"></i></a>
+                                    </li>
+                                <?php endif?>
+                            </ul>
+                        <?php endif?>
                     </div>
                 </div>
 
@@ -132,9 +147,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 col-md-6">
-                    <div class="copyright">
-                        Copyright 2023, ArefinDev. All Rights Reserved.
-                    </div>
+                    <div class="copyright"><?php echo ProviderSetting::get("copyright")?></div>
                 </div>
                 <?php if($terms || $privacy):?>
                     <div class="col-lg-6 col-md-6">
@@ -190,7 +203,7 @@
                         // console.log(response)
                         const res = JSON.parse(response)
 
-                        if(res.success || res.error?.message) {
+                        if(res.success || res.error.message) {
                             email.val("")
 
                             iziToast.show({
@@ -202,7 +215,7 @@
 
                         if(res.error) {
                             $.each(res.error, function (key,val) {
-                                el.find(".input-error.input-"+key).text(val[0])
+                                form.find(".input-error.input-"+key).text(val[0])
                             })    
                         }
 

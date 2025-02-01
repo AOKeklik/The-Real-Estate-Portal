@@ -21,16 +21,17 @@
         $error_message=$err;
     }
 ?>
-<div class="page-top" style="background-image: url('')">
-    <div class="bg"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>FAQ</h2>
-            </div>
-        </div>
-    </div>
-</div>
+
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+ <?php 
+    $page_title="FAQ";
+    include "./section_banner.php"
+?>
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
 
 <div class="page-content faq">
     <div class="container">
@@ -58,4 +59,5 @@
         </div>
     </div>
 </div>
+
 <?php include("./layout_footer.php")?>

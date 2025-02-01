@@ -43,16 +43,17 @@
         $error_message=$err->getMessage();
     }
 ?>
-<div class="page-top" style="background-image: url('uploads/banner.jpg')">
-    <div class="bg"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>All Properties</h2>
-            </div>
-        </div>
-    </div>
-</div>
+
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+ <?php 
+    $page_title="All Properties";
+    include "./section_banner.php"
+?>
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
 
 <div class="page-content user-panel">
     <div class="container">
@@ -165,6 +166,7 @@
         </div>
     </div>
 </div>
+
 <script>
     $(".btn.btn-danger").click(function(e){
         e.preventDefault()
@@ -202,5 +204,6 @@
         })
     })
 </script>
+
 <?php include "./layout_footer.php"?>
 

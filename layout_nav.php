@@ -2,7 +2,11 @@
     <!-- Menu For Mobile Device -->
     <div class="mobile-nav">
         <a href="<?php echo BASE_URL?>" class="logo">
-            <img src="https://placehold.co/600x200" alt="">
+            <?php if(ProviderSetting::get("logo")):?>
+                <img src="<?php echo PUBLIC_URL?>uploads/setting/<?php echo ProviderSetting::get("logo")?>" alt="">
+            <?php else:?>
+                <img src="https://placehold.co/600x200?text=Logo" alt="">
+            <?php endif?>
         </a>
     </div>
 
@@ -11,7 +15,11 @@
         <div class="container">
             <nav class="navbar navbar-expand-md navbar-light">
                 <a class="navbar-brand" href="<?php echo BASE_URL?>">
-                    <img src="https://placehold.co/600x200" alt="">
+                    <?php if(ProviderSetting::get("logo")):?>
+                        <img src="<?php echo PUBLIC_URL?>uploads/setting/<?php echo ProviderSetting::get("logo")?>" alt="">
+                    <?php else:?>
+                        <img src="https://placehold.co/600x200?text=Logo" alt="">
+                    <?php endif?>
                 </a>
                 <div class="collapse navbar-collapse mean-menu" id="navbarSupportedContent">
                     <ul class="navbar-nav ml-auto">

@@ -25,6 +25,58 @@
     }catch(PDOException $err){
         $error_message=$err->getMessage();
     }
+
+    try{
+        $stmt=$pdo->prepare("
+            SELECT
+                *
+            FROM
+                settings
+            LIMIT
+                1
+        ");
+        $stmt->execute();
+        $setting=$stmt->fetch(pdo::FETCH_ASSOC);
+    }catch(PDOException $err){
+        $error_message=$err->getMessage();
+    }
+
+    $errors=[];
+    
+    if($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["form"])){
+        $post_heading=htmlspecialchars(trim($_POST["post_heading"]));
+        $post_subheading=htmlspecialchars(trim($_POST["post_subheading"]));
+
+        if($post_heading === "")
+            $errors["post_heading"][] = "<small class='form-text text-danger'>The post heading field is required!</small>";
+
+        if($post_subheading === "")
+            $errors["post_subheading"][] = "<small class='form-text text-danger'>The post subheading field is required!</small>";
+
+        if(empty($errors)){
+            try{
+                $stmt=$pdo->prepare("
+                    UPDATE 
+                        settings
+                    SET
+                        post_heading=?,
+                        post_subheading=?
+                ");
+
+                if(!$stmt->execute([
+                    $post_heading,
+                    $post_subheading,
+                ]))
+                    throw new PDOException("An error occurred while updating. Please try again later!");
+
+                $_SESSION["success"]="The settings are updated successfully.";
+                header("Location: ".ADMIN_URL."posts");
+                exit();
+            }catch(PDOException $err){
+                $error_message=$err->getMessage();
+            }
+        }
+    }
 ?>
 <div class="main-content">
     <section class="section">
@@ -35,6 +87,52 @@
             </div>
         </div>
         <div class="section-body">
+            <div class="row">
+                <div class="col-8 offset-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="" method="post" enctype="multipart/form-data">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="mb-3">
+                                            <span class="badge badge-success" style="<?php if($setting["post_status"] == 0) echo "display:none"?>">Yes</span>
+                                            <span class="badge badge-danger" style="<?php if($setting["post_status"] == 1) echo "display:none"?>">No</span>
+                                        </div>
+                                        <div class="wrapper-loader-btn" style="display: inline-block;">
+                                            <span class="button-loader"></span>
+                                            <input 
+                                                name="post_status" 
+                                                <?php if($setting["post_status"] == 1) echo "checked"?> 
+                                                type="checkbox" 
+                                                data-toggle="toggle" 
+                                                data-onstyle="success" 
+                                                data-offstyle="danger"
+                                            >
+                                        </div> 
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group mb-3">
+                                            <label>Post Heading</label>
+                                            <input type="text" class="form-control" name="post_heading" value="<?php echo $setting["post_heading"]?>">
+                                            <?php if(isset($errors["post_heading"])) echo $errors["post_heading"][0]?>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group mb-3">
+                                            <label>Post Subheading</label>
+                                            <input type="text" class="form-control" name="post_subheading" value="<?php echo $setting["post_subheading"]?>">
+                                            <?php if(isset($errors["post_subheading"])) echo $errors["post_subheading"][0]?>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group text-end">
+                                    <button type="submit" class="btn btn-primary" name="form">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -199,6 +297,58 @@
                     if(res.error){
                         parent.attr("class","active")
                     }
+                }
+            })
+        })
+    })
+
+    /* update */
+    $(document).ready(function(){
+        $("input[name=post_status]").change(async function(e){
+            e.preventDefault()
+
+            const el = $(this)
+
+            const yes =el.closest(".col-md-2").find(".badge.badge-success")
+            const no =el.closest(".col-md-2").find(".badge.badge-danger")
+
+            const parent = el.closest(".wrapper-loader-btn")
+            const status = el.prop("checked") ? 1 : 0
+            const formData = new FormData()
+
+            parent.removeClass("active")
+            parent.addClass("pending")
+
+            await new Promise(resolve => setTimeout(resolve,1000))
+            formData.append("post_status",btoa(status))
+
+            $.ajax({
+                url: "<?php echo ADMIN_URL?>page_post_section_edit_status_ajax.php",
+                type: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(respense){
+                    const res = JSON.parse(respense)
+
+                    iziToast.show({
+                        title: res.success?.message ?? res.error.message,
+                        position: "topRight",
+                        color: res.success ? "green" : "red"
+                    })
+
+                    if(res.success){
+                        if(status === 1){
+                            yes.show()
+                            no.hide()
+                        }else{
+                            yes.hide()
+                            no.show()
+                        }
+                    }
+
+                    parent.removeClass("pending")
+                    parent.addClass("active")
                 }
             })
         })

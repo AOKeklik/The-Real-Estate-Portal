@@ -141,16 +141,19 @@
         }
     }
 ?>
-<div class="page-top" style="background-image: url('')">
-    <div class="bg"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2><?php echo $property["name"]?></h2>
-            </div>
-        </div>
-    </div>
-</div>
+
+
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+ <?php 
+    $page_title=$property["name"];
+    include "./section_banner.php"
+?>
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+
 
 <div class="property-result pt_50 pb_50">
     <div class="container">
@@ -494,6 +497,7 @@
         </div>
     </div>
 </div>
+
 <script>
     $(document).ready(function(){
         $("[name=form-enquery]").click( async function(e){

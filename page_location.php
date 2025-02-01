@@ -60,16 +60,18 @@
         $error_message=$err->getMessage();
     }
 ?>
-<div class="page-top" style="background-image: url('uploads/banner.jpg')">
-    <div class="bg"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>Location: <?php echo $location["name"]?></h2>
-            </div>
-        </div>
-    </div>
-</div>    
+
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+ <?php 
+    $page_title=$location["name"];
+    include "./section_banner.php"
+?>
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+  
 
 <div class="property" id="pagination">
     <div id="pagination-loader"></div>
@@ -143,6 +145,7 @@
         </nav>
     </div>
 </div>
+
 <script>
     $(document).ready(function(){
         const itemsPerPage = Number("<?php echo MAX_POSTS_PER_PAGE?>")

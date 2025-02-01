@@ -7,7 +7,7 @@ RewriteRule     ^admin/logout$                              ./admin/auth_logout.
 RewriteRule     ^admin/forget$                              ./admin/auth_forget.php                                 [NC,L]
 
 RewriteRule     ^admin/profile$                             ./admin/page_profile.php                                [NC,L]
-RewriteRule     ^admin/dashboard$                           ./admin/page_dashboard.php                              [NC,L]
+RewriteRule     ^admin(/dashboard)?/?$                      ./admin/page_dashboard.php                              [NC,L]
 RewriteRule     ^admin/setting$                             ./admin/page_setting.php                                [NC,L]
 RewriteRule     ^admin/properties$                          ./admin/page_properties.php                             [NC,L]
 RewriteRule     ^admin/orders$                              ./admin/page_orders.php                                 [NC,L]

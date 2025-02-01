@@ -7,7 +7,11 @@
     <meta name="description" content="">
     <title>The Home</title>
 
-    <link rel="icon" type="image/png" href="<?php echo PUBLIC_URL?>uploads/favicon.png">
+    <?php if(ProviderSetting::get("favicon")):?>
+        <link rel="icon" type="image/png" href="<?php echo PUBLIC_URL?>uploads/setting/<?php echo ProviderSetting::get("favicon")?>">
+    <?php else:?>
+        <link rel="icon" type="image/png" href="<?php echo PUBLIC_URL?>uploads/favicon.png">
+    <?php endif?>
 
     <!-- All CSS -->
     <link rel="stylesheet" href="<?php echo PUBLIC_URL?>dist/css/bootstrap.min.css">

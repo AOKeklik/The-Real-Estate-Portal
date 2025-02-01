@@ -19,16 +19,18 @@
         $error_message=$err->getMessage();
     }
 ?>
-<div class="page-top" style="background-image: url('')">
-    <div class="bg"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>Blog</h2>
-            </div>
-        </div>
-    </div>
-</div>
+
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+ <?php 
+    $page_title="Blog";
+    include "./section_banner.php"
+?>
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+
 
 <div class="blog">
     <div class="container" id="pagination">
@@ -74,6 +76,7 @@
         <?php endif?>
     </div>
 </div>
+
 <script>
     /* pagination */
     $(document).ready(function(){

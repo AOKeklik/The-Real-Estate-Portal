@@ -86,16 +86,17 @@
         }
     }
 ?>
-<div class="page-top" style="background-image: url('https://placehold.co/1300x260')">
-    <div class="bg"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>Forget Password</h2>
-            </div>
-        </div>
-    </div>
-</div>
+
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+ <?php 
+    $page_title="Forget Password";
+    include "./section_banner.php"
+?>
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
 
 <div class="page-content">
     <div class="container">
@@ -120,4 +121,5 @@
         </div>
     </div>
 </div>
+
 <?php include "./layout_footer.php" ?>

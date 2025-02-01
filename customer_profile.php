@@ -101,16 +101,17 @@
     }
 
 ?>
-<div class="page-top" style="background-image: url('https://placehold.co/1300x260')">
-    <div class="bg"></div>
-    <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h2>Edit Profile</h2>
-            </div>
-        </div>
-    </div>
-</div>
+
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
+ <?php 
+    $page_title="Edit Profile";
+    include "./section_banner.php"
+?>
+<!-- ///////////////////////
+            BANNER
+ /////////////////////////// -->
 
 <div class="page-content user-panel">
     <div class="container">
@@ -180,6 +181,7 @@
         </div>
     </div>
 </div>
+
 <script>
     $("input[type=file]").each(function () {
         $(this).change(function (e) {
@@ -187,4 +189,5 @@
         })
     })
 </script>
+
 <?php include "./layout_footer.php"?>
