@@ -41,10 +41,10 @@
                     <div class="item">
                         <h2 class="heading">Important Links</h2>
                         <ul class="useful-links">
-                            <li><a href="">Home</a></li>
-                            <li><a href="">Properties</a></li>
-                            <li><a href="">Agents</a></li>
-                            <li><a href="">Blog</a></li>
+                            <li><a href="<?php echo BASE_URL?>">Home</a></li>
+                            <li><a href="<?php echo BASE_URL?>properties">Properties</a></li>
+                            <li><a href="<?php echo BASE_URL?>agents">Agents</a></li>
+                            <li><a href="<?php echo BASE_URL?>posts">Blog</a></li>
                         </ul>
                     </div>
                 </div>
